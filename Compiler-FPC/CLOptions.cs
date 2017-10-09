@@ -1,4 +1,5 @@
-﻿using CommandLine;
+﻿using System.Reflection;
+using CommandLine;
 using CommandLine.Text;
 
 namespace Compiler_FPC
@@ -20,5 +21,14 @@ namespace Compiler_FPC
 
             return help;
         }
+
+        [Option('v', "version", HelpText = "Show compiler version")]
+        public bool GetVersion { get; set; }
+
+        [Option('f', HelpText = "Path to file")]
+        public string GetFileName { get; set; }
+
+        [Option('l', "lexer", HelpText = "Launch lexical analyzer")]
+        public bool LaunchLexer { get; set; }
     }
 }
