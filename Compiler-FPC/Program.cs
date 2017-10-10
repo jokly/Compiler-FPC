@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
+using ConsoleTables;
 
 namespace Compiler_FPC
 {
@@ -20,15 +22,21 @@ namespace Compiler_FPC
 
                 if (options.LaunchLexer && options.GetFileName != null)
                 {
-                    Tokenizer lexer = new Tokenizer(options.GetFileName);
+                    var table = new ConsoleTable(new ConsoleTableOptions
+                    {
+                        Columns = new List<string>(){"Position", "Type", "Value", "Text"},
+                        EnableCount = false
+                    });
+
+                    var lexer = new Tokenizer(options.GetFileName);
+
                     Token tok;
                     while ((tok = lexer.Next()) != null)
                     {
-                        Console.WriteLine(tok.Row + " : " + tok.Col);
-                        Console.WriteLine(tok.Type.ToString());
-                        Console.WriteLine(tok.Text);
-                        Console.WriteLine("-----------");
+                        table.AddRow($"({tok.Row}, {tok.Col})", tok.Type.ToString(), tok.Value, tok.Text);
                     }
+
+                    Console.WriteLine(table.ToString());
                 }
                 else if (options.LaunchLexer && options.GetFileName == null)
                 {
