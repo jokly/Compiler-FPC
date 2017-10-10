@@ -261,3 +261,4 @@ __pycache__/
 *.pyc
 
 GenerateStates/States.txt
+Tests/**/*.out
