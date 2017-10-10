@@ -25,8 +25,11 @@ namespace Compiler_FPC
         [Option('v', "version", HelpText = "Show compiler version")]
         public bool GetVersion { get; set; }
 
-        [Option('f', HelpText = "Path to file")]
-        public string GetFileName { get; set; }
+        [Option('f', HelpText = "Path to input file")]
+        public string GetInputFileName { get; set; }
+
+        [Option('o', HelpText = "Path to output file")]
+        public string GetOutputFileName { get; set; }
 
         [Option('l', "lexer", HelpText = "Launch lexical analyzer")]
         public bool LaunchLexer { get; set; }

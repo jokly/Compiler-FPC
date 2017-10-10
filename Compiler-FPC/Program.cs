@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using ConsoleTables;
 
@@ -12,37 +13,51 @@ namespace Compiler_FPC
             var options = new CLOptions();
             var assembly = Assembly.GetExecutingAssembly().GetName();
 
-            if (CommandLine.Parser.Default.ParseArguments(args, options))
+            if (!CommandLine.Parser.Default.ParseArguments(args, options)) return;
+
+            if (options.GetVersion)
             {
-                if (options.GetVersion)
+                Console.WriteLine(assembly.Name);
+                Console.WriteLine(assembly.Version.ToString());
+            }
+
+            if (options.LaunchLexer && options.GetInputFileName != null)
+            {
+                if (options.GetOutputFileName != null)
                 {
-                    Console.WriteLine(assembly.Name);
-                    Console.WriteLine(assembly.Version.ToString());
-                }
-
-                if (options.LaunchLexer && options.GetFileName != null)
-                {
-                    var table = new ConsoleTable(new ConsoleTableOptions
+                    using (var outputFile = new StreamWriter(options.GetOutputFileName))
                     {
-                        Columns = new List<string>(){"Position", "Type", "Value", "Text"},
-                        EnableCount = false
-                    });
-
-                    var lexer = new Tokenizer(options.GetFileName);
-
-                    Token tok;
-                    while ((tok = lexer.Next()) != null)
-                    {
-                        table.AddRow($"({tok.Row}, {tok.Col})", tok.Type.ToString(), tok.Value, tok.Text);
+                        outputFile.Write(getLexerOutput(options.GetInputFileName));
                     }
-
-                    Console.WriteLine(table.ToString());
                 }
-                else if (options.LaunchLexer && options.GetFileName == null)
+                else
                 {
-                    Console.WriteLine("No input files.");
+                    Console.WriteLine(getLexerOutput(options.GetInputFileName));
                 }
             }
+            else if (options.LaunchLexer && options.GetInputFileName == null)
+            {
+                Console.WriteLine("No input files.");
+            }
+        }
+
+        static string getLexerOutput(string fileName)
+        {
+            var table = new ConsoleTable(new ConsoleTableOptions
+            {
+                Columns = new List<string>() { "Position", "Type", "Value", "Text" },
+                EnableCount = false
+            });
+
+            var lexer = new Tokenizer(fileName);
+
+            Token tok;
+            while ((tok = lexer.Next()) != null)
+            {
+                table.AddRow($"({tok.Row}, {tok.Col})", tok.Type.ToString(), tok.Value, tok.Text);
+            }
+
+            return table.ToString();
         }
     }
 }
