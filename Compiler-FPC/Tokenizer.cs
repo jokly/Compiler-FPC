@@ -48,7 +48,7 @@ namespace Compiler_FPC
                 var newState = states[currentState, currentData];
                 ch = (char) currentData;
 
-                if (newState != 0)
+                if (newState != 0 && newState != -1)
                     currentText += ch;
 
                 currentCol++;
