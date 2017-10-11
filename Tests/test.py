@@ -6,7 +6,7 @@ from os.path import basename
 
 PATH_TO_COMPILER = 'C:\\Users\\slast\\Documents\\Projects\\Compiler-FPC\\Compiler-FPC\\bin\\Debug\\Compiler-FPC.exe'
 
-def test(folders, optinons = {}):
+def test(folders, optinons = []):
     for folder in folders:
         print(folder + '...', end='')
 
@@ -17,7 +17,7 @@ def test(folders, optinons = {}):
         countTests = 0
         for file in inputFiles:
             outFileName = os.path.splitext(file)[0] + '.out'
-            subpr.run([PATH_TO_COMPILER, '-f', file, '-o', outFileName, '-l'])
+            subpr.run([PATH_TO_COMPILER, '-f', file, '-o', outFileName] + optinons)
 
             ansFileName = os.path.splitext(file)[0] + '.ans'
             if open(outFileName, 'r').read() != open(ansFileName, 'r').read():
@@ -58,7 +58,7 @@ if __name__ == '__main__':
     testsPath = os.path.dirname(os.path.realpath(__file__))
 
     if args.lexer:
-        test([testsPath + '\\Lexer'])
+        test([testsPath + '\\Lexer'], ['-l'])
     else:
-        test(getAllDirs(testsPath))
+        test(getAllDirs(testsPath), ['-l'])
 
