@@ -51,7 +51,7 @@ def getAllDirs(testsPath):
 
 if __name__ == '__main__':
     argsParser = argparse.ArgumentParser()
-    argsParser.add_argument('-l', '--lexer', help='Start lexer sests', action='store_true')
+    argsParser.add_argument('-l', '--lexer', help='Start lexer tests', action='store_true')
 
     args = argsParser.parse_args()
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 
 namespace Compiler_FPC
@@ -7,21 +6,6 @@ namespace Compiler_FPC
     class Tokenizer
     {
         public Token Current { get; private set; }
-
-        private readonly int[,] states =
-        {
-            {
-                -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,-1,-1,0,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
-            },
-            {
-                -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
-            },
-        };
-
-        private readonly Dictionary<int, TokenType> statesToToken = new Dictionary<int, TokenType>()
-        {
-            {1, TokenType.Integer},
-        };
 
         private StreamReader input;
         private int currentState;
@@ -41,12 +25,11 @@ namespace Compiler_FPC
         public Token Next()
         {
             int currentData;
-            char ch;
 
             while ((currentData = input.Read()) != -1)
             {
-                var newState = states[currentState, currentData];
-                ch = (char) currentData;
+                var newState = Config.StateTable[currentState, currentData];
+                var ch = (char) currentData;
 
                 if (newState != 0 && newState != -1)
                     currentText += ch;
@@ -71,7 +54,7 @@ namespace Compiler_FPC
 
         private Token GetToken()
         {
-            if (statesToToken.TryGetValue(currentState, out var type))
+            if (Config.StatesToToken.TryGetValue(currentState, out var type))
             {
                 Current = new Token(currentRow, currentCol - currentText.Length,
                                     type, currentText, currentText);

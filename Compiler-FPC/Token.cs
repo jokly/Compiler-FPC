@@ -1,12 +1,6 @@
 ﻿
 namespace Compiler_FPC
 {
-    enum TokenType
-    {
-        Comment, Id, Integer, Real,
-        String, Char, Operation, Delimeter,
-    }
-
     class Token
     {
         public int Row { get; private set; }
