@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 
 namespace Compiler_FPC
@@ -66,6 +67,11 @@ namespace Compiler_FPC
                 {
                     type = TokenType.KeyWord;
                     value = lowercaseText;
+                }
+
+                if (type == TokenType.Real)
+                {
+                    value = double.Parse(lowercaseText, CultureInfo.InvariantCulture).ToString();
                 }
 
                 Current = new Token(currentRow, currentCol - currentText.Length,
