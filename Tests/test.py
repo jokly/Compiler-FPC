@@ -21,7 +21,7 @@ def test(folders, optinons = []):
 
             ansFileName = os.path.splitext(file)[0] + '.ans'
             if open(outFileName, 'r').read() != open(ansFileName, 'r').read():
-                print('(' + str(countTests) + '/' + str(len(inputFiles)) + ')')
+                print('(' + str(countTests) + os.sep + str(len(inputFiles)) + ')')
                 print('Not passed: ' + outFileName)
                 exit(0)
 
@@ -32,13 +32,13 @@ def test(folders, optinons = []):
     print('All tests passed!')    
 
 def getInputFiles(folder):
-    return glob.glob(folder + '\\*.in')
+    return glob.glob(folder + os.sep + '*.in')
 
 def getOutputFiles(folder):
-    return glob.glob(folder + '\\*.out')
+    return glob.glob(folder + os.sep + '*.out')
 
 def getAnswerFile(folder):
-    return glob.glob(folder + '\\*.ans')
+    return glob.glob(folder + os.sep + '*.ans')
 
 def getAllDirs(testsPath):
     allDirs = []
@@ -58,7 +58,7 @@ if __name__ == '__main__':
     testsPath = os.path.dirname(os.path.realpath(__file__))
 
     if args.lexer:
-        test([testsPath + '\\Lexer'], ['-l'])
+        test([testsPath + os.sep +'Lexer'], ['-l'])
     else:
         test(getAllDirs(testsPath), ['-l'])
 
