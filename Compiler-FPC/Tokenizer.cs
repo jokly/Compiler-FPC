@@ -27,7 +27,7 @@ namespace Compiler_FPC
         {
             int currentData;
 
-            while ((currentData = input.Read()) != -1)
+            while ((currentData = input.Peek()) != -1)
             {
                 var newState = Config.StateTable[currentState, currentData];
                 var ch = (char) currentData;
@@ -44,8 +44,11 @@ namespace Compiler_FPC
 
                 if (newState == -1)
                 {
+                    currentCol--;
                     return GetToken();
                 }
+
+                input.Read();
 
                 currentState = newState;
             }
@@ -63,13 +66,13 @@ namespace Compiler_FPC
                 var lowercaseText = currentText.ToLower();
                 var value = currentText;
 
-                if (type == TokenType.Id && Config.KeyWords.Contains(lowercaseText))
+                if (type == TokenType.ID && Config.KeyWords.Contains(lowercaseText))
                 {
-                    type = TokenType.KeyWord;
+                    type = TokenType.KEY_WORD;
                     value = lowercaseText;
                 }
 
-                if (type == TokenType.Real)
+                if (type == TokenType.REAL)
                 {
                     value = double.Parse(lowercaseText, CultureInfo.InvariantCulture).ToString();
                 }
