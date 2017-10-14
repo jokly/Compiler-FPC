@@ -49,6 +49,9 @@ namespace Compiler_FPC
                 currentState = newState;
             }
 
+            if (currentState != -1 && currentState != 0)
+                return GetToken();
+
             return null;
         }
 
@@ -56,8 +59,17 @@ namespace Compiler_FPC
         {
             if (Config.StatesToToken.TryGetValue(currentState, out var type))
             {
+                var lowercaseText = currentText.ToLower();
+                var value = currentText;
+
+                if (type == TokenType.Id && Config.KeyWords.Contains(lowercaseText))
+                {
+                    type = TokenType.KeyWord;
+                    value = lowercaseText;
+                }
+
                 Current = new Token(currentRow, currentCol - currentText.Length,
-                                    type, currentText, currentText);
+                                    type, value, currentText);
 
                 currentText = "";
                 currentState = 0;
