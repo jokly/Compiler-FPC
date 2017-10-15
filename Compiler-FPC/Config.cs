@@ -7,8 +7,8 @@ namespace Compiler_FPC
         ID, KEY_WORD, INTEGER, REAL,
         LBRACKET, RBRACKET, LCURLY_BRACKET, RCURLY_BRACKET, LSQUARE_BRACKET, RSQUARE_BRACKER,
         PLUS, MINUS, ASTERIX, FORWARD_SLASH, ADDITION_ASSIGNMENT, SUBSTRACTION_ASSIGNMENT,
-        MULTIPLICATION_ASSIGNMENT, DIVISION_ASSIGNMENT, ASSIGNMENT, DOT, DOUBLE_DOT,
-        COMMA, COLON, SEMICOLON, START_RANGE,
+        MULTIPLICATION_ASSIGNMENT, DIVISION_ASSIGNMENT, EQUALLY, DOT, DOUBLE_DOT,
+        COMMA, COLON, SEMICOLON, START_RANGE, ASSIGNMENT,
     }
 
     class Config
@@ -94,6 +94,9 @@ namespace Compiler_FPC
             -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
             },
             {
+            -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,29,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
+            },
+            {
             -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
             },
             {
@@ -111,8 +114,8 @@ namespace Compiler_FPC
             {12, TokenType.LSQUARE_BRACKET }, {13, TokenType.RSQUARE_BRACKER}, {14, TokenType.PLUS}, {15, TokenType.MINUS},
             {16, TokenType.ASTERIX}, {17, TokenType.FORWARD_SLASH}, {18, TokenType.ADDITION_ASSIGNMENT},
             {19, TokenType.SUBSTRACTION_ASSIGNMENT}, {20, TokenType.MULTIPLICATION_ASSIGNMENT}, {21, TokenType.DIVISION_ASSIGNMENT},
-            {22, TokenType.ASSIGNMENT}, {23, TokenType.DOT}, {24, TokenType.DOUBLE_DOT}, {25, TokenType.COMMA},
-            {26, TokenType.COLON}, {27, TokenType.SEMICOLON}, {28, TokenType.START_RANGE},
+            {22, TokenType.EQUALLY}, {23, TokenType.DOT}, {24, TokenType.DOUBLE_DOT}, {25, TokenType.COMMA},
+            {26, TokenType.COLON}, {27, TokenType.SEMICOLON}, {28, TokenType.START_RANGE}, {29, TokenType.ASSIGNMENT},
         };
 
         public static HashSet<string> KeyWords { get; } = new HashSet<string>()
