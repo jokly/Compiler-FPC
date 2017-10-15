@@ -101,6 +101,12 @@ namespace Compiler_FPC
                     value = Convert.ToInt64(currentText.TrimStart('$'), 16).ToString();
                 }
 
+                if (type == TokenType.OCTAL_NUMBER)
+                {
+                    type = TokenType.INTEGER;
+                    value = Convert.ToInt64(currentText.TrimStart('&'), 8).ToString();
+                }
+
                 Current = new Token(currentRow, currentCol - currentText.Length,
                                     type, value, currentText);
 
