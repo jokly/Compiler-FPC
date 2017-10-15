@@ -10,7 +10,7 @@ namespace Compiler_FPC
         MULTIPLICATION_ASSIGNMENT, DIVISION_ASSIGNMENT, DOT, DOUBLE_DOT,
         COMMA, COLON, SEMICOLON, START_RANGE, ASSIGNMENT, RELOP_EQ, RELOP_GT, RELOP_LT, RELOP_GE,
         RELOP_LE, RELOP_NE, BITWISE_SL, BITWISE_SR, SETOP_SYDIFF, POINTER, ADDRESS, HEX_NUMBER, 
-        OCTAL_NUMBER, BIN_NUMBER, CHAR_NUMBER,
+        OCTAL_NUMBER, BIN_NUMBER, CHAR_NUMBER, ERROR
     }
 
     class Config
@@ -169,7 +169,7 @@ namespace Compiler_FPC
         public static Dictionary<int, TokenType> StatesToToken { get; } = new Dictionary<int, TokenType>()
         {
             {1, TokenType.INTEGER}, {2, TokenType.ID}, {3, TokenType.REAL}, {4, TokenType.REAL}, {7, TokenType.REAL},
-            {8,TokenType.LBRACKET}, {9, TokenType.RBRACKET}, {10, TokenType.LCURLY_BRACKET}, {11, TokenType.RCURLY_BRACKET},
+            {8,TokenType.LBRACKET}, {9, TokenType.RBRACKET},
             {12, TokenType.LSQUARE_BRACKET }, {13, TokenType.RSQUARE_BRACKER}, {14, TokenType.PLUS}, {15, TokenType.MINUS},
             {16, TokenType.ASTERIX}, {17, TokenType.FORWARD_SLASH}, {18, TokenType.ADDITION_ASSIGNMENT},
             {19, TokenType.SUBSTRACTION_ASSIGNMENT}, {20, TokenType.MULTIPLICATION_ASSIGNMENT}, {21, TokenType.DIVISION_ASSIGNMENT},

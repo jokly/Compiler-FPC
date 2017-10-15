@@ -51,13 +51,19 @@ namespace Compiler_FPC
 
             var lexer = new Tokenizer(fileName);
 
-            Token tok;
-            while ((tok = lexer.Next()) != null)
+            try
             {
-                table.AddRow($"({tok.Row}, {tok.Col})", tok.Type.ToString(), tok.Value, tok.Text);
-                //Console.WriteLine($"({tok.Row}, {tok.Col}) {tok.Type.ToString()} {tok.Value} {tok.Text}");
+                Token tok;
+                while ((tok = lexer.Next()) != null)
+                {
+                    table.AddRow($"({tok.Row}, {tok.Col})", tok.Type.ToString(), tok.Value, tok.Text);
+                }
             }
-
+            catch (TokenizerException e)
+            {
+                table.AddRow($"({e.Row}, {e.Col})", TokenType.ERROR, e.Text, e.Text);
+            }
+            
             return table.ToString();
         }
     }

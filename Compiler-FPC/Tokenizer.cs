@@ -78,9 +78,10 @@ namespace Compiler_FPC
                 currentState = newState;
             }
 
-            if (currentState != -1 && currentState != 0)
+            if (currentState != -1 && currentState != 0 || depthComment != 0)
                 return GetToken();
 
+            input.Close();
             return null;
         }
 
@@ -155,8 +156,7 @@ namespace Compiler_FPC
                 return Current;
             }
 
-            input.Close();
-            throw new Exception(currentText);
+            throw new TokenizerException(currentRow, currentCol - currentText.Length, currentText);
         }
     }
 }
