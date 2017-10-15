@@ -107,6 +107,12 @@ namespace Compiler_FPC
                     value = Convert.ToInt64(currentText.TrimStart('&'), 8).ToString();
                 }
 
+                if (type == TokenType.BIN_NUMBER)
+                {
+                    type = TokenType.INTEGER;
+                    value = Convert.ToInt64(currentText.TrimStart('%'), 2).ToString();
+                }
+
                 Current = new Token(currentRow, currentCol - currentText.Length,
                                     type, value, currentText);
 
