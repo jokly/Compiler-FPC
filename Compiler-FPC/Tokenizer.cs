@@ -12,6 +12,7 @@ namespace Compiler_FPC
         private int currentState;
         private int currentRow, currentCol;
         private string currentText;
+        private int depthComment = 0;
 
         public Tokenizer(string fileName)
         {
@@ -31,12 +32,17 @@ namespace Compiler_FPC
             {
                 var newState = Config.StateTable[currentState, currentData];
 
-                if (newState == 48)
+                switch (newState)
                 {
-                    currentText = "";
-                    currentState = newState;
-                    input.Read();
-                    continue;
+                    case 0:
+                        currentText = "";
+                        break;
+                    case 10:
+                        depthComment++;
+                        break;
+                    case 11:
+                        depthComment--;
+                        break;
                 }
 
                 var ch = (char) currentData;
@@ -51,10 +57,20 @@ namespace Compiler_FPC
                     currentCol = 1;
                 }
 
-                if (newState == -1)
+                switch (newState)
                 {
-                    currentCol--;
-                    return GetToken();
+                    case -1 when depthComment == 0:
+                        currentCol--;
+                        return GetToken();
+                    case -1:
+                        currentText = "";
+                        currentCol--;
+                        currentState = 0;
+                        continue;
+                    case 11:
+                        input.Read();
+                        currentState = 0;
+                        continue;
                 }
 
                 input.Read();
