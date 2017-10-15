@@ -30,6 +30,15 @@ namespace Compiler_FPC
             while ((currentData = input.Peek()) != -1)
             {
                 var newState = Config.StateTable[currentState, currentData];
+
+                if (newState == 48)
+                {
+                    currentText = "";
+                    currentState = newState;
+                    input.Read();
+                    continue;
+                }
+
                 var ch = (char) currentData;
 
                 if (newState != 0 && newState != -1)
