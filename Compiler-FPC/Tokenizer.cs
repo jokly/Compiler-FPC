@@ -79,6 +79,11 @@ namespace Compiler_FPC
                     bufferState = 24;
                 }
 
+                if (type == TokenType.ID)
+                {
+                    value = lowercaseText;
+                }
+
                 if (type == TokenType.ID && Config.KeyWords.Contains(lowercaseText))
                 {
                     type = TokenType.KEY_WORD;
