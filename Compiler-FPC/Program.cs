@@ -55,6 +55,7 @@ namespace Compiler_FPC
             while ((tok = lexer.Next()) != null)
             {
                 table.AddRow($"({tok.Row}, {tok.Col})", tok.Type.ToString(), tok.Value, tok.Text);
+                //Console.WriteLine($"({tok.Row}, {tok.Col}) {tok.Type.ToString()} {tok.Value} {tok.Text}");
             }
 
             return table.ToString();
