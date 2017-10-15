@@ -95,6 +95,12 @@ namespace Compiler_FPC
                     value = double.Parse(lowercaseText, CultureInfo.InvariantCulture).ToString();
                 }
 
+                if (type == TokenType.HEX_NUMBER)
+                {
+                    type = TokenType.INTEGER;
+                    value = Convert.ToInt64(currentText.TrimStart('$'), 16).ToString();
+                }
+
                 Current = new Token(currentRow, currentCol - currentText.Length,
                                     type, value, currentText);
 
