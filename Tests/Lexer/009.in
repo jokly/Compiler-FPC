@@ -1,0 +1,10 @@
+cd:a :fd: f;d
+a.b . c
+a..14
+a . . b
+a,b
+;
+ a ;
+a : array of Integer[1..5];
+procedure ab(a, b);
+a = struct.val;

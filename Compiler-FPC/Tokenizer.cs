@@ -63,8 +63,21 @@ namespace Compiler_FPC
         {
             if (Config.StatesToToken.TryGetValue(currentState, out var type))
             {
+                var bufferText = "";
+                var bufferState = 0;
+
                 var lowercaseText = currentText.ToLower();
                 var value = currentText;
+
+                if (type == TokenType.START_RANGE)
+                {
+                    type = TokenType.INTEGER;
+                    currentText = currentText.TrimEnd('.');
+                    value = currentText;
+
+                    bufferText = "..";
+                    bufferState = 24;
+                }
 
                 if (type == TokenType.ID && Config.KeyWords.Contains(lowercaseText))
                 {
@@ -80,8 +93,16 @@ namespace Compiler_FPC
                 Current = new Token(currentRow, currentCol - currentText.Length,
                                     type, value, currentText);
 
-                currentText = "";
-                currentState = 0;
+                if (bufferText == "" && bufferState == 0)
+                {
+                    currentText = "";
+                    currentState = 0;
+                }
+                else
+                {
+                    currentText = bufferText;
+                    currentState = bufferState;
+                }
 
                 return Current;
             }
