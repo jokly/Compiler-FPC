@@ -51,7 +51,9 @@ def getAllDirs(testsPath):
 
 if __name__ == '__main__':
     argsParser = argparse.ArgumentParser()
+
     argsParser.add_argument('-l', '--lexer', help='Start lexer tests', action='store_true')
+    argsParser.add_argument('-p', '--parser', help='Start parser tests', action='store_true')
 
     args = argsParser.parse_args()
 
@@ -59,6 +61,6 @@ if __name__ == '__main__':
 
     if args.lexer:
         test([testsPath + os.sep +'Lexer'], ['-l'])
-    else:
-        test(getAllDirs(testsPath), ['-l'])
 
+    if args.parser:
+        test([testsPath + os.sep +'Parser'], ['-p'])

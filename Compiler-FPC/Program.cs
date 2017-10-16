@@ -15,12 +15,14 @@ namespace Compiler_FPC
 
             if (!CommandLine.Parser.Default.ParseArguments(args, options)) return;
 
+            // Version
             if (options.GetVersion)
             {
                 Console.WriteLine(assembly.Name);
                 Console.WriteLine(assembly.Version.ToString());
             }
 
+            // Lexer
             if (options.LaunchLexer && options.GetInputFileName != null)
             {
                 if (options.GetOutputFileName != null)
@@ -36,6 +38,26 @@ namespace Compiler_FPC
                 }
             }
             else if (options.LaunchLexer && options.GetInputFileName == null)
+            {
+                Console.WriteLine("No input files.");
+            }
+
+            // Parser
+            if (options.LaunchParser && options.GetInputFileName != null)
+            {
+                if (options.GetOutputFileName != null)
+                {
+                    using (var outputFile = new StreamWriter(options.GetOutputFileName))
+                    {
+                        outputFile.Write(getParserOutput(options.GetInputFileName));
+                    }
+                }
+                else
+                {
+                    Console.WriteLine(getParserOutput(options.GetInputFileName));
+                }
+            }
+            else if (options.LaunchParser && options.GetInputFileName == null)
             {
                 Console.WriteLine("No input files.");
             }
@@ -65,6 +87,13 @@ namespace Compiler_FPC
             }
             
             return table.ToString();
+        }
+
+        static string getParserOutput(string fileName)
+        {
+            var tokenizer = new Tokenizer(fileName);
+
+            return new Parser.Parser(tokenizer).getTree();
         }
     }
 }

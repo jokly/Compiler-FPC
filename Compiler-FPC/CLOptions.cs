@@ -33,5 +33,8 @@ namespace Compiler_FPC
 
         [Option('l', "lexer", HelpText = "Launch lexical analyzer")]
         public bool LaunchLexer { get; set; }
+
+        [Option('p', "parser", HelpText = "Launch parser")]
+        public bool LaunchParser { get; set; }
     }
 }

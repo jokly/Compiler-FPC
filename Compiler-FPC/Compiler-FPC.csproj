@@ -104,12 +104,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CLOptions.cs" />
-    <Compile Include="Config.cs" />
+    <Compile Include="Lexer\Config.cs" />
+    <Compile Include="Parser\Node.cs" />
+    <Compile Include="Parser\Parser.cs" />
+    <Compile Include="Parser\SyntaxTree.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Token.cs" />
-    <Compile Include="Tokenizer.cs" />
-    <Compile Include="TokenizerException.cs" />
+    <Compile Include="Lexer\Token.cs" />
+    <Compile Include="Lexer\Tokenizer.cs" />
+    <Compile Include="Lexer\TokenizerException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

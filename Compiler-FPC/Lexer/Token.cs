@@ -3,11 +3,11 @@ namespace Compiler_FPC
 {
     class Token
     {
-        public int Row { get; private set; }
-        public int Col { get; private set; }
-        public TokenType Type { get; private set; }
-        public string Value { get; private set; } 
-        public string Text { get; private set; }
+        public int Row { get; }
+        public int Col { get; }
+        public TokenType Type { get; }
+        public string Value { get; } 
+        public string Text { get; }
 
         public Token(int row, int col, TokenType tokenType, string value, string text)
         {
