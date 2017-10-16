@@ -31,7 +31,7 @@ namespace Compiler_FPC.Parser
             else
             {
                 TreeString += "├─";
-                indent += "| ";
+                indent += "│ ";
             }
 
             TreeString += root.Token.Value + '\n';

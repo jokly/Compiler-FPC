@@ -99,6 +99,7 @@ namespace Compiler_FPC
                 {
                     type = TokenType.INTEGER;
                     currentText = currentText.TrimEnd('.');
+                    lowercaseText = currentText.ToLower();
                     value = currentText;
 
                     bufferText = "..";
@@ -113,7 +114,11 @@ namespace Compiler_FPC
                 if (type == TokenType.ID && Config.KeyWords.Contains(lowercaseText))
                 {
                     type = TokenType.KEY_WORD;
-                    value = lowercaseText;
+                }
+
+                if (type == TokenType.INTEGER)
+                {
+                    value = int.Parse(lowercaseText).ToString();
                 }
 
                 if (type == TokenType.REAL)
