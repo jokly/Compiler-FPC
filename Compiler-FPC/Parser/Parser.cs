@@ -25,16 +25,11 @@ namespace Compiler_FPC.Parser
         {
             if (tree == null)
             {
-                parse();
+                tokenizer.Next();
+                tree = new SyntaxTree(parseExpr());
             }
 
             return tree.TreeString;
-        }
-
-        private void parse()
-        {
-            tokenizer.Next();
-            tree = new SyntaxTree(parseExpr());
         }
 
         private ExprNode parseExpr()
@@ -45,7 +40,9 @@ namespace Compiler_FPC.Parser
             while (t.Type == TokenType.PLUS || t.Type == TokenType.MINUS)
             {
                 tokenizer.Next();
-                return new BinOpNode(t, e, parseTerm());
+                var r = parseTerm();
+                e = new BinOpNode(t, e, r);
+                t = tokenizer.Current;
             }
 
             return e;
@@ -59,7 +56,9 @@ namespace Compiler_FPC.Parser
             while (t.Type == TokenType.ASTERIX || t.Type == TokenType.FORWARD_SLASH)
             {
                 tokenizer.Next();
-                return new BinOpNode(t, e, parseTerm());
+                var r = parseFactor();
+                e =  new BinOpNode(t, e, r);
+                t = tokenizer.Current;
             }
 
             return e;
