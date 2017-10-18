@@ -4,7 +4,8 @@ import glob
 import subprocess as subpr
 from os.path import basename
 
-PATH_TO_COMPILER = 'C:\\Users\\slast\\Documents\\Projects\\Compiler-FPC\\Compiler-FPC\\bin\\Debug\\Compiler-FPC.exe'
+PATH_TO_COMPILER = os.path.dirname(os.path.realpath(__file__)) + os.sep + '..' + os.sep + 'Compiler-FPC' + os.sep + 'bin' + \
+    os.sep + 'Debug' + os.sep + 'Compiler-FPC.exe'
 
 def test(folders, optinons = []):
     for folder in folders:
