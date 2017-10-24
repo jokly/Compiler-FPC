@@ -32,31 +32,131 @@ namespace Compiler_FPC.Parser
             return tree.TreeString;
         }
 
-        private Token match(TokenType expectedTkType)
+        private Token matchNext(TokenType expectedTkType)
         {
-            tokenizer.Next();
+            var next = tokenizer.Next();
 
-            if (expectedTkType != tokenizer.Current.Type)
+            if (next != null && expectedTkType != tokenizer.Current.Type)
             {
-                throw new Exception();
+                throw new Exception("Invalid token");
             }
 
-            return tokenizer.Current;
+            return next == null ? null : tokenizer.Current;
+        }
+
+        private Token matchNext(string expectedTkValue)
+        {
+            var next = tokenizer.Next();
+
+            if (next != null && !expectedTkValue.Equals(tokenizer.Current.Value))
+            {
+                throw new Exception("Invalid token");
+            }
+
+            return next == null ? null : tokenizer.Current;
         }
 
         private Node parseProgram()
         {
             if (tokenizer.Current.Value.Equals("program"))
             {
-                var programName = match(TokenType.ID);
-                match(TokenType.SEMICOLON);
+                var programName = matchNext(TokenType.ID);
+                matchNext(TokenType.SEMICOLON);
 
+                List<Node> blocks = new List<Node>();
+                Node block;
                 tokenizer.Next();
-                return new ProgramNode(programName, parseExpr());
+                while ((block = parseBlock()) != null)
+                {
+                    blocks.Add(block);
+                }
+                return new ProgramNode(programName, blocks);
             }
             else
             {
                 return parseExpr();
+            }
+        }
+
+        private Node parseBlock()
+        {
+            switch(tokenizer.Current.Value)
+            {
+                case "var":
+                    return new DeclarationNode(tokenizer.Current, parseVar());
+            }
+
+            return null;
+        }
+
+        private List<Node> parseVar()
+        {
+            List<Node> vars = new List<Node>();
+
+            while (true)
+            {
+                List<Token> tokensVars = new List<Token>();
+
+                while (true)
+                {
+                    var next = tokenizer.Next();
+
+                    if (vars.Count == 0 && next.Type == TokenType.KEY_WORD)
+                    {
+                        throw new Exception("Identifier expected");
+                    }
+                    else if (next.Type == TokenType.KEY_WORD)
+                    {
+                        return vars;
+                    }
+                    else if (next == null)
+                    {
+                        throw new Exception("Identifier expected");
+                    }
+
+                    tokensVars.Add(tokenizer.Current);
+                    tokenizer.Next();
+
+                    if (tokenizer.Current.Type == TokenType.COMMA)
+                    {
+                        continue;
+                    }
+                    else if (tokenizer.Current.Type == TokenType.COLON)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        throw new Exception("Invalid token");
+                    }
+                }
+
+                tokenizer.Next();
+
+                if (tokenizer.Current.Value == "array")
+                {
+                    matchNext(TokenType.LSQUARE_BRACKET);
+                    var leftRange = matchNext(TokenType.INTEGER);
+                    matchNext(TokenType.DOUBLE_DOT);
+                    var rightRange = matchNext(TokenType.INTEGER);
+                    matchNext(TokenType.RSQUARE_BRACKER);
+                    var of = matchNext("of");
+                    matchNext(TokenType.ID);
+
+                    foreach (var tokenVar in tokensVars)
+                    {
+                        vars.Add(new Var(tokenVar, new ArrayType(of, leftRange.Value, rightRange.Value, new VarType(tokenizer.Current))));
+                    }
+                }
+                else
+                {
+                    foreach (var tokenVar in tokensVars)
+                    {
+                        vars.Add(new Var(tokenVar, new VarType(tokenizer.Current)));
+                    }
+                }
+                
+                matchNext(TokenType.SEMICOLON);
             }
         }
 

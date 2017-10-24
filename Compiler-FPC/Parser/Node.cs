@@ -8,6 +8,7 @@ namespace Compiler_FPC.Parser
         public Node Right { get; protected set; } = null;
         public Token Token { get; } = null;
         public string BlockName { get; protected set; } = "";
+        public List<Node> Childrens { get; protected set; } = new List<Node>();
 
         public Node(Token token, string blockName = "")
         {
@@ -18,9 +19,47 @@ namespace Compiler_FPC.Parser
 
     class ProgramNode : Node
     {
-        public ProgramNode(Token token, Node left) : base(token, "Program")
+        public ProgramNode(Token token, List<Node> childrens) : base(token, "Program")
+        {
+            Childrens = childrens;
+        }
+    }
+
+    class DeclarationNode : Node
+    {
+        public DeclarationNode(Token token, List<Node> childrens) : base(token, "Declaration")
+        {
+            Childrens = childrens;
+        }
+    }
+
+    class Var : Node
+    {
+        public Var(Token token, Node left) : base(token)
         {
             Left = left;
+        }
+    }
+
+    class VarType : Node
+    {
+        public  VarType(Token token) : base(token) { }
+    }
+
+    class ArrayType : Node
+    {
+        public ArrayType(Token token, string leftRange, string rightRange, Node type) :
+            base(token, "Array [" + leftRange + ".." + rightRange + "]")
+        {
+            Left = type;
+        }
+    }
+
+    class BlockNode : Node
+    {
+        public BlockNode(Token token, List<Node> childrens) : base(token, "Block")
+        {
+            Childrens = childrens;
         }
     }
 

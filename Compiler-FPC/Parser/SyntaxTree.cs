@@ -41,6 +41,11 @@ namespace Compiler_FPC.Parser
 
             TreeString += root.Token.Value + '\n';
 
+            foreach (var children in root.Childrens)
+            {
+                setTreeString(children, indent);
+            }
+
             setTreeString(root.Left, indent);
             setTreeString(root.Right, indent, true);
         }
