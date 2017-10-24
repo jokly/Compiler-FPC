@@ -84,6 +84,8 @@ namespace Compiler_FPC.Parser
             {
                 case "var":
                     return new DeclarationNode(tokenizer.Current, parseVar());
+                case "begin":
+                    return new BlockNode(tokenizer.Current, parseBegin());
             }
 
             return null;
@@ -145,19 +147,75 @@ namespace Compiler_FPC.Parser
 
                     foreach (var tokenVar in tokensVars)
                     {
-                        vars.Add(new Var(tokenVar, new ArrayType(of, leftRange.Value, rightRange.Value, new VarType(tokenizer.Current))));
+                        vars.Add(new VarNode(tokenVar, new ArrayTypeNode(of, leftRange.Value, rightRange.Value, new VarTypeNode(tokenizer.Current))));
                     }
                 }
                 else
                 {
                     foreach (var tokenVar in tokensVars)
                     {
-                        vars.Add(new Var(tokenVar, new VarType(tokenizer.Current)));
+                        vars.Add(new VarNode(tokenVar, new VarTypeNode(tokenizer.Current)));
                     }
                 }
                 
                 matchNext(TokenType.SEMICOLON);
             }
+        }
+
+        private List<Node> parseBegin()
+        {
+            List<Node> statements = new List<Node>();
+
+            while (true)
+            {
+                var id = tokenizer.Next();
+                var afterId = tokenizer.Next();
+
+                if (id == null)
+                {
+                    throw new Exception("Expect 'end'");
+                }
+                else if (id.Value.Equals("end"))
+                {
+                    return statements;
+                }
+                else if (afterId.Type == TokenType.ASSIGNMENT || afterId.Type == TokenType.ADDITION_ASSIGNMENT ||
+                    afterId.Type == TokenType.SUBSTRACTION_ASSIGNMENT || afterId.Type == TokenType.MULTIPLICATION_ASSIGNMENT ||
+                    afterId.Type == TokenType.DIVISION_ASSIGNMENT)
+                {
+                    tokenizer.Next();
+                    statements.Add(new VarNode(id, new AssignmentNode(afterId, parseExpr())));
+                }
+                else if (afterId.Type == TokenType.LBRACKET)
+                {
+                    statements.Add(parseFunc(id));
+                }
+
+                if (tokenizer.Current.Type != TokenType.SEMICOLON)
+                    throw new Exception("Expected ';'");
+            }
+        }
+
+        private FuncCallNode parseFunc(Token id)
+        {
+            Token next = null;
+            List<Node> args = new List<Node>();
+            while (tokenizer.Current.Type != TokenType.RBRACKET && (next = tokenizer.Next()) != null)
+            {
+                if (next.Type == TokenType.COMMA)
+                    continue;
+
+                args.Add(parseExpr());
+            }
+
+            if (next == null)
+            {
+                throw new Exception("Expect ')'");
+            }
+
+            tokenizer.Next();
+
+            return new FuncCallNode(id, args);
         }
 
         private ExprNode parseExpr()
@@ -200,6 +258,8 @@ namespace Compiler_FPC.Parser
             {
                 case TokenType.ID:
                     tokenizer.Next();
+                    if (tokenizer.Current.Type == TokenType.LBRACKET)
+                        return parseFunc(t);
                     return new IdNode(t);
                 case TokenType.INTEGER:
                     tokenizer.Next();

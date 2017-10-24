@@ -33,22 +33,22 @@ namespace Compiler_FPC.Parser
         }
     }
 
-    class Var : Node
+    class VarNode : Node
     {
-        public Var(Token token, Node left) : base(token)
+        public VarNode(Token token, Node left) : base(token)
         {
             Left = left;
         }
     }
 
-    class VarType : Node
+    class VarTypeNode : Node
     {
-        public  VarType(Token token) : base(token) { }
+        public  VarTypeNode(Token token) : base(token) { }
     }
 
-    class ArrayType : Node
+    class ArrayTypeNode : Node
     {
-        public ArrayType(Token token, string leftRange, string rightRange, Node type) :
+        public ArrayTypeNode(Token token, string leftRange, string rightRange, Node type) :
             base(token, "Array [" + leftRange + ".." + rightRange + "]")
         {
             Left = type;
@@ -63,9 +63,25 @@ namespace Compiler_FPC.Parser
         }
     }
 
+    class AssignmentNode : Node
+    {
+        public AssignmentNode(Token token, Node left) : base(token)
+        {
+            Left = left;
+        }
+    }
+
+    class FuncCallNode : ExprNode
+    {
+        public FuncCallNode(Token token, List<Node> args) : base(token, "Function")
+        {
+            Childrens = args;
+        }
+    }
+
     class ExprNode : Node
     {
-        public ExprNode(Token token) : base(token) { }
+        public ExprNode(Token token, string name = "") : base(token, name) { }
     }
 
     class BinOpNode : ExprNode

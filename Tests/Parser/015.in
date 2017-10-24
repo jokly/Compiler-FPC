@@ -1,0 +1,9 @@
+program hello;
+
+var
+    a, b: Integer;
+
+begin
+    a *= getSum(a, b) - 2 * 5 / 100;
+    a := getSum(2, 3);
+end.

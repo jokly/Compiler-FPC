@@ -1,0 +1,12 @@
+program hello;
+
+var
+    a, b: Integer;
+
+begin
+    a := b + 5;
+    a += %100;
+    b -= 100;
+    a *= b * 2 - 1;
+    a /= 1.0;
+end.
