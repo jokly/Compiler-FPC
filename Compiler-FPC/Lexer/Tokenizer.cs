@@ -144,6 +144,11 @@ namespace Compiler_FPC
                     value = Convert.ToInt64(currentText.TrimStart('%'), 2).ToString();
                 }
 
+                if (type == TokenType.STRING)
+                {
+                    value = value.TrimStart('\'').TrimEnd('\'');
+                }
+
                 Current = new Token(currentRow, currentCol - currentText.Length,
                                     type, value, currentText);
 

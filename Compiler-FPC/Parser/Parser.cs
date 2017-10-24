@@ -21,7 +21,7 @@ namespace Compiler_FPC.Parser
             this.tokenizer = tokenizer;
         }
 
-        public string getTree()
+        public string Tree()
         {
             if (tree == null)
             {

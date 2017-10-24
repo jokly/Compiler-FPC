@@ -14,6 +14,11 @@ namespace Compiler_FPC.Parser
         }
     }
 
+    class ProgramNode : Node
+    {
+        public ProgramNode(Token token) : base(token) { }
+    }
+
     class ExprNode : Node
     {
         public ExprNode(Token token) : base(token) { }

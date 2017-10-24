@@ -93,7 +93,7 @@ namespace Compiler_FPC
         {
             var tokenizer = new Tokenizer(fileName);
 
-            return new Parser.Parser(tokenizer).getTree();
+            return new Parser.Parser(tokenizer).Tree();
         }
     }
 }
