@@ -7,16 +7,21 @@ namespace Compiler_FPC.Parser
         public Node Left { get; protected set; } = null;
         public Node Right { get; protected set; } = null;
         public Token Token { get; } = null;
+        public string BlockName { get; protected set; } = "";
 
-        public Node(Token token)
+        public Node(Token token, string blockName = "")
         {
-            this.Token = token;
+            Token = token;
+            BlockName = blockName;
         }
     }
 
     class ProgramNode : Node
     {
-        public ProgramNode(Token token) : base(token) { }
+        public ProgramNode(Token token, Node left) : base(token, "Program")
+        {
+            Left = left;
+        }
     }
 
     class ExprNode : Node

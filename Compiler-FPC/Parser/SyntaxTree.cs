@@ -34,6 +34,11 @@ namespace Compiler_FPC.Parser
                 indent += "│ ";
             }
 
+            if (!root.BlockName.Equals(""))
+            {
+                TreeString += root.BlockName + " ";
+            }
+
             TreeString += root.Token.Value + '\n';
 
             setTreeString(root.Left, indent);

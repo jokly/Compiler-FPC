@@ -26,10 +26,38 @@ namespace Compiler_FPC.Parser
             if (tree == null)
             {
                 tokenizer.Next();
-                tree = new SyntaxTree(parseExpr());
+                tree = new SyntaxTree(parseProgram());
             }
 
             return tree.TreeString;
+        }
+
+        private Token match(TokenType expectedTkType)
+        {
+            tokenizer.Next();
+
+            if (expectedTkType != tokenizer.Current.Type)
+            {
+                throw new Exception();
+            }
+
+            return tokenizer.Current;
+        }
+
+        private Node parseProgram()
+        {
+            if (tokenizer.Current.Value.Equals("program"))
+            {
+                var programName = match(TokenType.ID);
+                match(TokenType.SEMICOLON);
+
+                tokenizer.Next();
+                return new ProgramNode(programName, parseExpr());
+            }
+            else
+            {
+                return parseExpr();
+            }
         }
 
         private ExprNode parseExpr()

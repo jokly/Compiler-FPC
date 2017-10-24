@@ -1,3 +1,5 @@
+program hello;
+
 procedure hey(x: Integer);
 var
   ans: Real;
