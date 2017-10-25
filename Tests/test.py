@@ -4,8 +4,15 @@ import glob
 import subprocess as subpr
 from os.path import basename
 
-PATH_TO_COMPILER = os.path.dirname(os.path.realpath(__file__)) + os.sep + '..' + os.sep + 'Compiler-FPC' + os.sep + 'bin' + \
+TESTS_PATH = os.path.dirname(os.path.realpath(__file__))
+
+PATH_TO_COMPILER = TESTS_PATH + os.sep + '..' + os.sep + 'Compiler-FPC' + os.sep + 'bin' + \
     os.sep + 'Debug' + os.sep + 'Compiler-FPC.exe'
+
+TESTS = {
+    '-l': [TESTS_PATH + os.sep +'Lexer'],
+    '-p': [TESTS_PATH + os.sep +'Parser'],
+}
 
 def test(folders, optinons = []):
     for folder in folders:
@@ -58,10 +65,13 @@ if __name__ == '__main__':
 
     args = argsParser.parse_args()
 
-    testsPath = os.path.dirname(os.path.realpath(__file__))
-
     if args.lexer:
-        test([testsPath + os.sep +'Lexer'], ['-l'])
+        test(TESTS['-l'], ['-l'])
 
     if args.parser:
-        test([testsPath + os.sep +'Parser'], ['-p'])
+        test(TESTS['-p'], ['-p'])
+
+    if not args.lexer and not args.parser:
+        for key in TESTS:
+            test(TESTS[key], [key])
+            
