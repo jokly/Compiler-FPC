@@ -204,7 +204,7 @@ namespace Compiler_FPC.Parser
                 var leftRange = matchNext(TokenType.INTEGER);
                 matchNext(TokenType.DOUBLE_DOT);
                 var rightRange = matchNext(TokenType.INTEGER);
-                matchNext(TokenType.RSQUARE_BRACKER);
+                matchNext(TokenType.RSQUARE_BRACKET);
                 var of = matchNext("of");
 
                 tokenizer.Next();
@@ -265,7 +265,7 @@ namespace Compiler_FPC.Parser
                 }
                 else if (afterId.Type == TokenType.LBRACKET)
                 {
-                    statements.Add(parseFunc(id));
+                    statements.Add(new FuncCallNode(id, parseFunc()));
                 }
                 else
                 {
@@ -277,7 +277,7 @@ namespace Compiler_FPC.Parser
             }
         }
 
-        private FuncCallNode parseFunc(Token id)
+        private List<Node> parseFunc()
         {
             Token next = null;
             List<Node> args = new List<Node>();
@@ -290,13 +290,11 @@ namespace Compiler_FPC.Parser
             }
 
             if (next == null)
-            {
                 throw new Exception("Expect ')'");
-            }
 
             tokenizer.Next();
 
-            return new FuncCallNode(id, args);
+            return args;
         }
 
         private ExprNode parseExpr()
@@ -339,9 +337,25 @@ namespace Compiler_FPC.Parser
             {
                 case TokenType.ID:
                     tokenizer.Next();
+
+                    List<Node> funcCall = null;
                     if (tokenizer.Current.Type == TokenType.LBRACKET)
-                        return parseFunc(t);
-                    return new IdNode(t);
+                        funcCall = parseFunc();
+
+                    SquareBracketsNode sqrBr = null;
+                    if (tokenizer.Current.Type == TokenType.LSQUARE_BRACKET)
+                    {
+                        var indexes = parseSquareBrackets();
+                        sqrBr = new SquareBracketsNode(tokenizer.Current, indexes);
+                        tokenizer.Next();
+
+                        if (funcCall != null) funcCall.Add(sqrBr);
+                    }
+
+                    if (funcCall != null)
+                        return new FuncCallNode(t, funcCall);
+                    else
+                        return new IdNode(t, sqrBr);
                 case TokenType.INTEGER:
                     tokenizer.Next();
                     return new IntConstNode(t);
@@ -367,6 +381,24 @@ namespace Compiler_FPC.Parser
             }
 
             throw new Exception("Invalid token");
+        }
+
+        private List<Node> parseSquareBrackets()
+        {
+            List<Node> indexes = new List<Node>();
+
+            while (tokenizer.Current.Type != TokenType.RSQUARE_BRACKET && tokenizer.Next() != null)
+            {
+                if (tokenizer.Current.Type == TokenType.COMMA || tokenizer.Current.Type == TokenType.RSQUARE_BRACKET)
+                    continue;
+
+                indexes.Add(parseExpr());
+            }
+
+            if (tokenizer.Current == null)
+                throw new Exception("Expect ')'");
+
+            return indexes;
         }
     }
 }

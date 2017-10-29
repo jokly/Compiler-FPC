@@ -111,7 +111,10 @@ namespace Compiler_FPC.Parser
 
     class IdNode : ExprNode
     {
-        public IdNode(Token token) : base(token) { }
+        public IdNode(Token token, SquareBracketsNode index = null) : base(token)
+        {
+            Left = index;
+        }
     }
 
     class ConstNode : ExprNode
@@ -139,6 +142,14 @@ namespace Compiler_FPC.Parser
         public PtrConstNode(Token token, IdNode var) : base(token)
         {
             Left = var;
+        }
+    }
+
+    class SquareBracketsNode : ExprNode
+    {
+        public SquareBracketsNode(Token token, List<Node> indexes) : base(token, "[ Indexes")
+        {
+            Childrens = indexes;
         }
     }
 }
