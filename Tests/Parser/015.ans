@@ -1,23 +1,23 @@
-├─Program hello
-│ ├─Declaration var
-│ │ ├─a
-│ │ │ ├─integer
-│ │ ├─b
-│ │ │ ├─integer
-│ ├─Block begin
-│ │ ├─a
-│ │ │ ├─*=
-│ │ │ │ ├─-
-│ │ │ │ │ ├─Function getsum
-│ │ │ │ │ │ ├─a
-│ │ │ │ │ │ ├─b
-│ │ │ │ │ └─/
-│ │ │ │ │   ├─*
-│ │ │ │ │   │ ├─2
-│ │ │ │ │   │ └─5
-│ │ │ │ │   └─100
-│ │ ├─a
-│ │ │ ├─:=
-│ │ │ │ ├─Function getsum
-│ │ │ │ │ ├─2
-│ │ │ │ │ ├─3
+└─Program hello
+  ├─Declaration var
+  │ ├─a
+  │ │ └─integer
+  │ └─b
+  │   └─integer
+  └─Block begin
+    ├─a
+    │ └─*=
+    │   └─-
+    │     ├─Function getsum
+    │     │ ├─a
+    │     │ └─b
+    │     └─/
+    │       ├─*
+    │       │ ├─2
+    │       │ └─5
+    │       └─100
+    └─a
+      └─:=
+        └─Function getsum
+          ├─2
+          └─3

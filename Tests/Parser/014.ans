@@ -1,25 +1,25 @@
-├─Program hello
-│ ├─Declaration var
-│ │ ├─a
-│ │ │ ├─integer
-│ │ ├─b
-│ │ │ ├─integer
-│ │ ├─ans
-│ │ │ ├─integer
-│ ├─Block begin
-│ │ ├─Function writeln
-│ │ │ ├─a
-│ │ ├─Function sumfunc
-│ │ │ ├─a
-│ │ │ ├─b
-│ │ ├─Function manyargsfunc
-│ │ │ ├─a
-│ │ │ ├─b
-│ │ │ ├─/
-│ │ │ │ ├─*
-│ │ │ │ │ ├─5
-│ │ │ │ │ └─1
-│ │ │ │ └─2
-│ │ │ ├─+
-│ │ │ │ ├─10
-│ │ │ │ └─2
+└─Program hello
+  ├─Declaration var
+  │ ├─a
+  │ │ └─integer
+  │ ├─b
+  │ │ └─integer
+  │ └─ans
+  │   └─integer
+  └─Block begin
+    ├─Function writeln
+    │ └─a
+    ├─Function sumfunc
+    │ ├─a
+    │ └─b
+    └─Function manyargsfunc
+      ├─a
+      ├─b
+      ├─/
+      │ ├─*
+      │ │ ├─5
+      │ │ └─1
+      │ └─2
+      └─+
+        ├─10
+        └─2

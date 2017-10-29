@@ -1,18 +1,18 @@
-├─Program hello
-│ ├─Declaration var
-│ │ ├─a
-│ │ │ ├─integer
-│ │ ├─b
-│ │ │ ├─integer
-│ │ ├─c
-│ │ │ ├─real
-│ │ ├─arr1
-│ │ │ ├─Array [1..5] of
-│ │ │ │ ├─integer
-│ │ ├─arr2
-│ │ │ ├─Array [1..5] of
-│ │ │ │ ├─integer
-│ ├─Declaration var
-│ │ ├─new
-│ │ │ ├─integer
-│ ├─Block begin
+└─Program hello
+  ├─Declaration var
+  │ ├─a
+  │ │ └─integer
+  │ ├─b
+  │ │ └─integer
+  │ ├─c
+  │ │ └─real
+  │ ├─arr1
+  │ │ └─Array [1..5] of
+  │ │   └─integer
+  │ └─arr2
+  │   └─Array [1..5] of
+  │     └─integer
+  ├─Declaration var
+  │ └─new
+  │   └─integer
+  └─Block begin

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Compiler_FPC.Parser
+﻿namespace Compiler_FPC.Parser
 {
     class SyntaxTree
     {
@@ -13,9 +7,9 @@ namespace Compiler_FPC.Parser
 
         public SyntaxTree(Node root)
         {
-            this.Root = root;
+            Root = root;
 
-            setTreeString(root, "");
+            setTreeString(root, "", true);
         }
 
         private void setTreeString(Node root, string indent, bool last = false)
@@ -23,6 +17,7 @@ namespace Compiler_FPC.Parser
             if (root == null) return;
 
             TreeString += indent;
+
             if (last)
             {
                 TreeString += "└─";
@@ -41,12 +36,12 @@ namespace Compiler_FPC.Parser
 
             TreeString += root.Token.Value + '\n';
 
-            foreach (var children in root.Childrens)
+            for (var i = 0; i < root.Childrens.Count; i++)
             {
-                setTreeString(children, indent);
+                setTreeString(root.Childrens[i], indent, i == root.Childrens.Count - 1 && root.Left == null && root.Right == null);
             }
 
-            setTreeString(root.Left, indent);
+            setTreeString(root.Left, indent, root.Right == null);
             setTreeString(root.Right, indent, true);
         }
     }
