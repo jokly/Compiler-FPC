@@ -3,7 +3,7 @@ program hello;
 var
     a, b: Integer;
     c: Real;
-    arr1, arr2: array[1..5] of Integer;
+    arr1, arr2: array[1..5] of array[1..5] of Integer;
 var
     new: Integer;
 

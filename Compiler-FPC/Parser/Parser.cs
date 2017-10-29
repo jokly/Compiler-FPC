@@ -92,6 +92,7 @@ namespace Compiler_FPC.Parser
         {
             List<Node> vars = new List<Node>();
 
+            // Parse name of vars
             while (true)
             {
                 List<Token> tokensVars = new List<Token>();
@@ -132,19 +133,14 @@ namespace Compiler_FPC.Parser
 
                 tokenizer.Next();
 
+                // Parse type of vars
                 if (tokenizer.Current.Value == "array")
                 {
-                    matchNext(TokenType.LSQUARE_BRACKET);
-                    var leftRange = matchNext(TokenType.INTEGER);
-                    matchNext(TokenType.DOUBLE_DOT);
-                    var rightRange = matchNext(TokenType.INTEGER);
-                    matchNext(TokenType.RSQUARE_BRACKER);
-                    var of = matchNext("of");
-                    matchNext(TokenType.ID);
+                    Node arrayType = getArrayTypeNode();
 
                     foreach (var tokenVar in tokensVars)
                     {
-                        vars.Add(new VarNode(tokenVar, new ArrayTypeNode(of, leftRange.Value, rightRange.Value, new VarTypeNode(tokenizer.Current))));
+                        vars.Add(new VarNode(tokenVar, arrayType));
                     }
                 }
                 else
@@ -156,6 +152,27 @@ namespace Compiler_FPC.Parser
                 }
                 
                 matchNext(TokenType.SEMICOLON);
+            }
+        }
+
+        private Node getArrayTypeNode()
+        {
+            if (tokenizer.Current.Value == "array")
+            {
+                matchNext(TokenType.LSQUARE_BRACKET);
+                var leftRange = matchNext(TokenType.INTEGER);
+                matchNext(TokenType.DOUBLE_DOT);
+                var rightRange = matchNext(TokenType.INTEGER);
+                matchNext(TokenType.RSQUARE_BRACKER);
+                var of = matchNext("of");
+
+                tokenizer.Next();
+
+                return new ArrayTypeNode(of, leftRange.Value, rightRange.Value, getArrayTypeNode());
+            }
+            else
+            {
+                return new VarTypeNode((tokenizer.Current));
             }
         }
 
