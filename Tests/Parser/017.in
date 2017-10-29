@@ -1,0 +1,13 @@
+program hello;
+
+var
+    ptrI: ^Integer;
+    int: Integer;
+    arr: array[1..2] of Integer;
+    ptrArr: array[1..3] of ^Real;
+
+begin
+    ptrI^ := 222;
+    ptrI^ := ptrFunc();
+    ptrI := @int + 2;
+end.

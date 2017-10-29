@@ -51,13 +51,21 @@ namespace Compiler_FPC.Parser
 
     class VarTypeNode : Node
     {
-        public  VarTypeNode(Token token) : base(token) { }
+        public  VarTypeNode(Token token, string blockName = "") : base(token, blockName) { }
     }
 
-    class ArrayTypeNode : Node
+    class ArrayTypeNode : VarTypeNode
     {
         public ArrayTypeNode(Token token, string leftRange, string rightRange, Node type) :
             base(token, "Array [" + leftRange + ".." + rightRange + "]")
+        {
+            Left = type;
+        }
+    }
+
+    class PtrTypeNode : VarTypeNode
+    {
+        public PtrTypeNode(Token token, VarTypeNode type) : base(token)
         {
             Left = type;
         }
@@ -124,5 +132,13 @@ namespace Compiler_FPC.Parser
     class StringConstNode : ConstNode
     {
         public StringConstNode(Token token) : base(token) { }
+    }
+
+    class PtrConstNode : ConstNode
+    {
+        public PtrConstNode(Token token, IdNode var) : base(token)
+        {
+            Left = var;
+        }
     }
 }

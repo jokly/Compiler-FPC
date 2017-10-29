@@ -164,28 +164,39 @@ namespace Compiler_FPC.Parser
                 tokenizer.Next();
 
                 // Parse type of vars
+                VarTypeNode type = null;
+
                 if (tokenizer.Current.Value == "array")
                 {
-                    Node arrayType = getArrayTypeNode();
+                    type = getArrayTypeNode();
+                }
+                else if (tokenizer.Current.Type == TokenType.POINTER)
+                {
+                    var ptr = tokenizer.Current;
+                    var typeToken = matchNext(TokenType.ID);
 
-                    foreach (var tokenVar in tokensVars)
-                    {
-                        vars.Add(new VarNode(tokenVar, arrayType));
-                    }
+                    type = new PtrTypeNode(ptr, new VarTypeNode(typeToken));  
+                }
+                else if (tokenizer.Current.Type == TokenType.ID)
+                {
+                    type = new VarTypeNode(tokenizer.Current);
                 }
                 else
                 {
-                    foreach (var tokenVar in tokensVars)
-                    {
-                        vars.Add(new VarNode(tokenVar, new VarTypeNode(tokenizer.Current)));
-                    }
+                    throw new Exception("Identifier expected");
                 }
-                
+
+                foreach (var tokenVar in tokensVars)
+                {
+                    vars.Add(new VarNode(tokenVar, type));
+                }
+
+                tokensVars.Clear();
                 matchNext(TokenType.SEMICOLON);
             }
         }
 
-        private Node getArrayTypeNode()
+        private VarTypeNode getArrayTypeNode()
         {
             if (tokenizer.Current.Value == "array")
             {
@@ -199,6 +210,13 @@ namespace Compiler_FPC.Parser
                 tokenizer.Next();
 
                 return new ArrayTypeNode(of, leftRange.Value, rightRange.Value, getArrayTypeNode());
+            }
+            else if (tokenizer.Current.Type == TokenType.POINTER)
+            {
+                var ptr = tokenizer.Current;
+                var typeToken = matchNext(TokenType.ID);
+
+                return new PtrTypeNode(ptr, new VarTypeNode(typeToken));
             }
             else
             {
@@ -214,6 +232,13 @@ namespace Compiler_FPC.Parser
             {
                 var id = tokenizer.Next();
                 var afterId = tokenizer.Next();
+                Token ptrToken = null;
+
+                if (afterId.Type == TokenType.POINTER)
+                {
+                    ptrToken = tokenizer.Current;
+                    afterId = tokenizer.Next();
+                }
 
                 if (id == null)
                 {
@@ -228,13 +253,25 @@ namespace Compiler_FPC.Parser
                     afterId.Type == TokenType.DIVISION_ASSIGNMENT)
                 {
                     tokenizer.Next();
-                    statements.Add(new VarNode(id, new AssignmentNode(afterId, parseExpr())));
+
+                    if (ptrToken != null)
+                    {
+                        statements.Add(new VarNode(id, new VarNode(ptrToken, new AssignmentNode(afterId, parseExpr()))));
+                    }
+                    else
+                    {
+                        statements.Add(new VarNode(id, new AssignmentNode(afterId, parseExpr())));
+                    }
                 }
                 else if (afterId.Type == TokenType.LBRACKET)
                 {
                     statements.Add(parseFunc(id));
                 }
-
+                else
+                {
+                    throw new Exception("Expect expression");
+                }
+              
                 if (tokenizer.Current.Type != TokenType.SEMICOLON)
                     throw new Exception("Expected ';'");
             }
@@ -246,7 +283,7 @@ namespace Compiler_FPC.Parser
             List<Node> args = new List<Node>();
             while (tokenizer.Current.Type != TokenType.RBRACKET && (next = tokenizer.Next()) != null)
             {
-                if (next.Type == TokenType.COMMA)
+                if (next.Type == TokenType.COMMA || next.Type == TokenType.RBRACKET)
                     continue;
 
                 args.Add(parseExpr());
@@ -319,13 +356,17 @@ namespace Compiler_FPC.Parser
                     var e = parseExpr();
 
                     if (tokenizer.Current.Type != TokenType.RBRACKET)
-                        throw new Exception();
+                        throw new Exception("Expected ')'");
 
                     tokenizer.Next();
                     return e;
+                case TokenType.ADDRESS:
+                    var id = matchNext(TokenType.ID);
+                    tokenizer.Next();
+                    return new PtrConstNode(t, new IdNode(id));
             }
 
-            throw new Exception();
+            throw new Exception("Invalid token");
         }
     }
 }
