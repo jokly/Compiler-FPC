@@ -41,6 +41,14 @@ namespace Compiler_FPC.Parser
         }
     }
 
+    class ConstDeclNode : Node
+    {
+        public ConstDeclNode(Token token, List<Node> childrens) : base(token)
+        {
+            Childrens = childrens;
+        }
+    }
+
     class VarTypeNode : Node
     {
         public  VarTypeNode(Token token) : base(token) { }
@@ -111,5 +119,10 @@ namespace Compiler_FPC.Parser
     class RealConstNode : ConstNode
     {
         public RealConstNode(Token token) : base(token) { }
+    }
+
+    class StringConstNode : ConstNode
+    {
+        public StringConstNode(Token token) : base(token) { }
     }
 }

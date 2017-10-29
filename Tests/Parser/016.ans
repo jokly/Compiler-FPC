@@ -1,0 +1,11 @@
+└─Program hello
+  ├─const
+  │ ├─a
+  │ │ └─5
+  │ ├─b
+  │ │ └─hello
+  │ └─c
+  │   └─+
+  │     ├─a
+  │     └─10
+  └─Block begin

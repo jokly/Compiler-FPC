@@ -67,6 +67,7 @@ namespace Compiler_FPC.Parser
                 {
                     blocks.Add(block);
                 }
+
                 return new ProgramNode(programName, blocks);
             }
             else
@@ -79,6 +80,8 @@ namespace Compiler_FPC.Parser
         {
             switch(tokenizer.Current.Value)
             {
+                case "const":
+                    return new ConstDeclNode(tokenizer.Current, parseConstDecl());
                 case "var":
                     return new DeclarationNode(tokenizer.Current, parseVar());
                 case "begin":
@@ -86,6 +89,37 @@ namespace Compiler_FPC.Parser
             }
 
             return null;
+        }
+
+        private List<Node> parseConstDecl()
+        {
+            List<Node> consts = new List<Node>();
+
+            while (true)
+            {
+                var nameToken = tokenizer.Next();
+
+                if (nameToken.Type == TokenType.KEY_WORD && consts.Count == 0 || nameToken == null)
+                {
+                    throw new Exception("Identifier expected");
+                }
+                else if (nameToken.Type == TokenType.KEY_WORD)
+                {
+                    return consts;
+                }
+                else if (nameToken.Type != TokenType.ID)
+                {
+                    throw new Exception("Identifier expected");
+                }
+
+                matchNext(TokenType.RELOP_EQ);
+                tokenizer.Next();
+
+                consts.Add(new VarNode(nameToken, parseExpr()));
+
+                if (tokenizer.Current.Type != TokenType.SEMICOLON)
+                    throw new Exception("Expected ';'");
+            }
         }
 
         private List<Node> parseVar()
@@ -101,17 +135,13 @@ namespace Compiler_FPC.Parser
                 {
                     var next = tokenizer.Next();
 
-                    if (vars.Count == 0 && next.Type == TokenType.KEY_WORD)
+                    if (vars.Count == 0 && next.Type == TokenType.KEY_WORD || next == null)
                     {
                         throw new Exception("Identifier expected");
                     }
                     else if (next.Type == TokenType.KEY_WORD)
                     {
                         return vars;
-                    }
-                    else if (next == null)
-                    {
-                        throw new Exception("Identifier expected");
                     }
 
                     tokensVars.Add(tokenizer.Current);
@@ -281,6 +311,9 @@ namespace Compiler_FPC.Parser
                 case TokenType.REAL:
                     tokenizer.Next();
                     return new RealConstNode(t);
+                case TokenType.STRING:
+                    tokenizer.Next();
+                    return new StringConstNode(t);
                 case TokenType.LBRACKET:
                     tokenizer.Next();
                     var e = parseExpr();
