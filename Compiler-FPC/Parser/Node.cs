@@ -89,9 +89,10 @@ namespace Compiler_FPC.Parser
 
     class FuncCallNode : ExprNode
     {
-        public FuncCallNode(Token token, List<Node> args) : base(token, "Function")
+        public FuncCallNode(Token token, List<Node> args, Node call = null) : base(token, "Function")
         {
             Childrens = args;
+            Left = call;
         }
     }
 
@@ -147,7 +148,7 @@ namespace Compiler_FPC.Parser
 
     class SquareBracketsNode : ExprNode
     {
-        public SquareBracketsNode(Token token, List<Node> indexes) : base(token, "[ Indexes")
+        public SquareBracketsNode(Token token, List<Node> indexes) : base(token, "[ Index")
         {
             Childrens = indexes;
         }

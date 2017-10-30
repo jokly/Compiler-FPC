@@ -338,9 +338,9 @@ namespace Compiler_FPC.Parser
                 case TokenType.ID:
                     tokenizer.Next();
 
-                    List<Node> funcCall = null;
-                    if (tokenizer.Current.Type == TokenType.LBRACKET)
-                        funcCall = parseFunc();
+                    List<List<Node>> funcCall = new List<List<Node>>();
+                    while (tokenizer.Current.Type == TokenType.LBRACKET)
+                        funcCall.Add(parseFunc());
 
                     SquareBracketsNode sqrBr = null;
                     if (tokenizer.Current.Type == TokenType.LSQUARE_BRACKET)
@@ -349,11 +349,11 @@ namespace Compiler_FPC.Parser
                         sqrBr = new SquareBracketsNode(tokenizer.Current, indexes);
                         tokenizer.Next();
 
-                        if (funcCall != null) funcCall.Add(sqrBr);
+                        if (funcCall.Count != 0) funcCall[funcCall.Count - 1].Add(sqrBr);
                     }
 
-                    if (funcCall != null)
-                        return new FuncCallNode(t, funcCall);
+                    if (funcCall.Count != 0)
+                        return genFuncCallNode(0, funcCall, t);
                     else
                         return new IdNode(t, sqrBr);
                 case TokenType.INTEGER:
@@ -399,6 +399,14 @@ namespace Compiler_FPC.Parser
                 throw new Exception("Expect ')'");
 
             return indexes;
+        }
+
+        private FuncCallNode genFuncCallNode(int i, List<List<Node>> args, Token t)
+        {
+            if (i == args.Count)
+                return null;
+
+            return new FuncCallNode(t, args[i], genFuncCallNode(i + 1, args, t));
         }
     }
 }

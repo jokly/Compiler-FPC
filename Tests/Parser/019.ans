@@ -1,0 +1,33 @@
+└─Program hello
+  ├─Declaration var
+  │ ├─arr
+  │ │ └─Array [1..3] of
+  │ │   └─Array [1..3] of
+  │ │     └─Array [1..3] of
+  │ │       └─integer
+  │ └─int
+  │   └─integer
+  └─Block begin
+    ├─int
+    │ └─:=
+    │   └─Function getfuncgetarr
+    │     └─Function getfuncgetarr
+    │       └─[ Index ]
+    │         └─0
+    └─int
+      └─:=
+        └─Function getfuncgetarr
+          ├─i
+          └─Function getfuncgetarr
+            ├─j
+            ├─k
+            ├─+
+            │ ├─5
+            │ └─1
+            └─[ Index ]
+              ├─/
+              │ ├─*
+              │ │ ├─l
+              │ │ └─2
+              │ └─1
+              └─0

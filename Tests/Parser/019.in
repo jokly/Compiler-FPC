@@ -1,0 +1,10 @@
+program hello;
+
+var
+    arr: array[1..3] of array[1..3] of array[1..3] of Integer;
+    int: Integer;
+
+begin
+    int := getFuncGetArr()()[0];
+    int := getFuncGetArr(i)(j, k, 5 + 1)[l * 2 / 1, 0];
+end.

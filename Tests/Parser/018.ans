@@ -11,7 +11,7 @@
     ├─int
     │ └─:=
     │   └─arr
-    │     └─[ Indexes ]
+    │     └─[ Index ]
     │       ├─1
     │       ├─+
     │       │ ├─i
@@ -27,12 +27,12 @@
       └─:=
         └─Function getarr
           ├─arr
-          │ └─[ Indexes ]
+          │ └─[ Index ]
           │   └─0
           ├─arr
-          │ └─[ Indexes ]
+          │ └─[ Index ]
           │   └─1
-          └─[ Indexes ]
+          └─[ Index ]
             └─*
               ├─i
               └─2
