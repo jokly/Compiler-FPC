@@ -1,0 +1,24 @@
+└─Program hello
+  ├─Declaration type
+  │ ├─tint
+  │ │ └─integer
+  │ ├─tintarr
+  │ │ └─Array [1..5] of
+  │ │   └─integer
+  │ ├─Record trec
+  │ │ ├─x
+  │ │ │ └─real
+  │ │ ├─y
+  │ │ │ └─real
+  │ │ └─arr
+  │ │   └─Array [1..2] of
+  │ │     └─tint
+  │ ├─Record trec2
+  │ │ └─matrix
+  │ │   └─Array [1..2] of
+  │ │     └─Array [1..2] of
+  │ │       └─tint
+  │ └─tmatrix
+  │   └─Array [1..2] of
+  │     └─tintarr
+  └─Block begin

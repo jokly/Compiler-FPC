@@ -1,0 +1,16 @@
+program hello;
+
+type
+    TInt = Integer;
+    TIntArr = array[1..5] of Integer;
+    TRec = Record
+        x, y: Real;
+        arr: array[1..2] of TInt;
+        end;
+    TRec2 = Record
+        matrix: array[1..2] of array[1..2] of TInt;
+        end;
+    TMatrix = array[1..2] of TIntArr;
+
+begin
+end.

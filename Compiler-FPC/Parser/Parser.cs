@@ -82,6 +82,8 @@ namespace Compiler_FPC.Parser
             {
                 case "const":
                     return new ConstDeclNode(tokenizer.Current, parseConstDecl());
+                case "type":
+                    return new TypeDeclNode(tokenizer.Current, parseTypeDecl());
                 case "var":
                     return new DeclarationNode(tokenizer.Current, parseVar());
                 case "begin":
@@ -119,6 +121,46 @@ namespace Compiler_FPC.Parser
 
                 if (tokenizer.Current.Type != TokenType.SEMICOLON)
                     throw new Exception("Expected ';'");
+            }
+        }
+
+        private List<Node> parseTypeDecl()
+        {
+            List<Node> types = new List<Node>();
+
+            while(true)
+            {
+                var nameToken = tokenizer.Next();
+
+                if (nameToken.Type == TokenType.KEY_WORD && types.Count == 0 || nameToken == null)
+                {
+                    throw new Exception("Identifier expected");
+                }
+                else if (nameToken.Type == TokenType.KEY_WORD)
+                {
+                    return types;
+                }
+                else if (nameToken.Type != TokenType.ID)
+                {
+                    throw new Exception("Identifier expected");
+                }
+
+                matchNext(TokenType.RELOP_EQ);
+                tokenizer.Next();
+
+                if (tokenizer.Current.Value.Equals("record"))
+                {
+                    types.Add(new RecordNode(nameToken, parseVar()));
+
+                    if (!tokenizer.Current.Value.Equals("end"))
+                        throw new Exception("Expected 'end'");
+                }
+                else
+                {
+                    types.Add(new TypeNode(nameToken, getVarType()));
+                }
+
+                matchNext(TokenType.SEMICOLON);
             }
         }
 
@@ -164,27 +206,7 @@ namespace Compiler_FPC.Parser
                 tokenizer.Next();
 
                 // Parse type of vars
-                VarTypeNode type = null;
-
-                if (tokenizer.Current.Value == "array")
-                {
-                    type = getArrayTypeNode();
-                }
-                else if (tokenizer.Current.Type == TokenType.POINTER)
-                {
-                    var ptr = tokenizer.Current;
-                    var typeToken = matchNext(TokenType.ID);
-
-                    type = new PtrTypeNode(ptr, new VarTypeNode(typeToken));  
-                }
-                else if (tokenizer.Current.Type == TokenType.ID)
-                {
-                    type = new VarTypeNode(tokenizer.Current);
-                }
-                else
-                {
-                    throw new Exception("Identifier expected");
-                }
+                var type = getVarType();
 
                 foreach (var tokenVar in tokensVars)
                 {
@@ -194,6 +216,33 @@ namespace Compiler_FPC.Parser
                 tokensVars.Clear();
                 matchNext(TokenType.SEMICOLON);
             }
+        }
+
+        private VarTypeNode getVarType()
+        {
+            VarTypeNode type = null;
+
+            if (tokenizer.Current.Value == "array")
+            {
+                type = getArrayTypeNode();
+            }
+            else if (tokenizer.Current.Type == TokenType.POINTER)
+            {
+                var ptr = tokenizer.Current;
+                var typeToken = matchNext(TokenType.ID);
+
+                type = new PtrTypeNode(ptr, new VarTypeNode(typeToken));
+            }
+            else if (tokenizer.Current.Type == TokenType.ID)
+            {
+                type = new VarTypeNode(tokenizer.Current);
+            }
+            else
+            {
+                throw new Exception("Identifier expected");
+            }
+
+            return type;
         }
 
         private VarTypeNode getArrayTypeNode()

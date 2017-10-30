@@ -49,6 +49,30 @@ namespace Compiler_FPC.Parser
         }
     }
 
+    class TypeDeclNode : Node
+    {
+        public TypeDeclNode(Token token, List<Node> childrens) : base(token, "Declaration")
+        {
+            Childrens = childrens;
+        }
+    }
+
+    class RecordNode: Node
+    {
+        public RecordNode(Token token, List<Node> vars) : base(token, "Record")
+        {
+            Childrens = vars;
+        }
+    }
+
+    class TypeNode : Node
+    {
+        public TypeNode(Token token, Node type) : base(token)
+        {
+            Left = type;
+        }
+    }
+
     class VarTypeNode : Node
     {
         public  VarTypeNode(Token token, string blockName = "") : base(token, blockName) { }
