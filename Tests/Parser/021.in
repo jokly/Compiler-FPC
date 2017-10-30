@@ -1,0 +1,36 @@
+program hello;
+
+const
+    a = 5;
+    b = 'hello';
+    c = a + 10;
+
+type
+    TInt = Integer;
+    TIntArr = array[1..5] of Integer;
+    TRec = Record
+        x, y: Real;
+        arr: array[1..2] of TInt;
+        end;
+    TRec2 = Record
+        matrix: array[1..2] of array[1..2] of TInt;
+        end;
+    TMatrix = array[1..2] of TIntArr;
+
+var
+    a, b: Integer;
+    c: Real;
+    arr1, arr2: array[1..5] of array[1..5] of Integer;
+
+type
+    TInt2 = Integer;
+
+const
+    test = 5;
+
+var
+    testVar: TInt2;
+
+begin
+
+end.

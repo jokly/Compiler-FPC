@@ -1,0 +1,57 @@
+└─Program hello
+  ├─Declaration const
+  │ ├─a
+  │ │ └─5
+  │ ├─b
+  │ │ └─hello
+  │ └─c
+  │   └─+
+  │     ├─a
+  │     └─10
+  ├─Declaration type
+  │ ├─tint
+  │ │ └─integer
+  │ ├─tintarr
+  │ │ └─Array [1..5] of
+  │ │   └─integer
+  │ ├─Record trec
+  │ │ ├─x
+  │ │ │ └─real
+  │ │ ├─y
+  │ │ │ └─real
+  │ │ └─arr
+  │ │   └─Array [1..2] of
+  │ │     └─tint
+  │ ├─Record trec2
+  │ │ └─matrix
+  │ │   └─Array [1..2] of
+  │ │     └─Array [1..2] of
+  │ │       └─tint
+  │ └─tmatrix
+  │   └─Array [1..2] of
+  │     └─tintarr
+  ├─Declaration var
+  │ ├─a
+  │ │ └─integer
+  │ ├─b
+  │ │ └─integer
+  │ ├─c
+  │ │ └─real
+  │ ├─arr1
+  │ │ └─Array [1..5] of
+  │ │   └─Array [1..5] of
+  │ │     └─integer
+  │ └─arr2
+  │   └─Array [1..5] of
+  │     └─Array [1..5] of
+  │       └─integer
+  ├─Declaration type
+  │ └─tint2
+  │   └─integer
+  ├─Declaration const
+  │ └─test
+  │   └─5
+  ├─Declaration var
+  │ └─testvar
+  │   └─tint2
+  └─Block begin

@@ -43,7 +43,7 @@ namespace Compiler_FPC.Parser
 
     class ConstDeclNode : Node
     {
-        public ConstDeclNode(Token token, List<Node> childrens) : base(token)
+        public ConstDeclNode(Token token, List<Node> childrens) : base(token, "Declaration")
         {
             Childrens = childrens;
         }

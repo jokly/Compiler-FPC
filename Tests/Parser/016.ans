@@ -1,5 +1,5 @@
 └─Program hello
-  ├─const
+  ├─Declaration const
   │ ├─a
   │ │ └─5
   │ ├─b
