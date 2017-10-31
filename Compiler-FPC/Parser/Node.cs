@@ -111,12 +111,29 @@ namespace Compiler_FPC.Parser
         }
     }
 
+    class ProcedureNode : Node
+    {
+        public ProcedureNode(Token token, ArgsNode args, List<Node> childrens) : base(token, "Procedure")
+        {
+            Childrens = childrens;
+            Left = args;
+        }
+    }
+
     class FuncCallNode : ExprNode
     {
         public FuncCallNode(Token token, List<Node> args, Node call = null) : base(token, "Function")
         {
             Childrens = args;
             Left = call;
+        }
+    }
+
+    class ArgsNode : Node
+    {
+        public ArgsNode(Token token, List<Node> args) : base(token, "Args of")
+        {
+            Childrens = args;
         }
     }
 

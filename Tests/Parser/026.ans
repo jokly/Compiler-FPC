@@ -1,0 +1,43 @@
+└─Program hello
+  ├─Procedure sum
+  │ ├─Declaration const
+  │ │ └─test
+  │ │   └─5
+  │ ├─Declaration var
+  │ │ └─test2
+  │ │   └─real
+  │ ├─Declaration const
+  │ │ └─realconst
+  │ │   └─5,5
+  │ ├─Declaration type
+  │ │ └─tarrint
+  │ │   └─Array [1..2] of
+  │ │     └─integer
+  │ ├─Declaration var
+  │ │ └─intarr
+  │ │   └─tarrint
+  │ ├─Block begin
+  │ │ ├─Function writeln
+  │ │ │ └─test
+  │ │ └─intarr
+  │ │   └─:=
+  │ │     └─arr
+  │ └─Args of sum
+  │   ├─a
+  │   │ └─integer
+  │   ├─b
+  │   │ └─integer
+  │   ├─c
+  │   │ └─real
+  │   └─arr
+  │     └─Array [1..2] of
+  │       └─integer
+  ├─Declaration var
+  │ └─mainvar
+  │   └─integer
+  └─Block begin
+    └─Function sum
+      ├─1
+      ├─2
+      ├─5
+      └─arr

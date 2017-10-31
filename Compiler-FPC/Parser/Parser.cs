@@ -59,16 +59,9 @@ namespace Compiler_FPC.Parser
             {
                 var programName = matchNext(TokenType.ID);
                 matchNext(TokenType.SEMICOLON);
-
-                List<Node> blocks = new List<Node>();
-                Node block;
                 tokenizer.Next();
-                while ((block = parseBlock()) != null)
-                {
-                    blocks.Add(block);
-                }
 
-                return new ProgramNode(programName, blocks);
+                return new ProgramNode(programName, parseBlocks(true));
             }
             else
             {
@@ -76,7 +69,22 @@ namespace Compiler_FPC.Parser
             }
         }
 
-        private Node parseBlock()
+        private List<Node> parseBlocks(bool isMain = false)
+        {
+            List<Node> blocks = new List<Node>();
+            Node block;
+            while ((block = parseBlock(isMain)) != null)
+            {
+                blocks.Add(block);
+
+                if (blocks[blocks.Count - 1] is BlockNode)
+                    return blocks;
+            }
+
+            return blocks;
+        }
+
+        private Node parseBlock(bool isMain = false)
         {
             switch(tokenizer.Current.Value)
             {
@@ -87,10 +95,30 @@ namespace Compiler_FPC.Parser
                 case "var":
                     return new DeclarationNode(tokenizer.Current, parseVar());
                 case "begin":
-                    return new BlockNode(tokenizer.Current, parseBegin());
+                    var blockName = tokenizer.Current;
+                    var begNode = parseBegin();
+
+                    if ((isMain && tokenizer.Current.Type != TokenType.DOT) ||
+                        (!isMain && tokenizer.Current.Type != TokenType.SEMICOLON))
+                        throw new Exception("Invalid token");
+
+                    tokenizer.Next();
+                    return new BlockNode(blockName, begNode);
+                case "procedure":
+                    return new ProcedureNode(matchNext(TokenType.ID), parseArgs(tokenizer.Current), parseBlocks());
             }
 
             return null;
+        }
+
+        private ArgsNode parseArgs(Token nameProc)
+        {
+            matchNext(TokenType.LBRACKET);
+            var args = parseVar(true);
+            matchNext(TokenType.SEMICOLON);
+            tokenizer.Next();
+
+            return new ArgsNode(nameProc, args);
         }
 
         private List<Node> parseConstDecl()
@@ -164,7 +192,7 @@ namespace Compiler_FPC.Parser
             }
         }
 
-        private List<Node> parseVar()
+        private List<Node> parseVar(bool isArgs = false)
         {
             List<Node> vars = new List<Node>();
 
@@ -181,7 +209,7 @@ namespace Compiler_FPC.Parser
                     {
                         throw new Exception("Identifier expected");
                     }
-                    else if (next.Type == TokenType.KEY_WORD)
+                    else if (next.Type == TokenType.KEY_WORD || next.Type == TokenType.RBRACKET)
                     {
                         return vars;
                     }
@@ -214,7 +242,17 @@ namespace Compiler_FPC.Parser
                 }
 
                 tokensVars.Clear();
-                matchNext(TokenType.SEMICOLON);
+                if (!isArgs)
+                    matchNext(TokenType.SEMICOLON);
+                else
+                {
+                    tokenizer.Next();
+
+                    if (tokenizer.Current.Type == TokenType.RBRACKET)
+                        return vars;
+                    else if (tokenizer.Current.Type != TokenType.SEMICOLON)
+                        throw new Exception("Excepted ';'");
+                }
             }
         }
 
@@ -314,7 +352,7 @@ namespace Compiler_FPC.Parser
                 }
                 else if (afterId.Type == TokenType.LBRACKET)
                 {
-                    statements.Add(new FuncCallNode(id, parseFunc()));
+                    statements.Add(new FuncCallNode(id, parseFuncCall()));
                 }
                 else
                 {
@@ -326,7 +364,7 @@ namespace Compiler_FPC.Parser
             }
         }
 
-        private List<Node> parseFunc()
+        private List<Node> parseFuncCall()
         {
             Token next = null;
             List<Node> args = new List<Node>();
@@ -439,7 +477,7 @@ namespace Compiler_FPC.Parser
 
                     List<List<Node>> funcCall = new List<List<Node>>();
                     while (tokenizer.Current.Type == TokenType.LBRACKET)
-                        funcCall.Add(parseFunc());
+                        funcCall.Add(parseFuncCall());
 
                     SquareBracketsNode sqrBr = null;
                     if (tokenizer.Current.Type == TokenType.LSQUARE_BRACKET)
