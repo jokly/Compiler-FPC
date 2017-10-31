@@ -1,0 +1,24 @@
+ProGrAm hello;
+
+function sum(a, b: Integer; c: Real; arr: array[1..2] of Integer) : array[1..2] of Integer;
+const
+    test = 5;
+var
+    test2: Real;
+const
+    realConst = 5.5;
+type
+    TArrInt = array[1..2] of Integer;
+var
+    intArr: TArrInt;
+begin
+    WriteLn(test);
+    intArr := arr;
+end;
+
+var
+    mainVar: Integer;
+
+begin 
+    sum(1, 2, 5.0, arr);
+end.

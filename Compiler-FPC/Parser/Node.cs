@@ -120,12 +120,13 @@ namespace Compiler_FPC.Parser
         }
     }
 
-    class FuncCallNode : ExprNode
+    class FunctionNode : Node
     {
-        public FuncCallNode(Token token, List<Node> args, Node call = null) : base(token, "Function")
+        public FunctionNode(Token token, ArgsNode args, ReturnValueNode returnValue, List<Node> childrens) : base(token, "Function")
         {
-            Childrens = args;
-            Left = call;
+            Childrens = childrens;
+            Left = args;
+            Right = returnValue;
         }
     }
 
@@ -134,6 +135,23 @@ namespace Compiler_FPC.Parser
         public ArgsNode(Token token, List<Node> args) : base(token, "Args of")
         {
             Childrens = args;
+        }
+    }
+
+    class ReturnValueNode : Node
+    {
+        public ReturnValueNode(Token token, Node type) : base(token, "Return type")
+        {
+            Left = type;
+        }
+    }
+
+    class FuncCallNode : ExprNode
+    {
+        public FuncCallNode(Token token, List<Node> args, Node call = null) : base(token, "Call function")
+        {
+            Childrens = args;
+            Left = call;
         }
     }
 

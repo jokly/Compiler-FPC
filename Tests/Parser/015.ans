@@ -8,7 +8,7 @@
     ├─a
     │ └─*=
     │   └─-
-    │     ├─Function getsum
+    │     ├─Call function getsum
     │     │ ├─a
     │     │ └─b
     │     └─/
@@ -18,6 +18,6 @@
     │       └─100
     └─a
       └─:=
-        └─Function getsum
+        └─Call function getsum
           ├─2
           └─3

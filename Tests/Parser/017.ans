@@ -20,7 +20,7 @@
     ├─ptri
     │ └─^
     │   └─:=
-    │     └─Function ptrfunc
+    │     └─Call function ptrfunc
     └─ptri
       └─:=
         └─+

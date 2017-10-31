@@ -10,15 +10,15 @@
   └─Block begin
     ├─int
     │ └─:=
-    │   └─Function getfuncgetarr
-    │     └─Function getfuncgetarr
+    │   └─Call function getfuncgetarr
+    │     └─Call function getfuncgetarr
     │       └─[ Index ]
     │         └─0
     └─int
       └─:=
-        └─Function getfuncgetarr
+        └─Call function getfuncgetarr
           ├─i
-          └─Function getfuncgetarr
+          └─Call function getfuncgetarr
             ├─j
             ├─k
             ├─+

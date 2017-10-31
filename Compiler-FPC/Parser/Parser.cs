@@ -106,19 +106,39 @@ namespace Compiler_FPC.Parser
                     return new BlockNode(blockName, begNode);
                 case "procedure":
                     return new ProcedureNode(matchNext(TokenType.ID), parseArgs(tokenizer.Current), parseBlocks());
+                case "function":
+                    var nameFunc = matchNext(TokenType.ID);
+                    return new FunctionNode(nameFunc, parseArgs(nameFunc, true),
+                        parseReturnValue(nameFunc), parseBlocks());
             }
 
             return null;
         }
 
-        private ArgsNode parseArgs(Token nameProc)
+        private ArgsNode parseArgs(Token nameProc, bool isFunc = false)
         {
             matchNext(TokenType.LBRACKET);
             var args = parseVar(true);
+
+            if (!isFunc)
+            {
+                matchNext(TokenType.SEMICOLON);
+                tokenizer.Next();
+            }
+
+            return new ArgsNode(nameProc, args);
+        }
+
+        private ReturnValueNode parseReturnValue(Token nameFunc)
+        {
+            matchNext(TokenType.COLON);
+            tokenizer.Next();
+
+            var funcRetType = getVarType();
             matchNext(TokenType.SEMICOLON);
             tokenizer.Next();
 
-            return new ArgsNode(nameProc, args);
+            return new ReturnValueNode(nameFunc, funcRetType);
         }
 
         private List<Node> parseConstDecl()
@@ -209,7 +229,7 @@ namespace Compiler_FPC.Parser
                     {
                         throw new Exception("Identifier expected");
                     }
-                    else if (next.Type == TokenType.KEY_WORD || next.Type == TokenType.RBRACKET)
+                    else if (next.Type == TokenType.KEY_WORD)
                     {
                         return vars;
                     }

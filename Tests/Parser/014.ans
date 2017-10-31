@@ -7,12 +7,12 @@
   │ └─ans
   │   └─integer
   └─Block begin
-    ├─Function writeln
+    ├─Call function writeln
     │ └─a
-    ├─Function sumfunc
+    ├─Call function sumfunc
     │ ├─a
     │ └─b
-    └─Function manyargsfunc
+    └─Call function manyargsfunc
       ├─a
       ├─b
       ├─/

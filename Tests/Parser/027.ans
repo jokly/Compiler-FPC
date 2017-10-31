@@ -1,5 +1,5 @@
 └─Program hello
-  ├─Procedure sum
+  ├─Function sum
   │ ├─Declaration const
   │ │ └─test
   │ │   └─5
@@ -22,16 +22,19 @@
   │ │ └─intarr
   │ │   └─:=
   │ │     └─arr
-  │ └─Args of sum
-  │   ├─a
-  │   │ └─integer
-  │   ├─b
-  │   │ └─integer
-  │   ├─c
-  │   │ └─real
-  │   └─arr
-  │     └─Array [1..2] of
-  │       └─integer
+  │ ├─Args of sum
+  │ │ ├─a
+  │ │ │ └─integer
+  │ │ ├─b
+  │ │ │ └─integer
+  │ │ ├─c
+  │ │ │ └─real
+  │ │ └─arr
+  │ │   └─Array [1..2] of
+  │ │     └─integer
+  │ └─Return type sum
+  │   └─Array [1..2] of
+  │     └─integer
   ├─Declaration var
   │ └─mainvar
   │   └─integer
