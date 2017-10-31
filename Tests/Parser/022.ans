@@ -1,0 +1,18 @@
+└─Program hello
+  └─Block begin
+    ├─ans
+    │ └─:=
+    │   └─+
+    │     └─2
+    ├─ans
+    │ └─:=
+    │   └─-
+    │     └─2
+    ├─ans
+    │ └─:=
+    │   └─@
+    │     └─test
+    └─ans
+      └─:=
+        └─not
+          └─test

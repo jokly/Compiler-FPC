@@ -1,0 +1,10 @@
+ProGrAm hello;
+
+begin 
+    ans := a and b;
+    ans := a or b;
+    ans := a and b or b and c; 
+    ans := (a + b > 10) and (a + b < 20) or (c = 0);
+    ans := not a and b;
+    ans := not (a and b);
+end.

@@ -348,10 +348,30 @@ namespace Compiler_FPC.Parser
 
         private ExprNode parseExpr()
         {
+            var e = parseExpr1();
+            var t = tokenizer.Current;
+
+            while (t.Type == TokenType.RELOP_EQ || t.Type == TokenType.RELOP_NE ||
+                   t.Type == TokenType.RELOP_LT || t.Type == TokenType.RELOP_GT ||
+                   t.Type == TokenType.RELOP_LE || t.Type == TokenType.RELOP_GE ||
+                   t.Text.Equals("in") || t.Text.Equals("is"))
+            {
+                tokenizer.Next();
+                var r = parseExpr1();
+                e = new BinOpNode(t, e, r);
+                t = tokenizer.Current;
+            }
+
+            return e;
+        }
+
+        private ExprNode parseExpr1()
+        {
             var e = parseTerm();
             var t = tokenizer.Current;
 
-            while (t.Type == TokenType.PLUS || t.Type == TokenType.MINUS)
+            while (t.Type == TokenType.PLUS || t.Type == TokenType.MINUS ||
+                   t.Text.Equals("or") || t.Text.Equals("xor"))
             {
                 tokenizer.Next();
                 var r = parseTerm();
@@ -364,18 +384,48 @@ namespace Compiler_FPC.Parser
 
         private ExprNode parseTerm()
         {
-            var e = parseFactor();
+            var e = parseTerm0();
             var t = tokenizer.Current;
 
-            while (t.Type == TokenType.ASTERIX || t.Type == TokenType.FORWARD_SLASH)
+            while (t.Type == TokenType.ASTERIX || t.Type == TokenType.FORWARD_SLASH ||
+                   t.Text.Equals("div") || t.Text.Equals("mod") || t.Text.Equals("and") ||
+                   t.Text.Equals("shl") || t.Text.Equals("shr") || t.Text.Equals("as") ||
+                   t.Type == TokenType.BITWISE_SL || t.Type == TokenType.BITWISE_SR)
             {
                 tokenizer.Next();
-                var r = parseFactor();
+                var r = parseTerm0();
                 e =  new BinOpNode(t, e, r);
                 t = tokenizer.Current;
             }
 
             return e;
+        }
+
+        private ExprNode parseTerm0()
+        {
+            var t = tokenizer.Current;
+            List<Token> binOps = new List<Token>();
+
+            while (t.Type == TokenType.PLUS || t.Type == TokenType.MINUS ||
+                   t.Type == TokenType.ADDRESS || t.Text.Equals("not"))
+            {
+                binOps.Add(t);
+                t = tokenizer.Next();
+            }
+
+            if (binOps.Count != 0)
+                return genUnOp(0, binOps, parseFactor());
+            else
+                return parseFactor();
+
+        }
+
+        private ExprNode genUnOp(int i, List<Token> binOps, ExprNode fac)
+        {
+            if (i == binOps.Count - 1)
+                return new UnOpNode(binOps[i], fac);
+
+            return new UnOpNode(binOps[i], genUnOp(i + 1, binOps, fac));
         }
 
         private ExprNode parseFactor()
@@ -423,10 +473,6 @@ namespace Compiler_FPC.Parser
 
                     tokenizer.Next();
                     return e;
-                case TokenType.ADDRESS:
-                    var id = matchNext(TokenType.ID);
-                    tokenizer.Next();
-                    return new PtrConstNode(t, new IdNode(id));
             }
 
             throw new Exception("Invalid token");

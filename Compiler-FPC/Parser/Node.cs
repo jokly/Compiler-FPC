@@ -125,6 +125,14 @@ namespace Compiler_FPC.Parser
         public ExprNode(Token token, string name = "") : base(token, name) { }
     }
 
+    class UnOpNode : ExprNode
+    {
+        public UnOpNode(Token token, ExprNode right) : base(token)
+        {
+            Right = right;
+        }
+    }
+
     class BinOpNode : ExprNode
     {
         public BinOpNode(Token token, ExprNode left, ExprNode right) : base(token)
