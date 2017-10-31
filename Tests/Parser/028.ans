@@ -1,0 +1,24 @@
+└─Program hello
+  ├─Declaration var
+  │ └─mainvar
+  │   └─integer
+  └─Block begin
+    └─while
+      ├─Condition of while
+      │ └─and
+      │   ├─=
+      │   │ ├─5
+      │   │ └─5
+      │   └─>
+      │     ├─+
+      │     │ ├─a
+      │     │ └─b
+      │     └─10
+      └─Block begin
+        ├─ans
+        │ └─:=
+        │   └─+
+        │     ├─ans
+        │     └─5
+        └─Call function writeln
+          └─ans

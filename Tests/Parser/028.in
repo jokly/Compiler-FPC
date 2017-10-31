@@ -1,0 +1,11 @@
+ProGrAm hello;
+
+var
+    mainVar: Integer;
+
+begin 
+    while (5 = 5) and (a + b > 10) do begin
+        ans := ans + 5;
+        WriteLn(ans);
+    end;
+end.

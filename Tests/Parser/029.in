@@ -1,0 +1,19 @@
+ProGrAm hello;
+
+var
+    mainVar: Integer;
+
+begin 
+    begin 
+        begin
+            ans := 5;
+        end;
+    end;
+
+    while 5 = 5 do
+    begin
+        begin
+            ans += 1;
+        end;
+    end;
+end.

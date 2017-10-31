@@ -103,6 +103,23 @@ namespace Compiler_FPC.Parser
         }
     }
 
+    class WhileNode : Node
+    {
+        public WhileNode(Token token, ConditionNode cond, BlockNode beginBlock) : base(token)
+        {
+            Left = cond;
+            Right = beginBlock;
+        }
+    }
+
+    class ConditionNode : Node
+    {
+        public ConditionNode(Token token, Node expr) : base(token, "Condition of")
+        {
+            Left = expr;
+        }
+    }
+
     class AssignmentNode : Node
     {
         public AssignmentNode(Token token, Node left) : base(token)
