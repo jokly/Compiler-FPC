@@ -1,0 +1,80 @@
+program ::= program_header ; block .
+program_header ::= PROGRAM identifier
+
+    block ::= declaration_part_list statement_part
+    declaration_part ::= constant_declaration_part | type_declaration_part | variable_declaration_part | procedure_function_declaration_part
+    declaration_part_list ::= declaration_part | declaration_part declaration_part_list
+    statement_part ::= compound_statement
+        
+        constant_declaration_part ::= CONST constant_list
+        constant_list ::= constant | constant constant_list
+        constant ::= constant_declaration_list
+
+            constant_declaration_list ::= constant_declaration | constant_declaration constant_declaration_list
+            constant_declaration ::= identifier = expression ;
+        
+        type_declaration_part ::= TYPE type_list
+        type_list ::= type_declaration | type_declaration type_list
+        
+        var_declaration_part ::= VAR var_list
+        var_list ::= var_declaration | var_declaration var_list
+        var_declaration ::= identifier : type | identifier : type = expression
+        
+        procedure_function_declaration_part ::= procedure_function_list
+        procedure_function_list ::= procedure_function | procedure_function procedure_function_list
+        procedure_function ::= procedure_declaration | function_declaration
+
+            procedure_declaration ::= procedure_header ; subroutine_block ;
+            procedure_header ::= PROCEDURE identifier formal_parameter_list
+
+            function_declaration ::= function_header ; subroutine_block ;
+            funtrion_header ::= FUNCTION identifier formal_parameter_list : result_type
+
+            subroutine_block ::= block
+
+
+formal_parameter_list ::= ( parameter_declaration_list )
+    parameter_declaration_list ::= parameter_declaration | parameter_declaration ; parameter_declaration_list
+        parameter_declaration ::= value_parameter
+        value_parameter ::= identifier : type_identifier = default_parameter_value
+
+actual_parameter_list ::= ( ) | ( parameter_list )
+    parameter_list ::= expression | expression , parameter_list
+
+
+statement ::= simple_statement | structured_statement   
+    simple_statement ::= assignment_statement | procedure_statement
+
+        assignment_statement ::= assignment_identifier assignment_operand expression
+            assignment_identifier ::= variable_reference | function_identifier
+            assignment_operand ::= := | += | -= | *= | /=
+
+        procedure_statement ::= procedure_statement_identifier | procedure_statement_identifier actual_parameter_list
+            procedure_statement_identifier ::= procedure_identifier
+
+    structured_statement ::= compound_statement | repetitive_statement
+        compound_statement ::= BEGIN statement_list END
+            statement_list ::= anystatement_list
+            anystatement_list ::= anystatement | anystatement anystatement_list
+            anystatement ::= simple_statement | structured_statement
+
+        repetitive_statement ::= for_statement | repeat_statement | while_statement
+            for_statement ::= FOR control_variable := initial_value for_shift final_value DO statement
+                for_shift ::= TO | DOWNTO
+                control_variable ::= variable_identifier
+                initial_value ::= expression
+                final_value ::= expression
+
+            repeat_statement ::= REPEAT statement_list UNTIL expression
+                statement_list ::= statement | statement ; statement_list
+
+            while_statement ::= WHILE expression DO statement
+
+expression ::= simple_expression | simple_expression < simple_expression | simple_expression <= simple_expression | simple_expression > simple_expression | simple_expression >= simple_expression | simple_expression = simple_expression | simple_expression <> simple_expression
+    simple_expression ::= term | term + term | term - term | term OR term
+        term ::= factor | factor * factor | factor / factor | factor DIV factor | factor MOD factor | factor AND factor
+            factor ::= variable_reference | function_call | unsigned_constant | NOT factor | - factor | + factor
+                unsigned_constant ::= unsigned_number | character_string | constant_identifier
+
+function_call ::= function_identifier actual_parameter_list
+
