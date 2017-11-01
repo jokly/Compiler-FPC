@@ -1,0 +1,13 @@
+ProGrAm hello;
+
+var
+    mainVar: Integer;
+
+begin 
+    repeat
+        ans := 5;
+        while ans < 10 do begin
+            ans += 1;
+        end;
+    until 5 = 5;
+end.

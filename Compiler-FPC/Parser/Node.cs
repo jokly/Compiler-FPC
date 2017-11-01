@@ -112,6 +112,15 @@ namespace Compiler_FPC.Parser
         }
     }
 
+    class RepeatNode : Node
+    {
+        public RepeatNode(Token token, ConditionNode cond, BlockNode beginBlock) : base(token)
+        {
+            Left = cond;
+            Right = beginBlock;
+        }
+    }
+
     class ConditionNode : Node
     {
         public ConditionNode(Token token, Node expr) : base(token, "Condition of")

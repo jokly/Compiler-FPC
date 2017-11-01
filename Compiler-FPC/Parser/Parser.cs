@@ -107,14 +107,20 @@ namespace Compiler_FPC.Parser
             return null;
         }
 
-        private BlockNode parseBeginBlock(bool isMain = false)
+        private BlockNode parseBeginBlock(bool isMain = false, bool isUntil = false)
         {
             var blockName = tokenizer.Current;
-            var begNode = parseBegin();
+            var begNode = parseBegin(isUntil);
 
-            if ((isMain && tokenizer.Current.Type != TokenType.DOT) ||
-                (!isMain && tokenizer.Current.Type != TokenType.SEMICOLON))
+            if (!isUntil)
+                tokenizer.Next();
+
+            if ((!isUntil && ((isMain && tokenizer.Current.Type != TokenType.DOT) ||
+                            (!isMain && tokenizer.Current.Type != TokenType.SEMICOLON))) ||
+                (isUntil && !tokenizer.Current.Value.Equals("until")))
+            {
                 throw new Exception("Invalid token");
+            }
 
             tokenizer.Next();
 
@@ -337,7 +343,7 @@ namespace Compiler_FPC.Parser
             }
         }
 
-        private List<Node> parseBegin()
+        private List<Node> parseBegin(bool isUntil = false)
         {
             List<Node> statements = new List<Node>();
 
@@ -351,7 +357,15 @@ namespace Compiler_FPC.Parser
                     statements.Add(block);
                     id = tokenizer.Current;
                 }
-                    
+
+                if (id == null)
+                {
+                    throw new Exception("Expect 'end'");
+                }
+                else if (id.Value.Equals("end") || (id.Value.Equals("until") && isUntil))
+                {
+                    return statements;
+                }
 
                 var afterId = tokenizer.Next();
                 Token ptrToken = null;
@@ -361,16 +375,8 @@ namespace Compiler_FPC.Parser
                     ptrToken = tokenizer.Current;
                     afterId = tokenizer.Next();
                 }
-
-                if (id == null)
-                {
-                    throw new Exception("Expect 'end'");
-                }
-                else if (id.Value.Equals("end"))
-                {
-                    return statements;
-                }
-                else if (afterId.Type == TokenType.ASSIGNMENT || afterId.Type == TokenType.ADDITION_ASSIGNMENT ||
+                
+                if (afterId.Type == TokenType.ASSIGNMENT || afterId.Type == TokenType.ADDITION_ASSIGNMENT ||
                     afterId.Type == TokenType.SUBSTRACTION_ASSIGNMENT || afterId.Type == TokenType.MULTIPLICATION_ASSIGNMENT ||
                     afterId.Type == TokenType.DIVISION_ASSIGNMENT)
                 {
@@ -401,30 +407,24 @@ namespace Compiler_FPC.Parser
 
         private Node getBlock(Token id)
         {
-            Node retNode = null;
-
             if (id.Type == TokenType.KEY_WORD)
             {
                 switch (id.Value)
                 {
                     case "begin":
-                        retNode = parseBeginBlock(false);
-                        id = tokenizer.Current;
-                        break;
+                        return parseBeginBlock(false);
                     case "while":
-                        retNode = parseWhile();
-                        id = tokenizer.Current;
-                        break;
-                    case "end":
+                        return parseWhile();
+                    case "repeat":
+                        return parseRepeatUntil();
+                    case "end": case "until":
                         return null;
                     default:
                         throw new Exception("Unknown token");
                 }
-
-                return retNode;
             }
-            else
-                return retNode;
+
+            return null;
         }
 
         private WhileNode parseWhile()
@@ -442,6 +442,22 @@ namespace Compiler_FPC.Parser
             var begBlock = parseBeginBlock(false);
 
             return new WhileNode(nameTok, new ConditionNode(nameTok, cond), begBlock);
+        }
+
+        private RepeatNode parseRepeatUntil()
+        {
+            var nameTok = tokenizer.Current;
+
+            var begBlock = parseBeginBlock(false, true);
+
+            var cond = parseExpr();
+
+            if (tokenizer.Current.Type != TokenType.SEMICOLON)
+                throw new Exception("Expected ';'");
+
+            tokenizer.Next();
+
+            return new RepeatNode(nameTok, new ConditionNode(nameTok, cond), begBlock);
         }
 
         private List<Node> parseFuncCall()

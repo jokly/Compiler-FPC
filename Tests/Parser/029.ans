@@ -1,0 +1,20 @@
+└─Program hello
+  ├─Declaration var
+  │ └─mainvar
+  │   └─integer
+  └─Block begin
+    ├─Block begin
+    │ └─Block begin
+    │   └─ans
+    │     └─:=
+    │       └─5
+    └─while
+      ├─Condition of while
+      │ └─=
+      │   ├─5
+      │   └─5
+      └─Block begin
+        └─Block begin
+          └─ans
+            └─+=
+              └─1
