@@ -121,6 +121,26 @@ namespace Compiler_FPC.Parser
         }
     }
 
+    class ForNode : Node
+    {
+        public ForNode(Token token, Node startVal, Node endVal, Node direction, Node beginBlock) : base(token)
+        {
+            Left = startVal;
+            Right = endVal;
+            Childrens = new List<Node> { beginBlock, direction };
+        }
+    }
+
+    class ForDirTo : Node
+    {
+        public ForDirTo(Token token) : base(token, "Direction") { }
+    }
+
+    class ForDirDownto : Node
+    {
+        public ForDirDownto(Token token) : base(token, "Direction") { }
+    }
+
     class ConditionNode : Node
     {
         public ConditionNode(Token token, Node expr) : base(token, "Condition of")

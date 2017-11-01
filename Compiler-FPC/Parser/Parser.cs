@@ -412,11 +412,13 @@ namespace Compiler_FPC.Parser
                 switch (id.Value)
                 {
                     case "begin":
-                        return parseBeginBlock(false);
+                        return parseBeginBlock();
                     case "while":
                         return parseWhile();
                     case "repeat":
                         return parseRepeatUntil();
+                    case "for":
+                        return parseFor();
                     case "end": case "until":
                         return null;
                     default:
@@ -439,7 +441,7 @@ namespace Compiler_FPC.Parser
 
             tokenizer.Next();
 
-            var begBlock = parseBeginBlock(false);
+            var begBlock = parseBeginBlock();
 
             return new WhileNode(nameTok, new ConditionNode(nameTok, cond), begBlock);
         }
@@ -458,6 +460,35 @@ namespace Compiler_FPC.Parser
             tokenizer.Next();
 
             return new RepeatNode(nameTok, new ConditionNode(nameTok, cond), begBlock);
+        }
+
+        private ForNode parseFor()
+        {
+            var nameTok = tokenizer.Current;
+
+            var nameCounter = matchNext(TokenType.ID);
+            var assign = matchNext(TokenType.ASSIGNMENT);
+            tokenizer.Next();
+            var startVal = new VarNode(nameCounter, new AssignmentNode(assign, parseExpr()));
+
+            Node dir;
+            if (tokenizer.Current.Value.Equals("to"))
+                dir = new ForDirTo(tokenizer.Current);
+            else if (tokenizer.Current.Value.Equals("downto"))
+                dir = new ForDirDownto(tokenizer.Current);
+            else
+                throw new Exception("Expected 'to' or 'downto'");
+
+            tokenizer.Next();
+            var endVal = parseExpr();
+
+            if (!tokenizer.Current.Value.Equals("do"))
+                throw new Exception("Expected 'do'");
+
+            tokenizer.Next();
+            var begBlock = parseBeginBlock();
+
+            return new ForNode(nameTok, startVal, endVal, dir, begBlock);
         }
 
         private List<Node> parseFuncCall()

@@ -1,0 +1,37 @@
+└─Program hello
+  └─Block begin
+    ├─for
+    │ ├─Block begin
+    │ │ └─while
+    │ │   ├─Condition of while
+    │ │   │ └─=
+    │ │   │   ├─5
+    │ │   │   └─5
+    │ │   └─Block begin
+    │ │     └─Call function writeln
+    │ │       └─i
+    │ ├─Direction to
+    │ ├─i
+    │ │ └─:=
+    │ │   └─1
+    │ └─5
+    └─for
+      ├─Block begin
+      │ ├─test
+      │ │ └─+=
+      │ │   └─1
+      │ └─Call function writeln
+      │   └─test
+      ├─Direction downto
+      ├─i
+      │ └─:=
+      │   └─-
+      │     ├─+
+      │     │ ├─5
+      │     │ └─1
+      │     └─ans
+      └─/
+        ├─*
+        │ ├─100
+        │ └─5
+        └─20
