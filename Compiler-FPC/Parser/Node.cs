@@ -97,9 +97,18 @@ namespace Compiler_FPC.Parser
 
     class BlockNode : Node
     {
-        public BlockNode(Token token, List<Node> childrens) : base(token, "Block")
+        public BlockNode(Token token, List<Node> childrens = null) : base(token, "Block")
         {
             Childrens = childrens;
+        }
+    }
+
+    class IfNode : BlockNode
+    {
+        public IfNode(Token token, Node cond, Node beginBlock, Node elseNode) : base(token)
+        {
+            Left = cond;
+            Childrens = new List<Node>() { beginBlock, elseNode };
         }
     }
 

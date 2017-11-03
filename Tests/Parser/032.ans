@@ -1,0 +1,25 @@
+└─Program hello
+  └─Block begin
+    └─Block if
+      ├─Block begin
+      │ └─a
+      │   └─:=
+      │     └─5
+      ├─Block else
+      │ └─Block if
+      │   ├─Block begin
+      │   │ └─a
+      │   │   └─:=
+      │   │     └─6
+      │   ├─Block else
+      │   │ └─Block begin
+      │   │   └─a
+      │   │     └─:=
+      │   │       └─-
+      │   │         └─1
+      │   └─=
+      │     ├─6
+      │     └─6
+      └─=
+        ├─5
+        └─5

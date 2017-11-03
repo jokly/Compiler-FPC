@@ -34,9 +34,7 @@ namespace Compiler_FPC.Parser
             var next = tokenizer.Next();
 
             if (next != null && expectedTkType != tokenizer.Current.Type)
-            {
                 throw new Exception("Invalid token");
-            }
 
             return next == null ? null : tokenizer.Current;
         }
@@ -46,11 +44,21 @@ namespace Compiler_FPC.Parser
             var next = tokenizer.Next();
 
             if (next != null && !expectedTkValue.Equals(tokenizer.Current.Value))
-            {
                 throw new Exception("Invalid token");
-            }
 
             return next == null ? null : tokenizer.Current;
+        }
+
+        private void require(TokenType expectedTkType)
+        {
+            if (tokenizer.Current != null && expectedTkType != tokenizer.Current.Type)
+                throw new Exception("Invalid token");
+        }
+
+        private void require(string expectedTkValue)
+        {
+            if (tokenizer.Current != null && !expectedTkValue.Equals(tokenizer.Current.Value))
+                throw new Exception("Invalid token");
         }
 
         private Node parseProgram()
@@ -169,18 +177,15 @@ namespace Compiler_FPC.Parser
                 {
                     return consts;
                 }
-                else if (nameToken.Type != TokenType.ID)
-                {
-                    throw new Exception("Identifier expected");
-                }
+
+                require(TokenType.ID);
 
                 matchNext(TokenType.RELOP_EQ);
                 tokenizer.Next();
 
                 consts.Add(new VarNode(nameToken, parseExpr()));
 
-                if (tokenizer.Current.Type != TokenType.SEMICOLON)
-                    throw new Exception("Expected ';'");
+                require(TokenType.SEMICOLON);
             }
         }
 
@@ -200,10 +205,8 @@ namespace Compiler_FPC.Parser
                 {
                     return types;
                 }
-                else if (nameToken.Type != TokenType.ID)
-                {
-                    throw new Exception("Identifier expected");
-                }
+
+                require(TokenType.ID);
 
                 matchNext(TokenType.RELOP_EQ);
                 tokenizer.Next();
@@ -211,9 +214,8 @@ namespace Compiler_FPC.Parser
                 if (tokenizer.Current.Value.Equals("record"))
                 {
                     types.Add(new RecordNode(nameToken, parseVar()));
-
-                    if (!tokenizer.Current.Value.Equals("end"))
-                        throw new Exception("Expected 'end'");
+                    
+                    require("end");
                 }
                 else
                 {
@@ -282,8 +284,8 @@ namespace Compiler_FPC.Parser
 
                     if (tokenizer.Current.Type == TokenType.RBRACKET)
                         return vars;
-                    else if (tokenizer.Current.Type != TokenType.SEMICOLON)
-                        throw new Exception("Excepted ';'");
+
+                    require(TokenType.SEMICOLON);
                 }
             }
         }
@@ -360,7 +362,7 @@ namespace Compiler_FPC.Parser
 
                 if (id == null)
                 {
-                    throw new Exception("Expect 'end'");
+                    throw new Exception("Expected 'end'");
                 }
                 else if (id.Value.Equals("end") || (id.Value.Equals("until") && isUntil))
                 {
@@ -397,7 +399,7 @@ namespace Compiler_FPC.Parser
                 }
                 else
                 {
-                    throw new Exception("Expect expression");
+                    throw new Exception("Expected expression");
                 }
               
                 if (tokenizer.Current.Type != TokenType.SEMICOLON)
@@ -413,6 +415,8 @@ namespace Compiler_FPC.Parser
                 {
                     case "begin":
                         return parseBeginBlock();
+                    case "if":
+                        return parseIf();
                     case "while":
                         return parseWhile();
                     case "repeat":
@@ -422,11 +426,44 @@ namespace Compiler_FPC.Parser
                     case "end": case "until":
                         return null;
                     default:
-                        throw new Exception("Unknown token");
+                        throw new Exception("Unexpected token");
                 }
             }
 
             return null;
+        }
+
+        private Node parseIf()
+        {
+            var nameTok = tokenizer.Current;
+            tokenizer.Next();
+
+            var cond = parseExpr();
+
+            require("then");
+
+            tokenizer.Next();
+
+            var begBlock = parseBeginBlock();
+
+            Node elseBlock = null;
+            if (tokenizer.Current.Value.Equals("else"))
+            {
+                var elseToken = tokenizer.Current;
+                tokenizer.Next();
+
+                Node block = null;
+                if (tokenizer.Current.Value.Equals("if"))
+                    block = parseIf();
+                else if (tokenizer.Current.Value.Equals("begin"))
+                    block = parseBeginBlock();
+                else
+                    throw new Exception("Unexpected token");
+
+                elseBlock = new BlockNode(elseToken, new List<Node>() { block });
+            }
+
+            return new IfNode(nameTok, cond, begBlock, elseBlock);
         }
 
         private WhileNode parseWhile()
@@ -436,8 +473,7 @@ namespace Compiler_FPC.Parser
 
             var cond = parseExpr();
 
-            if (!tokenizer.Current.Value.Equals("do"))
-                throw new Exception("Expected 'do'");
+            require("do");
 
             tokenizer.Next();
 
@@ -454,8 +490,7 @@ namespace Compiler_FPC.Parser
 
             var cond = parseExpr();
 
-            if (tokenizer.Current.Type != TokenType.SEMICOLON)
-                throw new Exception("Expected ';'");
+            require(TokenType.SEMICOLON);
 
             tokenizer.Next();
 
@@ -482,8 +517,7 @@ namespace Compiler_FPC.Parser
             tokenizer.Next();
             var endVal = parseExpr();
 
-            if (!tokenizer.Current.Value.Equals("do"))
-                throw new Exception("Expected 'do'");
+            require("do");
 
             tokenizer.Next();
             var begBlock = parseBeginBlock();
@@ -504,7 +538,7 @@ namespace Compiler_FPC.Parser
             }
 
             if (next == null)
-                throw new Exception("Expect ')'");
+                throw new Exception("Expected ')'");
 
             tokenizer.Next();
 
@@ -633,8 +667,7 @@ namespace Compiler_FPC.Parser
                     tokenizer.Next();
                     var e = parseExpr();
 
-                    if (tokenizer.Current.Type != TokenType.RBRACKET)
-                        throw new Exception("Expected ')'");
+                    require(TokenType.RBRACKET);
 
                     tokenizer.Next();
                     return e;
@@ -656,7 +689,7 @@ namespace Compiler_FPC.Parser
             }
 
             if (tokenizer.Current == null)
-                throw new Exception("Expect ')'");
+                throw new Exception("Expected ')'");
 
             return indexes;
         }
