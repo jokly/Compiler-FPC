@@ -1,0 +1,8 @@
+ProGrAm test;
+
+var
+    a, b: Integer
+
+begin
+
+end.

@@ -82,7 +82,9 @@ namespace Compiler_FPC
                 return GetToken();
 
             input.Close();
-            return null;
+
+            Current = new Token(currentRow, currentCol, TokenType.EOF, "EOF", "EOF");
+            return Current;
         }
 
         private Token GetToken()

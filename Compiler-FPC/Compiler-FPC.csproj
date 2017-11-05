@@ -107,6 +107,7 @@
     <Compile Include="Lexer\Config.cs" />
     <Compile Include="Parser\Node.cs" />
     <Compile Include="Parser\Parser.cs" />
+    <Compile Include="Parser\ParserException.cs" />
     <Compile Include="Parser\SyntaxTree.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

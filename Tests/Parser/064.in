@@ -1,0 +1,9 @@
+ProGrAm test;
+
+var
+    a, b: Integer;
+    arr: array of Integer;
+
+begin
+
+end.

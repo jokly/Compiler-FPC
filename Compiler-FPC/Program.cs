@@ -76,7 +76,7 @@ namespace Compiler_FPC
             try
             {
                 Token tok;
-                while ((tok = lexer.Next()) != null)
+                while ((tok = lexer.Next()).Type != TokenType.EOF)
                 {
                     table.AddRow($"({tok.Row}, {tok.Col})", tok.Type.ToString(), tok.Value, tok.Text);
                 }

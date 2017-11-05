@@ -1,0 +1,7 @@
+ProGrAm hello;
+
+begin 
+    repeat
+        a += 1;
+     5 = 5;
+end.

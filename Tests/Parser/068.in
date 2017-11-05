@@ -1,0 +1,8 @@
+ProGrAm test;
+
+var
+    arr: array[1..2]
+
+begin
+
+end.

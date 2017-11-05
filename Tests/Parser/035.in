@@ -1,0 +1,7 @@
+ProGrAm hello;
+
+begin 
+    if 5 = 5 then begin
+        a := 5;
+    end
+end.
