@@ -1,80 +1,93 @@
-program ::= program_header ; block .
-program_header ::= PROGRAM identifier
+// Program
+program ::= program_header ';' block '.'
 
-    block ::= declaration_part_list statement_part
-    declaration_part ::= constant_declaration_part | type_declaration_part | variable_declaration_part | procedure_function_declaration_part
-    declaration_part_list ::= declaration_part | declaration_part declaration_part_list
-    statement_part ::= compound_statement
-        
-        constant_declaration_part ::= CONST constant_list
-        constant_list ::= constant | constant constant_list
-        constant ::= constant_declaration_list
+program_header ::= PROGRAM identifier ';'
 
-            constant_declaration_list ::= constant_declaration | constant_declaration constant_declaration_list
-            constant_declaration ::= identifier = expression ;
-        
-        type_declaration_part ::= TYPE type_list
-        type_list ::= type_declaration | type_declaration type_list
-        
-        var_declaration_part ::= VAR var_list
-        var_list ::= var_declaration | var_declaration var_list
-        var_declaration ::= identifier : type | identifier : type = expression
-        
-        procedure_function_declaration_part ::= procedure_function_list
-        procedure_function_list ::= procedure_function | procedure_function procedure_function_list
-        procedure_function ::= procedure_declaration | function_declaration
+block ::= ( const_decl | type_decl | var_decl | proc_func_decl )* compound_statement
 
-            procedure_declaration ::= procedure_header ; subroutine_block ;
-            procedure_header ::= PROCEDURE identifier formal_parameter_list
+// Const
+const_decl ::= CONST ( const_statement )+
 
-            function_declaration ::= function_header ; subroutine_block ;
-            funtrion_header ::= FUNCTION identifier formal_parameter_list : result_type
+const_statement ::= identifier '=' expression ';'
 
-            subroutine_block ::= block
+// Type
+type_decl ::= TYPE ( type_statement )+
 
+type_statement ::= identifier '=' ( type | func_type | proc_type ) ';'
 
-formal_parameter_list ::= ( parameter_declaration_list )
-    parameter_declaration_list ::= parameter_declaration | parameter_declaration ; parameter_declaration_list
-        parameter_declaration ::= value_parameter
-        value_parameter ::= identifier : type_identifier = default_parameter_value
+func_type ::= FUNCTION formal_parameter_list ':' type
 
-actual_parameter_list ::= ( ) | ( parameter_list )
-    parameter_list ::= expression | expression , parameter_list
+proc_type ::= PROCEDURE formal_parameter_list
 
+type ::= (simple_type | array_type | pointer_type | struct_type)
 
-statement ::= simple_statement | structured_statement   
-    simple_statement ::= assignment_statement | procedure_statement
+simple_type ::= identifier
 
-        assignment_statement ::= assignment_identifier assignment_operand expression
-            assignment_identifier ::= variable_reference | function_identifier
-            assignment_operand ::= := | += | -= | *= | /=
+array_type ::= ARRAY '[' integer '..' integer ']' OF type
 
-        procedure_statement ::= procedure_statement_identifier | procedure_statement_identifier actual_parameter_list
-            procedure_statement_identifier ::= procedure_identifier
+pointer_type ::= '^' identifier
 
-    structured_statement ::= compound_statement | repetitive_statement
-        compound_statement ::= BEGIN statement_list END
-            statement_list ::= anystatement_list
-            anystatement_list ::= anystatement | anystatement anystatement_list
-            anystatement ::= simple_statement | structured_statement
+struct_type ::= RECORD ( var_decl_row ';' )+ END ';'
 
-        repetitive_statement ::= for_statement | repeat_statement | while_statement
-            for_statement ::= FOR control_variable := initial_value for_shift final_value DO statement
-                for_shift ::= TO | DOWNTO
-                control_variable ::= variable_identifier
-                initial_value ::= expression
-                final_value ::= expression
+var_decl_row ::= field_list ':' type
 
-            repeat_statement ::= REPEAT statement_list UNTIL expression
-                statement_list ::= statement | statement ; statement_list
+field_list ::= identifier (',' identifier)*
 
-            while_statement ::= WHILE expression DO statement
+// Var
+var_decl ::= VAR ( var_decl_row )+
 
-expression ::= simple_expression | simple_expression < simple_expression | simple_expression <= simple_expression | simple_expression > simple_expression | simple_expression >= simple_expression | simple_expression = simple_expression | simple_expression <> simple_expression
-    simple_expression ::= term | term + term | term - term | term OR term
-        term ::= factor | factor * factor | factor / factor | factor DIV factor | factor MOD factor | factor AND factor
-            factor ::= variable_reference | function_call | unsigned_constant | NOT factor | - factor | + factor
-                unsigned_constant ::= unsigned_number | character_string | constant_identifier
+// Procedure and Function
+proc_func_decl ::= (proc_decl | func_decl)*
 
-function_call ::= function_identifier actual_parameter_list
+proc_decl ::= proc_type ';' block ';'
 
+func_decl ::= func_type ';' block ';'
+
+formal_parameter_list ::= '(' var_decl_row ( ';' var_decl_row )* ')'
+
+// Compound statement
+compound_statement ::= BEGIN statements END
+
+statements ::= statement (';' statement)*
+
+statement ::= (if_stmnt | while_stmnt | repeat_stmnt | for_stmnt | assign_stmnt | func_call_stmnt)
+
+if_stmnt ::= IF expression THEN compound_statement ';' ( if_stmnt )* ( else compound_statement ';')+
+
+while_stmnt ::= WHILE expression DO compound_statement ';'
+
+repeat_stmnt ::= REPEAT statements UNTIL expression ';'
+
+for_stmnt ::= FOR assign ( TO | DOWNTO ) expression DO compound_statement ';'
+
+assign ::= identifier ':=' expression
+
+assign_stmnt ::= assign ';'
+
+func_call_stmnt ::= identifier args_list ( '()' | arr_index ) ';'
+
+args_list ::= '(' expression (',' expression) ')'
+
+expression ::= ( simple_expr | simple_expr < simple_expr | simple_expr <= simple_expr | simple_expr > simple_expr | simple_expr >= simple_expr |
+    simple_expr = simple_expr | simple_expr <> simple_expr )
+
+simple_expr ::=  ( term | term + term | term - term | term OR term )
+
+term ::= ( factor | factor * factor | factor / factor | factor DIV factor | factor MOD factor | factor AND factor | factor SHL factor | factor SHR factor |
+    factor << factor | factor >> factor )
+
+factor ::= function_call | unsigned_constant | NOT factor | '-' factor | '+' factor | '@' factor
+
+unsigned_constant ::= unsigned_number | chr | stirng | identifier
+
+unsigned_number := unsigned_int | unsigned_real
+
+unsigned_int ::= (0-9)+
+
+unsigned_real ::= unsigned_int ( '.' unsigned_int | 'e' unsigned_int )
+
+chr ::= ( ''' CHAR ''' | '#' unsigned_int )
+
+string ::= ''' ( CHAR )* '''
+
+identifier ::= ID
