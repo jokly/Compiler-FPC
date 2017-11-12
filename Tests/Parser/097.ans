@@ -1,0 +1,14 @@
+└─Program test
+  └─Block begin
+    ├─a
+    │ └─:=
+    │   └─rec
+    │     └─.
+    │       └─a
+    │         └─.
+    │           └─b
+    └─a
+      └─:=
+        └─Call function getrec
+          └─.
+            └─a

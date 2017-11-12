@@ -681,10 +681,20 @@ namespace Compiler_FPC.Parser
                         if (funcCall.Count != 0) funcCall[funcCall.Count - 1].Add(sqrBr);
                     }
 
+                    DotNode rec = null;
+                    if (tokenizer.Current.Type == TokenType.DOT)
+                    {
+                        var dotTok = tokenizer.Current;
+                        matchNext(TokenType.ID);
+                        rec = new DotNode(dotTok, parseFactor());
+
+                        if (funcCall.Count != 0) funcCall[funcCall.Count - 1].Add(rec);
+                    }
+
                     if (funcCall.Count != 0)
                         return genFuncCallNode(0, funcCall, t);
                     else
-                        return new IdNode(t, sqrBr);
+                        return new IdNode(t, sqrBr, rec);
                 case TokenType.INTEGER:
                     tokenizer.Next();
                     return new IntConstNode(t);

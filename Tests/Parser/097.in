@@ -1,0 +1,6 @@
+ProGrAm test;
+
+begin
+    a := rec.a.b;
+    a := GetRec().a;
+end.
