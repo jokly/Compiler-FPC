@@ -39,9 +39,9 @@ var_decl ::= VAR ( var_decl_row )+
 // Procedure and Function
 proc_func_decl ::= (proc_decl | func_decl)*
 
-proc_decl ::= proc_type ';' block ';'
+proc_decl ::= PROCEDURE identifier formal_parameter_list ';' block ';'
 
-func_decl ::= func_type ';' block ';'
+func_decl ::= FUNCTION identifier formal_parameter_list ';' block ';'
 
 formal_parameter_list ::= '(' var_decl_row ( ';' var_decl_row )* ')'
 
