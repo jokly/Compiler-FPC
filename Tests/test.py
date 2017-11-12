@@ -16,7 +16,7 @@ TESTS = {
 
 def test(folders, optinons = []):
     for folder in folders:
-        print(folder + '...', end='')
+        print(folder + '...')
 
         inputFiles = getInputFiles(folder)
         outputFiles = getOutputFiles(folder)
@@ -29,13 +29,15 @@ def test(folders, optinons = []):
 
             ansFileName = os.path.splitext(file)[0] + '.ans'
             if open(outFileName, 'r').read() != open(ansFileName, 'r').read():
-                print('(' + str(countTests) + os.sep + str(len(inputFiles)) + ')')
+                print('Passed (' + str(countTests) + os.sep + str(len(inputFiles)) + ')')
                 print('Not passed: ' + outFileName)
                 exit(0)
+            else:
+                print(outFileName + '...OK')
 
             countTests += 1
 
-        print('(' + str(countTests) + '/' + str(len(inputFiles)) + ')')
+        print('Passed (' + str(countTests) + '/' + str(len(inputFiles)) + ')')
 
     print('All tests passed!')    
 
