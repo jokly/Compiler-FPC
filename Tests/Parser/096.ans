@@ -1,0 +1,16 @@
+└─Program test
+  ├─Procedure tets
+  │ ├─forward
+  │ └─Args of tets
+  │   ├─a
+  │   │ └─integer
+  │   └─b
+  │     └─integer
+  ├─Declaration type
+  │ └─tint
+  │   └─integer
+  ├─Declaration var
+  │ └─arr
+  │   └─Array [1..5] of
+  │     └─integer
+  └─Block begin

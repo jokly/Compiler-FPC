@@ -166,6 +166,11 @@ namespace Compiler_FPC.Parser
         }
     }
 
+    class ForwardDecl : Node
+    {
+        public ForwardDecl(Token token) : base(token) { }
+    }
+
     class ProcedureNode : Node
     {
         public ProcedureNode(Token token, ArgsNode args, List<Node> childrens) : base(token, "Procedure")

@@ -92,7 +92,7 @@ namespace Compiler_FPC.Parser
             {
                 blocks.Add(block);
 
-                if (blocks[blocks.Count - 1] is BlockNode)
+                if (block is BlockNode || block is ForwardDecl)
                     return blocks;
             }
 
@@ -111,11 +111,16 @@ namespace Compiler_FPC.Parser
                     return new DeclarationNode(tokenizer.Current, parseVar());
                 case "begin":
                     return parseBeginBlock(isMain);
+                case "forward":
+                    var name = tokenizer.Current;
+                    matchNext(TokenType.SEMICOLON);
+                    tokenizer.Next();
+                    return new ForwardDecl(name);
                 case "procedure":
                     return new ProcedureNode(matchNext(TokenType.ID), parseArgs(tokenizer.Current), parseBlocks());
                 case "function":
-                    var nameFunc = matchNext(TokenType.ID);
-                    return new FunctionNode(nameFunc, parseArgs(nameFunc, true), parseReturnValue(nameFunc), parseBlocks());
+                    var funcName = matchNext(TokenType.ID);
+                    return new FunctionNode(funcName, parseArgs(funcName, true), parseReturnValue(funcName), parseBlocks());
                 case "EOF":
                     return null;
                 default:

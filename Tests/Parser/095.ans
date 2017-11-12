@@ -1,0 +1,8 @@
+└─Program test
+  └─Procedure tets
+    ├─forward
+    └─Args of tets
+      ├─a
+      │ └─integer
+      └─b
+        └─integer

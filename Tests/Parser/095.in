@@ -1,0 +1,3 @@
+ProGrAm test;
+
+procedure tets(a: Integer; b: Integer); forward;

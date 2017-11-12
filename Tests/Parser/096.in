@@ -1,0 +1,13 @@
+ProGrAm test;
+
+procedure tets(a: Integer; b: Integer); forward;
+
+type
+    TInt = Integer;
+
+var
+    arr: array[1..5] of Integer;
+
+begin
+
+end.
