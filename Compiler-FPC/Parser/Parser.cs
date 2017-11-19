@@ -430,7 +430,7 @@ namespace Compiler_FPC.Parser
                         statements.Add(new VarNode(id, new AssignmentNode(afterId, parseExpr())));
                     }
                 }
-                else if (id.Type == TokenType.ID && afterId.Type == TokenType.LBRACKET)
+                else if ((id.Type == TokenType.ID || id.Type == TokenType.KEY_WORD) && afterId.Type == TokenType.LBRACKET)
                 {
                     statements.Add(new FuncCallNode(id, parseFuncCall()));
                 }
@@ -470,8 +470,6 @@ namespace Compiler_FPC.Parser
                         return parseFor();
                     case "end": case "until":
                         return null;
-                    default:
-                        throw new ParserException(id);
                 }
             }
 

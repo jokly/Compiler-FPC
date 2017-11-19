@@ -193,7 +193,7 @@ namespace Compiler_FPC
             "div", "do", "downto", "else", "end", "false", "file", "for", "function", "goto", "if", "implementation", "in",
             "inherited", "inline", "interface", "label", "mod", "nil", "not", "object", "of", "on", "operator", "or", "packed",
             "procedure", "program", "record", "reintroduce", "repeat", "self", "set", "shl", "shr", "string", "then", "to",
-            "true", "type", "unit", "until", "uses", "var", "while", "with", "xor"
+            "true", "type", "unit", "until", "uses", "var", "while", "with", "xor", "write", "writeln"
         };
 
     }
