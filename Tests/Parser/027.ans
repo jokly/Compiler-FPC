@@ -1,4 +1,8 @@
 └─Program hello
+  ├─Declaration type
+  │ └─tintarr
+  │   └─Array of
+  │     └─integer
   ├─Function sum
   │ ├─Declaration const
   │ │ └─test
@@ -33,17 +37,17 @@
   │ │ │ └─real
   │ │ └─arr
   │ │   └─Array of
-  │ │     ├─1
-  │ │     ├─2
   │ │     └─integer
   │ └─Return type sum
+  │   └─tintarr
+  ├─Declaration var
+  │ ├─mainvar
+  │ │ └─integer
+  │ └─arr
   │   └─Array of
   │     ├─1
   │     ├─2
   │     └─integer
-  ├─Declaration var
-  │ └─mainvar
-  │   └─integer
   └─Block begin
     └─Call function sum
       ├─1

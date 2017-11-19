@@ -15,13 +15,18 @@ namespace Compiler_FPC.Parser
     class SymbolTable
     {
         public SymbolTable Parent { get; protected set; } = null;
-        public List<SymbolTable> Childrens { get; protected set; } = new List<SymbolTable>();
+        private List<SymbolTable> Childrens = new List<SymbolTable>();
 
-        public Dictionary<string, Node> Table { get; } = new Dictionary<string, Node>();
+        private Dictionary<string, Node> Table = new Dictionary<string, Node>();
 
         public SymbolTable(SymbolTable parent = null)
         {
             Parent = parent;
+        }
+
+        public void AddChildTable(SymbolTable table)
+        {
+            Childrens.Add(table);
         }
 
         public void AddSymbol(Node symbol)
@@ -34,9 +39,14 @@ namespace Compiler_FPC.Parser
             Table.Add(symbolName, symbol);
         }
 
-        public void AddChildTable(SymbolTable table)
+        public bool IsExist(string name)
         {
-            Childrens.Add(table);
+            return Table.ContainsKey(name);
+        }
+
+        public void GetType(string name)
+        {
+            return; // Table[name]
         }
     }
 
@@ -68,9 +78,22 @@ namespace Compiler_FPC.Parser
             Current.AddSymbol(symbol);
         }
 
-        public void GetType(string name)
+        public void GetType(Token token)
         {
+            var name = token.Value;
+            SymbolTable ptr = Current;
 
+            while (ptr != null)
+            {
+                if (ptr.IsExist(name))
+                {
+                    return; //ptr.GetType(name);
+                }
+
+                ptr = ptr.Parent;
+            }
+
+            throw new NotFounIdException(token);
         }
     }
 }

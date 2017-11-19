@@ -1,1 +1,8 @@
-(a*(a+b)+c)-3;
+program hello;
+
+var
+    a, b, c, ans: Integer;
+
+begin
+    ans := (a * (a + b) + c) - 3;
+end.

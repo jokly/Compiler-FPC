@@ -1,9 +1,18 @@
 └─Program hello
+  ├─Function getsum
+  │ ├─Block begin
+  │ ├─Args of getsum
+  │ │ ├─a
+  │ │ │ └─real
+  │ │ └─b
+  │ │   └─real
+  │ └─Return type getsum
+  │   └─real
   ├─Declaration var
   │ ├─a
-  │ │ └─integer
+  │ │ └─real
   │ └─b
-  │   └─integer
+  │   └─real
   └─Block begin
     ├─a
     │ └─*=

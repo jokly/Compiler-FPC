@@ -1,7 +1,12 @@
 program hello;
 
+function getSum(a, b: Real) : Real;
+begin
+
+end;
+
 var
-    a, b: Integer;
+    a, b: Real;
 
 begin
     a *= getSum(a, b) - 2 * 5 / 100;

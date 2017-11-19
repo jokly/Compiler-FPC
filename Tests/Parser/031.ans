@@ -1,4 +1,11 @@
 └─Program hello
+  ├─Declaration var
+  │ ├─i
+  │ │ └─integer
+  │ ├─ans
+  │ │ └─integer
+  │ └─test
+  │   └─integer
   └─Block begin
     ├─for
     │ ├─Block begin
@@ -30,8 +37,6 @@
       │     │ ├─5
       │     │ └─1
       │     └─ans
-      └─/
-        ├─*
-        │ ├─100
-        │ └─5
-        └─20
+      └─*
+        ├─100
+        └─5

@@ -1,6 +1,9 @@
 ProGrAm hello;
 
-function sum(a, b: Integer; c: Real; arr: array[1..2] of Integer) : array[1..2] of Integer;
+type
+    TIntArr = array of Integer;
+
+function sum(a, b: Integer; c: Real; arr: array of Integer) : TIntArr;
 const
     test = 5;
 var
@@ -18,6 +21,7 @@ end;
 
 var
     mainVar: Integer;
+    arr: array[1..2] of Integer;
 
 begin 
     sum(1, 2, 5.0, arr);

@@ -1,6 +1,6 @@
 ProGrAm hello;
 
-procedure sum(a, b: Integer; c: Real; arr: array[1..2] of Integer);
+procedure sum(a, b: Integer; c: Real; arr: array of Integer);
 const
     test = 5;
 var
@@ -18,6 +18,7 @@ end;
 
 var
     mainVar: Integer;
+    arr: array[1..5] of Integer;
 
 begin 
     sum(1, 2, 5.0, arr);

@@ -1,10 +1,19 @@
 program hello;
 
+type
+    IntArr = array[1..100] of Integer;
+    IntArrFun = function() : IntArr;
+    SimpleProc = procedure();
+
+function getFuncGetArr() : IntArrFunc;
+begin
+
+end;
+
 var
-    arr: array[1..3] of array[1..3] of array[1..3] of Integer;
-    int: Integer;
+    int, l: Integer;
 
 begin
     int := getFuncGetArr()()[0];
-    int := getFuncGetArr(i)(j, k, 5 + 1)[l * 2 / 1, 0];
+    int := getFuncGetArr()()[l * 2];
 end.

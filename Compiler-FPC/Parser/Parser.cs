@@ -126,12 +126,14 @@ namespace Compiler_FPC.Parser
                     tables.NewTable();
                     var proc = new ProcedureNode(matchNext(TokenType.ID), parseArgs(tokenizer.Current), parseBlocks());
                     tables.BackTable();
+                    tables.AddSymbol(proc);
                     return proc;
                 case "function":
                     tables.NewTable();
                     var funcName = matchNext(TokenType.ID);
                     var func = new FunctionNode(funcName, parseArgs(funcName, true), parseReturnValue(funcName), parseBlocks());
                     tables.BackTable();
+                    tables.AddSymbol(func);
                     return func;
                 case "EOF":
                     return null;
@@ -212,7 +214,9 @@ namespace Compiler_FPC.Parser
                 matchNext(TokenType.RELOP_EQ);
                 tokenizer.Next();
 
-                consts.Add(new VarNode(nameToken, parseExpr()));
+                var varNode = new VarNode(nameToken, parseExpr());
+                tables.AddSymbol(varNode);
+                consts.Add(varNode);
 
                 require(TokenType.SEMICOLON);
             }
@@ -221,10 +225,11 @@ namespace Compiler_FPC.Parser
         private List<Node> parseTypeDecl()
         {
             List<Node> types = new List<Node>();
+            tokenizer.Next();
 
-            while(true)
+            while (true)
             {
-                var nameToken = tokenizer.Next();
+                var nameToken = tokenizer.Current;
 
                 if (nameToken.Type == TokenType.KEY_WORD && types.Count == 0)
                 {
@@ -242,17 +247,39 @@ namespace Compiler_FPC.Parser
 
                 if (tokenizer.Current.Value.Equals("record"))
                 {
+                    tables.NewTable();
                     types.Add(new RecordNode(nameToken, parseVar()));
-                    
+                    tables.BackTable();
+
                     require("end");
+                    matchNext(TokenType.SEMICOLON);
+                    tokenizer.Next();
                 }
                 else
                 {
-                    types.Add(new TypeNode(nameToken, getVarType()));
+                    types.Add(new TypeNode(nameToken, getType()));
                 }
-
-                matchNext(TokenType.SEMICOLON);
             }
+        }
+
+        private VarTypeNode getType()
+        {
+            if (tokenizer.Current.Value.Equals("function"))
+            {
+                var funcName = tokenizer.Current;
+                return new FuncTypeNode(funcName, parseArgs(funcName, true), parseReturnValue(funcName));
+            }
+            else if (tokenizer.Current.Value.Equals("procedure"))
+            {
+                var procName = tokenizer.Current;
+                return new ProcTypeNode(procName, parseArgs(tokenizer.Current));
+            }
+
+            var returnVal = getVarType();
+            matchNext(TokenType.SEMICOLON);
+            tokenizer.Next();
+
+            return returnVal;
         }
 
         private List<Node> parseVar(bool isArgs = false)
@@ -358,14 +385,22 @@ namespace Compiler_FPC.Parser
         {
             if (tokenizer.Current.Value == "array")
             {
-                matchNext(TokenType.LSQUARE_BRACKET);
-                tokenizer.Next();
-                var leftRange = parseExpr();
-                require(TokenType.DOUBLE_DOT);
-                tokenizer.Next();
-                var rightRange = parseExpr();
-                require(TokenType.RSQUARE_BRACKET);
-                var of = matchNext("of");
+                var of = tokenizer.Next();
+                ExprNode leftRange = null;
+                ExprNode rightRange = null;
+
+                if (tokenizer.Current.Value.Equals("["))
+                {
+                    tokenizer.Next();
+                    leftRange = parseExpr();
+                    require(TokenType.DOUBLE_DOT);
+                    tokenizer.Next();
+                    rightRange = parseExpr();
+                    require(TokenType.RSQUARE_BRACKET);
+                    of = matchNext("of");
+                }
+                else if (!tokenizer.Current.Value.Equals("of"))
+                    throw new ParserException(tokenizer.Current);
 
                 tokenizer.Next();
 
@@ -680,6 +715,8 @@ namespace Compiler_FPC.Parser
             {
                 case TokenType.ID:
                     tokenizer.Next();
+
+                    tables.GetType(t);
 
                     List<List<Node>> funcCall = new List<List<Node>>();
                     while (tokenizer.Current.Type == TokenType.LBRACKET)

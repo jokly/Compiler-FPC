@@ -1,10 +1,12 @@
 ProGrAm hello;
 
+var
+    ans, a, b: Integer;
+
 begin 
     ans := a mod 2 + b div 2;
     ans := a shl 2;
     ans := a << 2;
     ans := a shr 2;
     ans := a >> 2;
-    ans := b as Integer;
 end.

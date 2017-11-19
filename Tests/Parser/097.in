@@ -1,6 +1,23 @@
 ProGrAm test;
 
+type
+    TSmallRec = record
+        b: Integer;
+    end;
+    TParentRec = record
+        a: TSmallRec;
+    end;
+
+function GetRec() : TSmallRec;
+begin 
+
+end;
+
+var
+    rec: TParentRec;
+    a, b: Integer;
+
 begin
     a := rec.a.b;
-    a := GetRec().a;
+    b := GetRec().b;
 end.

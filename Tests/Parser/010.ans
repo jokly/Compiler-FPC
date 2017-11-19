@@ -1,11 +1,24 @@
-└─*
-  ├─+
-  │ ├─+
-  │ │ ├─+
-  │ │ │ ├─a
-  │ │ │ └─b
-  │ │ └─-
-  │ │   ├─c
-  │ │   └─3
-  │ └─4
-  └─5
+└─Program hello
+  ├─Declaration var
+  │ ├─a
+  │ │ └─integer
+  │ ├─b
+  │ │ └─integer
+  │ ├─c
+  │ │ └─integer
+  │ └─ans
+  │   └─integer
+  └─Block begin
+    └─ans
+      └─:=
+        └─*
+          ├─+
+          │ ├─+
+          │ │ ├─+
+          │ │ │ ├─a
+          │ │ │ └─b
+          │ │ └─-
+          │ │   ├─c
+          │ │   └─3
+          │ └─4
+          └─5

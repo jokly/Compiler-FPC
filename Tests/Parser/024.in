@@ -1,5 +1,8 @@
 ProGrAm hello;
 
+var
+    a, b, c, ans: Integer;
+
 begin 
     ans := a and b;
     ans := a or b;

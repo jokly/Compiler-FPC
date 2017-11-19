@@ -1,1 +1,8 @@
-(a-b)+(b+c);
+program hello;
+
+var
+    a, b, c, ans: Integer;
+
+begin
+    ans := (a - b) + (b + c);
+end.

@@ -75,4 +75,11 @@ namespace Compiler_FPC.Parser
         public override string Message => $"({token.Row}, {token.Col}): Duplicate identifier '{token.Value}';" +
                                           $" First found at ({FirstDecl.Row}, {FirstDecl.Col})";
     }
+
+    class NotFounIdException : SemanticException
+    {
+        public NotFounIdException(Token token) : base(token) { }
+
+        public override string Message => $"({token.Row}, {token.Col}): Identifier not fount '{token.Value}'";
+    }
 }

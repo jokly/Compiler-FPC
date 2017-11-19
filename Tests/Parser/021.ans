@@ -41,11 +41,11 @@
   │     ├─2
   │     └─tintarr
   ├─Declaration var
-  │ ├─a
+  │ ├─d
   │ │ └─integer
-  │ ├─b
+  │ ├─e
   │ │ └─integer
-  │ ├─c
+  │ ├─f
   │ │ └─real
   │ ├─arr1
   │ │ └─Array of

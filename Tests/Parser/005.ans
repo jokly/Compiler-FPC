@@ -1,7 +1,22 @@
-└─-
-  ├─a
-  └─*
-    ├─/
-    │ ├─b
-    │ └─c
-    └─f
+└─Program hello
+  ├─Declaration var
+  │ ├─a
+  │ │ └─real
+  │ ├─b
+  │ │ └─real
+  │ ├─c
+  │ │ └─real
+  │ ├─f
+  │ │ └─real
+  │ └─ans
+  │   └─real
+  └─Block begin
+    └─ans
+      └─:=
+        └─-
+          ├─a
+          └─*
+            ├─/
+            │ ├─b
+            │ └─c
+            └─f

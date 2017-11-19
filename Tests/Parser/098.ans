@@ -1,4 +1,7 @@
 └─Program test
+  ├─Declaration var
+  │ └─a
+  │   └─char
   └─Block begin
     └─a
       └─:=

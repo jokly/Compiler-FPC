@@ -1,4 +1,13 @@
 └─Program hello
+  ├─Declaration var
+  │ ├─a
+  │ │ └─integer
+  │ ├─b
+  │ │ └─integer
+  │ ├─c
+  │ │ └─integer
+  │ └─ans
+  │   └─integer
   └─Block begin
     ├─ans
     │ └─:=

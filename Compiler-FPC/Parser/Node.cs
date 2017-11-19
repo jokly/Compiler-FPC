@@ -96,6 +96,23 @@ namespace Compiler_FPC.Parser
         }
     }
 
+    class ProcTypeNode : VarTypeNode
+    {
+        public ProcTypeNode(Token token, ArgsNode args) : base(token)
+        {
+            Left = args;
+        }
+    }
+
+    class FuncTypeNode : VarTypeNode
+    {
+        public FuncTypeNode(Token token, ArgsNode args, ReturnValueNode returnValue) : base(token)
+        {
+            Left = args;
+            Right = returnValue;
+        }
+    }
+
     class BlockNode : Node
     {
         public BlockNode(Token token, List<Node> childrens = null) : base(token, "Block")

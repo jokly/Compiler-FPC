@@ -1,4 +1,12 @@
 └─Program hello
+  ├─Function ptrfunc
+  │ ├─Block begin
+  │ │ └─result
+  │ │   └─:=
+  │ │     └─1
+  │ ├─Args of ptrfunc
+  │ └─Return type ptrfunc
+  │   └─integer
   ├─Declaration var
   │ ├─ptri
   │ │ └─^

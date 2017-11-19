@@ -1,1 +1,8 @@
-((a + b+(c -3)) + 4) * 5;
+program hello;
+
+var
+    a, b, c, ans: Integer;
+
+begin
+    ans := ((a + b + (c - 3)) + 4) * 5;
+end.

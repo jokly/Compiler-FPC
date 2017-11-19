@@ -1,8 +1,15 @@
 ProGrAm hello;
 
+var
+    ans: Integer;
+    test: ^Integer;
+
 begin 
     ans := +2;
     ans := -2;
-    ans := @test;
-    ans := not test;
+    test := @ans;
+    
+    if (not (5 <> 5)) then begin
+        ans := 0;
+    end;
 end.

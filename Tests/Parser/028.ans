@@ -1,6 +1,10 @@
 └─Program hello
   ├─Declaration var
-  │ └─mainvar
+  │ ├─ans
+  │ │ └─integer
+  │ ├─a
+  │ │ └─integer
+  │ └─b
   │   └─integer
   └─Block begin
     └─while

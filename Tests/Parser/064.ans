@@ -1,1 +1,10 @@
-(5, 16): Unexpected token 'of'; Expected: '['
+└─Program test
+  ├─Declaration var
+  │ ├─a
+  │ │ └─integer
+  │ ├─b
+  │ │ └─integer
+  │ └─arr
+  │   └─Array of
+  │     └─integer
+  └─Block begin

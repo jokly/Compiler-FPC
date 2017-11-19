@@ -1,7 +1,22 @@
-└─*
-  ├─*
+└─Program hello
+  ├─Declaration var
+  │ ├─a
+  │ │ └─integer
+  │ ├─b
+  │ │ └─integer
   │ ├─c
-  │ └─*
-  │   ├─a
-  │   └─b
-  └─v
+  │ │ └─integer
+  │ ├─v
+  │ │ └─integer
+  │ └─ans
+  │   └─integer
+  └─Block begin
+    └─ans
+      └─:=
+        └─*
+          ├─*
+          │ ├─c
+          │ └─*
+          │   ├─a
+          │   └─b
+          └─v

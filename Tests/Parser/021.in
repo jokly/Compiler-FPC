@@ -18,8 +18,8 @@ type
     TMatrix = array[1..2] of TIntArr;
 
 var
-    a, b: Integer;
-    c: Real;
+    d, e: Integer;
+    f: Real;
     arr1, arr2: array[1..5] of array[1..5] of Integer;
 
 type

@@ -1,1 +1,8 @@
-a-b/c*f;
+program hello;
+
+var
+    a, b, c, f, ans: Real;
+
+begin
+    ans := a - b / c * f;
+end.

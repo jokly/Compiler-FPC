@@ -1,5 +1,8 @@
 ProGrAm hello;
 
+var
+    i, ans, test: Integer;
+
 begin 
     for i := 1 to 5 do begin
         while 5 = 5 do begin
@@ -7,7 +10,7 @@ begin
         end;
     end;
 
-    for i := 5 + 1 - ans downto 100 * 5 / 20 do begin
+    for i := 5 + 1 - ans downto 100 * 5 do begin
         test += 1;
         WriteLn(test);
     end;

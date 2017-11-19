@@ -33,12 +33,15 @@
   │   │ └─real
   │   └─arr
   │     └─Array of
-  │       ├─1
-  │       ├─2
   │       └─integer
   ├─Declaration var
-  │ └─mainvar
-  │   └─integer
+  │ ├─mainvar
+  │ │ └─integer
+  │ └─arr
+  │   └─Array of
+  │     ├─1
+  │     ├─5
+  │     └─integer
   └─Block begin
     └─Call function sum
       ├─1

@@ -1,1 +1,8 @@
-c*(a*b)*v;
+program hello;
+
+var
+    a, b, c, v, ans: Integer;
+
+begin
+    ans := c * (a * b) * v;
+end.

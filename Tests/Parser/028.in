@@ -1,7 +1,7 @@
 ProGrAm hello;
 
 var
-    mainVar: Integer;
+    ans, a, b: Integer;
 
 begin 
     while (5 = 5) and (a + b > 10) do begin

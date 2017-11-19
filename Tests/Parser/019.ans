@@ -1,17 +1,27 @@
 └─Program hello
-  ├─Declaration var
-  │ ├─arr
+  ├─Declaration type
+  │ ├─intarr
   │ │ └─Array of
   │ │   ├─1
-  │ │   ├─3
-  │ │   └─Array of
-  │ │     ├─1
-  │ │     ├─3
-  │ │     └─Array of
-  │ │       ├─1
-  │ │       ├─3
-  │ │       └─integer
-  │ └─int
+  │ │   ├─100
+  │ │   └─integer
+  │ ├─intarrfun
+  │ │ └─function
+  │ │   ├─Args of function
+  │ │   └─Return type function
+  │ │     └─intarr
+  │ └─simpleproc
+  │   └─procedure
+  │     └─Args of procedure
+  ├─Function getfuncgetarr
+  │ ├─Block begin
+  │ ├─Args of getfuncgetarr
+  │ └─Return type getfuncgetarr
+  │   └─intarrfunc
+  ├─Declaration var
+  │ ├─int
+  │ │ └─integer
+  │ └─l
   │   └─integer
   └─Block begin
     ├─int
@@ -23,17 +33,8 @@
     └─int
       └─:=
         └─Call function getfuncgetarr
-          ├─i
           └─Call function getfuncgetarr
-            ├─j
-            ├─k
-            ├─+
-            │ ├─5
-            │ └─1
             └─[ Index ]
-              ├─/
-              │ ├─*
-              │ │ ├─l
-              │ │ └─2
-              │ └─1
-              └─0
+              └─*
+                ├─l
+                └─2

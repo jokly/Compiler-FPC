@@ -1,4 +1,10 @@
 └─Program hello
+  ├─Declaration var
+  │ ├─ans
+  │ │ └─integer
+  │ └─test
+  │   └─^
+  │     └─integer
   └─Block begin
     ├─ans
     │ └─:=
@@ -8,11 +14,16 @@
     │ └─:=
     │   └─-
     │     └─2
-    ├─ans
+    ├─test
     │ └─:=
     │   └─@
-    │     └─test
-    └─ans
-      └─:=
-        └─not
-          └─test
+    │     └─ans
+    └─Block if
+      ├─Block begin
+      │ └─ans
+      │   └─:=
+      │     └─0
+      └─not
+        └─<>
+          ├─5
+          └─5
