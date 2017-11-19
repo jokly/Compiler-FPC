@@ -1,0 +1,8 @@
+program hello;
+
+var
+    a, a: Integer;
+
+begin
+
+end.

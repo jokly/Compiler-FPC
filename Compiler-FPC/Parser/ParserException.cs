@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Compiler_FPC.Parser
 {
-    class ParserException : Exception
+    class CompilerException : Exception { }
+
+    class ParserException : CompilerException
     {
         protected Token token;
         protected string expectedTk;
@@ -47,5 +49,30 @@ namespace Compiler_FPC.Parser
         public ExpectedAfterException(Token token, TokenType expectedTk) : base(token, expectedTk) { }
 
         public override string Message => $"({token.Row}, {token.Col}): Expected after '{token.Text}' token '{expectedTk}'";
+    }
+
+    class SemanticException : CompilerException
+    {
+        protected Token token;
+
+        public SemanticException(Token token)
+        {
+            this.token = token;
+        }
+
+        public override string Message => $"({token.Row}, {token.Col}): Semantic exception";
+    }
+
+    class DuplicateDeclarationException : SemanticException
+    {
+        protected Token FirstDecl;
+
+        public DuplicateDeclarationException(Token firstDecl, Token duplDecl) : base(duplDecl)
+        {
+            FirstDecl = firstDecl;
+        }
+
+        public override string Message => $"({token.Row}, {token.Col}): Duplicate identifier '{token.Value}';" +
+                                          $" First found at ({FirstDecl.Row}, {FirstDecl.Col})";
     }
 }

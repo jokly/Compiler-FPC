@@ -7,13 +7,19 @@ namespace Compiler_FPC.Parser
     {
         private readonly Tokenizer tokenizer;
         private SyntaxTree tree;
+        private SymbolTableTree tables;
 
-        public Parser(string fileName)
+        private Parser()
         {
-            tokenizer = new Tokenizer(fileName); 
+            tables = new SymbolTableTree();
         }
 
-        public Parser(Tokenizer tokenizer)
+        public Parser(string fileName) : this()
+        {
+            tokenizer = new Tokenizer(fileName);
+        }
+
+        public Parser(Tokenizer tokenizer) : this()
         {
             this.tokenizer = tokenizer;
         }
@@ -27,7 +33,7 @@ namespace Compiler_FPC.Parser
                 {
                     tree = new SyntaxTree(parseProgram());
                 }
-                catch (ParserException ex)
+                catch (CompilerException ex)
                 {
                     return ex.Message;
                 }
@@ -117,10 +123,16 @@ namespace Compiler_FPC.Parser
                     tokenizer.Next();
                     return new ForwardDecl(name);
                 case "procedure":
-                    return new ProcedureNode(matchNext(TokenType.ID), parseArgs(tokenizer.Current), parseBlocks());
+                    tables.NewTable();
+                    var proc = new ProcedureNode(matchNext(TokenType.ID), parseArgs(tokenizer.Current), parseBlocks());
+                    tables.BackTable();
+                    return proc;
                 case "function":
+                    tables.NewTable();
                     var funcName = matchNext(TokenType.ID);
-                    return new FunctionNode(funcName, parseArgs(funcName, true), parseReturnValue(funcName), parseBlocks());
+                    var func = new FunctionNode(funcName, parseArgs(funcName, true), parseReturnValue(funcName), parseBlocks());
+                    tables.BackTable();
+                    return func;
                 case "EOF":
                     return null;
                 default:
@@ -293,7 +305,9 @@ namespace Compiler_FPC.Parser
 
                 foreach (var tokenVar in tokensVars)
                 {
-                    vars.Add(new VarNode(tokenVar, type));
+                    var varNode = new VarNode(tokenVar, type);
+                    tables.AddSymbol(varNode);
+                    vars.Add(varNode);
                 }
 
                 tokensVars.Clear();

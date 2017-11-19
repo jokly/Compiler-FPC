@@ -1,0 +1,15 @@
+program hello;
+
+var
+    a: Integer;
+
+procedure test();
+var
+    a, a: Integer;
+begin
+
+end;
+
+begin
+
+end.

@@ -1,0 +1,11 @@
+└─Program hello
+  ├─Declaration var
+  │ └─a
+  │   └─integer
+  ├─Procedure test
+  │ ├─Declaration var
+  │ │ └─a
+  │ │   └─integer
+  │ ├─Block begin
+  │ └─Args of test
+  └─Block begin

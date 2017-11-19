@@ -4,14 +4,14 @@ import glob
 import subprocess as subpr
 from os.path import basename
 
-TESTS_PATH = os.path.dirname(os.path.realpath(__file__))
+TESTS_PATH = os.path.dirname(os.path.realpath(__file__)) + os.sep
 
-PATH_TO_COMPILER = TESTS_PATH + os.sep + '..' + os.sep + 'Compiler-FPC' + os.sep + 'bin' + \
+PATH_TO_COMPILER = TESTS_PATH + '..' + os.sep + 'Compiler-FPC' + os.sep + 'bin' + \
     os.sep + 'Debug' + os.sep + 'Compiler-FPC.exe'
 
 TESTS = {
-    '-l': [TESTS_PATH + os.sep +'Lexer'],
-    '-p': [TESTS_PATH + os.sep +'Parser'],
+    '-l': [TESTS_PATH +'Lexer'],
+    '-p': [TESTS_PATH +'Parser', TESTS_PATH +'Semantic'],
 }
 
 def test(folders, optinons = []):

@@ -1,0 +1,18 @@
+program hello;
+
+var
+    a: Integer;
+
+procedure test(a: Integer);
+var
+    b: Integer;
+begin
+
+end;
+
+var
+    a: Integer;
+
+begin
+
+end.
