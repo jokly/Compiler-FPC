@@ -11,6 +11,8 @@
   │   └─integer
   ├─Declaration var
   │ └─arr
-  │   └─Array [1..5] of
+  │   └─Array of
+  │     ├─1
+  │     ├─5
   │     └─integer
   └─Block begin

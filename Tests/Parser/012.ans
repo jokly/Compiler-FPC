@@ -7,12 +7,20 @@
   │ ├─c
   │ │ └─real
   │ ├─arr1
-  │ │ └─Array [1..5] of
-  │ │   └─Array [1..5] of
+  │ │ └─Array of
+  │ │   ├─1
+  │ │   ├─5
+  │ │   └─Array of
+  │ │     ├─1
+  │ │     ├─5
   │ │     └─integer
   │ └─arr2
-  │   └─Array [1..5] of
-  │     └─Array [1..5] of
+  │   └─Array of
+  │     ├─1
+  │     ├─5
+  │     └─Array of
+  │       ├─1
+  │       ├─5
   │       └─integer
   ├─Declaration var
   │ └─new

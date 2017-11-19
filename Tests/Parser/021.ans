@@ -12,7 +12,9 @@
   │ ├─tint
   │ │ └─integer
   │ ├─tintarr
-  │ │ └─Array [1..5] of
+  │ │ └─Array of
+  │ │   ├─1
+  │ │   ├─5
   │ │   └─integer
   │ ├─Record trec
   │ │ ├─x
@@ -20,15 +22,23 @@
   │ │ ├─y
   │ │ │ └─real
   │ │ └─arr
-  │ │   └─Array [1..2] of
+  │ │   └─Array of
+  │ │     ├─1
+  │ │     ├─2
   │ │     └─tint
   │ ├─Record trec2
   │ │ └─matrix
-  │ │   └─Array [1..2] of
-  │ │     └─Array [1..2] of
+  │ │   └─Array of
+  │ │     ├─1
+  │ │     ├─2
+  │ │     └─Array of
+  │ │       ├─1
+  │ │       ├─2
   │ │       └─tint
   │ └─tmatrix
-  │   └─Array [1..2] of
+  │   └─Array of
+  │     ├─1
+  │     ├─2
   │     └─tintarr
   ├─Declaration var
   │ ├─a
@@ -38,12 +48,20 @@
   │ ├─c
   │ │ └─real
   │ ├─arr1
-  │ │ └─Array [1..5] of
-  │ │   └─Array [1..5] of
+  │ │ └─Array of
+  │ │   ├─1
+  │ │   ├─5
+  │ │   └─Array of
+  │ │     ├─1
+  │ │     ├─5
   │ │     └─integer
   │ └─arr2
-  │   └─Array [1..5] of
-  │     └─Array [1..5] of
+  │   └─Array of
+  │     ├─1
+  │     ├─5
+  │     └─Array of
+  │       ├─1
+  │       ├─5
   │       └─integer
   ├─Declaration type
   │ └─tint2

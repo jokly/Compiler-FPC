@@ -345,15 +345,17 @@ namespace Compiler_FPC.Parser
             if (tokenizer.Current.Value == "array")
             {
                 matchNext(TokenType.LSQUARE_BRACKET);
-                var leftRange = matchNext(TokenType.INTEGER);
-                matchNext(TokenType.DOUBLE_DOT);
-                var rightRange = matchNext(TokenType.INTEGER);
-                matchNext(TokenType.RSQUARE_BRACKET);
+                tokenizer.Next();
+                var leftRange = parseExpr();
+                require(TokenType.DOUBLE_DOT);
+                tokenizer.Next();
+                var rightRange = parseExpr();
+                require(TokenType.RSQUARE_BRACKET);
                 var of = matchNext("of");
 
                 tokenizer.Next();
 
-                return new ArrayTypeNode(of, leftRange.Value, rightRange.Value, getArrayTypeNode());
+                return new ArrayTypeNode(of, leftRange, rightRange, getArrayTypeNode());
             }
             else if (tokenizer.Current.Type == TokenType.POINTER)
             {

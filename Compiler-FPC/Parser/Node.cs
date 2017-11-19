@@ -2,11 +2,6 @@
 
 namespace Compiler_FPC.Parser
 {
-    enum Types
-    {
-        INT, REAL, CHAR, STRING, BOOL
-    }
-
     class Node
     {
         public Node Left { get; protected set; } = null;
@@ -85,10 +80,11 @@ namespace Compiler_FPC.Parser
 
     class ArrayTypeNode : VarTypeNode
     {
-        public ArrayTypeNode(Token token, string leftRange, string rightRange, Node type) :
-            base(token, "Array [" + leftRange + ".." + rightRange + "]")
+        public ArrayTypeNode(Token token, Node leftRange, Node rightRange, Node type) :
+            base(token, "Array")
         {
             Left = type;
+            Childrens = new List<Node> { leftRange, rightRange };
         }
     }
 

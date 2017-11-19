@@ -11,7 +11,9 @@
   │ │   └─5,5
   │ ├─Declaration type
   │ │ └─tarrint
-  │ │   └─Array [1..2] of
+  │ │   └─Array of
+  │ │     ├─1
+  │ │     ├─2
   │ │     └─integer
   │ ├─Declaration var
   │ │ └─intarr
@@ -30,7 +32,9 @@
   │   ├─c
   │   │ └─real
   │   └─arr
-  │     └─Array [1..2] of
+  │     └─Array of
+  │       ├─1
+  │       ├─2
   │       └─integer
   ├─Declaration var
   │ └─mainvar
