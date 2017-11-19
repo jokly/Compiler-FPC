@@ -703,6 +703,10 @@ namespace Compiler_FPC.Parser
                     return new RealConstNode(t);
                 case TokenType.STRING:
                     tokenizer.Next();
+
+                    if (t.Value.Length == 1)
+                        return new CharConstNode(t);
+
                     return new StringConstNode(t);
                 case TokenType.LBRACKET:
                     tokenizer.Next();

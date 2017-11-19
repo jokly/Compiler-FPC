@@ -1,0 +1,5 @@
+└─Program test
+  └─Block begin
+    └─a
+      └─:=
+        └─a

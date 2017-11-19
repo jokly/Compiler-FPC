@@ -2,6 +2,11 @@
 
 namespace Compiler_FPC.Parser
 {
+    enum Types
+    {
+        INT, REAL, CHAR, STRING, BOOL
+    }
+
     class Node
     {
         public Node Left { get; protected set; } = null;
@@ -267,6 +272,11 @@ namespace Compiler_FPC.Parser
     class RealConstNode : ConstNode
     {
         public RealConstNode(Token token) : base(token) { }
+    }
+
+    class CharConstNode : ConstNode
+    {
+        public CharConstNode(Token token) : base(token) { }
     }
 
     class StringConstNode : ConstNode
