@@ -4,7 +4,10 @@ lexer:
 parser:
 	python Tests\test.py -p
 
-test: lexer parser
+semantic:
+	python Tests\test.py -s
+
+test: lexer parser semantic
 
 clean:
 	git clean -x

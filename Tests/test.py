@@ -11,7 +11,8 @@ PATH_TO_COMPILER = TESTS_PATH + '..' + os.sep + 'Compiler-FPC' + os.sep + 'bin' 
 
 TESTS = {
     '-l': [TESTS_PATH +'Lexer'],
-    '-p': [TESTS_PATH +'Parser', TESTS_PATH +'Semantic'],
+    '-p': [TESTS_PATH +'Parser'],
+    '-s': [TESTS_PATH +'Semantic']
 }
 
 def test(folders, optinons = []):
@@ -64,6 +65,7 @@ if __name__ == '__main__':
 
     argsParser.add_argument('-l', '--lexer', help='Start lexer tests', action='store_true')
     argsParser.add_argument('-p', '--parser', help='Start parser tests', action='store_true')
+    argsParser.add_argument('-s', '--semantic', help='Start semantic tests', action='store_true')
 
     args = argsParser.parse_args()
 
@@ -73,7 +75,10 @@ if __name__ == '__main__':
     if args.parser:
         test(TESTS['-p'], ['-p'])
 
-    if not args.lexer and not args.parser:
+    if args.semantic:
+        test(TESTS['-s'], ['-p'])
+
+    if not args.lexer and not args.parser and not args.semantic:
         for key in TESTS:
             test(TESTS[key], [key])
             
