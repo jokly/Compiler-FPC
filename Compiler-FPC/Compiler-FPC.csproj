@@ -108,7 +108,14 @@
     <Compile Include="Parser\Node.cs" />
     <Compile Include="Parser\Parser.cs" />
     <Compile Include="Parser\ParserException.cs" />
+    <Compile Include="Parser\SemanticException.cs" />
+    <Compile Include="Parser\Symbol.cs" />
+    <Compile Include="Parser\SymbolTableTree.cs" />
+    <Compile Include="Parser\SymFunc.cs" />
+    <Compile Include="Parser\SymType.cs" />
+    <Compile Include="Parser\SymVar.cs" />
     <Compile Include="Parser\SyntaxTree.cs" />
+    <Compile Include="Parser\TypeBuilder.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Lexer\Token.cs" />

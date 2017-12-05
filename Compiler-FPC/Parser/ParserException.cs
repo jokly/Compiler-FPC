@@ -50,36 +50,4 @@ namespace Compiler_FPC.Parser
 
         public override string Message => $"({token.Row}, {token.Col}): Expected after '{token.Text}' token '{expectedTk}'";
     }
-
-    class SemanticException : CompilerException
-    {
-        protected Token token;
-
-        public SemanticException(Token token)
-        {
-            this.token = token;
-        }
-
-        public override string Message => $"({token.Row}, {token.Col}): Semantic exception";
-    }
-
-    class DuplicateDeclarationException : SemanticException
-    {
-        protected Token FirstDecl;
-
-        public DuplicateDeclarationException(Token firstDecl, Token duplDecl) : base(duplDecl)
-        {
-            FirstDecl = firstDecl;
-        }
-
-        public override string Message => $"({token.Row}, {token.Col}): Duplicate identifier '{token.Value}';" +
-                                          $" First found at ({FirstDecl.Row}, {FirstDecl.Col})";
-    }
-
-    class NotFounIdException : SemanticException
-    {
-        public NotFounIdException(Token token) : base(token) { }
-
-        public override string Message => $"({token.Row}, {token.Col}): Identifier not fount '{token.Value}'";
-    }
 }

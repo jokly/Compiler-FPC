@@ -2,22 +2,12 @@
 
 namespace Compiler_FPC.Parser
 {
-    class Symbol
-    {
-        string Name;
-
-        public Symbol(string name)
-        {
-            Name = name;
-        }
-    }
-
     class SymbolTable
     {
         public SymbolTable Parent { get; protected set; } = null;
         private List<SymbolTable> Childrens = new List<SymbolTable>();
 
-        private Dictionary<string, Node> Table = new Dictionary<string, Node>();
+        private Dictionary<string, Symbol> Table = new Dictionary<string, Symbol>();
 
         public SymbolTable(SymbolTable parent = null)
         {
@@ -29,12 +19,12 @@ namespace Compiler_FPC.Parser
             Childrens.Add(table);
         }
 
-        public void AddSymbol(Node symbol)
+        public void AddSymbol(Symbol symbol)
         {
-            var symbolName = symbol.Token.Value;
+            var symbolName = symbol.Node.Token.Value;
 
             if (Table.ContainsKey(symbolName))
-                throw new DuplicateDeclarationException(Table[symbolName].Token, symbol.Token);
+                throw new DuplicateDeclarationException(Table[symbolName].Node.Token, symbol.Node.Token);
 
             Table.Add(symbolName, symbol);
         }
@@ -44,9 +34,14 @@ namespace Compiler_FPC.Parser
             return Table.ContainsKey(name);
         }
 
-        public void GetType(string name)
+        public Symbol GetSymbol(Token token)
         {
-            return; // Table[name]
+            var name = token.Value;
+
+            if (!IsExist(name))
+                throw new NotFounIdException(token);
+
+            return Table[name];
         }
     }
 
@@ -73,12 +68,12 @@ namespace Compiler_FPC.Parser
             Current = Current.Parent;
         }
 
-        public void AddSymbol(Node symbol)
+        public void AddSymbol(Symbol symbol)
         {
             Current.AddSymbol(symbol);
         }
 
-        public void GetType(Token token)
+        public Symbol GetSymbol(Token token)
         {
             var name = token.Value;
             SymbolTable ptr = Current;
@@ -87,7 +82,7 @@ namespace Compiler_FPC.Parser
             {
                 if (ptr.IsExist(name))
                 {
-                    return; //ptr.GetType(name);
+                    return ptr.GetSymbol(token);
                 }
 
                 ptr = ptr.Parent;

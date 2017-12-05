@@ -126,14 +126,14 @@ namespace Compiler_FPC.Parser
                     tables.NewTable();
                     var proc = new ProcedureNode(matchNext(TokenType.ID), parseArgs(tokenizer.Current), parseBlocks());
                     tables.BackTable();
-                    tables.AddSymbol(proc);
+                    tables.AddSymbol(new SymProc(proc));
                     return proc;
                 case "function":
                     tables.NewTable();
                     var funcName = matchNext(TokenType.ID);
                     var func = new FunctionNode(funcName, parseArgs(funcName, true), parseReturnValue(funcName), parseBlocks());
                     tables.BackTable();
-                    tables.AddSymbol(func);
+                    tables.AddSymbol(new SymFunc(func));
                     return func;
                 case "EOF":
                     return null;
@@ -215,7 +215,7 @@ namespace Compiler_FPC.Parser
                 tokenizer.Next();
 
                 var varNode = new VarNode(nameToken, parseExpr());
-                tables.AddSymbol(varNode);
+                tables.AddSymbol(new SymVar(varNode, new SymType()));
                 consts.Add(varNode);
 
                 require(TokenType.SEMICOLON);
@@ -248,8 +248,11 @@ namespace Compiler_FPC.Parser
                 if (tokenizer.Current.Value.Equals("record"))
                 {
                     tables.NewTable();
-                    types.Add(new RecordNode(nameToken, parseVar()));
+                    var recordNode = new RecordNode(nameToken, parseVar());
                     tables.BackTable();
+
+                    types.Add(recordNode);
+                    tables.AddSymbol(TypeBuilder.Build(recordNode, tables));
 
                     require("end");
                     matchNext(TokenType.SEMICOLON);
@@ -257,7 +260,9 @@ namespace Compiler_FPC.Parser
                 }
                 else
                 {
-                    types.Add(new TypeNode(nameToken, getType()));
+                    var typeNode = new TypeNode(nameToken, getType());
+                    types.Add(typeNode);
+                    tables.AddSymbol(TypeBuilder.Build(typeNode, tables));
                 }
             }
         }
@@ -333,7 +338,9 @@ namespace Compiler_FPC.Parser
                 foreach (var tokenVar in tokensVars)
                 {
                     var varNode = new VarNode(tokenVar, type);
-                    tables.AddSymbol(varNode);
+                    var symType = TypeBuilder.Build(type, tables);
+
+                    tables.AddSymbol(new SymVar(varNode, symType));
                     vars.Add(varNode);
                 }
 
@@ -716,7 +723,7 @@ namespace Compiler_FPC.Parser
                 case TokenType.ID:
                     tokenizer.Next();
 
-                    tables.GetType(t);
+                    tables.GetSymbol(t);
 
                     List<List<Node>> funcCall = new List<List<Node>>();
                     while (tokenizer.Current.Type == TokenType.LBRACKET)

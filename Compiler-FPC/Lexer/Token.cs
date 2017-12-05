@@ -11,11 +11,11 @@ namespace Compiler_FPC
 
         public Token(int row, int col, TokenType tokenType, string value, string text)
         {
-            this.Row = row;
-            this.Col = col;
-            this.Type = tokenType;
-            this.Value = value;
-            this.Text = text;
+            Row = row;
+            Col = col;
+            Type = tokenType;
+            Value = value;
+            Text = text;
         }
     }
 }
