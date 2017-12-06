@@ -2,7 +2,7 @@ program hello;
 
 type
     IntArr = array[1..100] of Integer;
-    IntArrFun = function() : IntArr;
+    IntArrFunc = function() : IntArr;
     SimpleProc = procedure();
 
 function getFuncGetArr() : IntArrFunc;

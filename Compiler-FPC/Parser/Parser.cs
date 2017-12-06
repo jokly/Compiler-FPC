@@ -126,14 +126,14 @@ namespace Compiler_FPC.Parser
                     tables.NewTable();
                     var proc = new ProcedureNode(matchNext(TokenType.ID), parseArgs(tokenizer.Current), parseBlocks());
                     tables.BackTable();
-                    tables.AddSymbol(new SymProc(proc));
+                    tables.AddSymbol(new SymTypeProc(proc));
                     return proc;
                 case "function":
                     tables.NewTable();
                     var funcName = matchNext(TokenType.ID);
                     var func = new FunctionNode(funcName, parseArgs(funcName, true), parseReturnValue(funcName), parseBlocks());
                     tables.BackTable();
-                    tables.AddSymbol(new SymFunc(func));
+                    tables.AddSymbol(new SymTypeFunc(func, TypeBuilder.Build(func.Right, tables)));
                     return func;
                 case "EOF":
                     return null;
@@ -474,7 +474,12 @@ namespace Compiler_FPC.Parser
                 }
                 else if ((id.Type == TokenType.ID || id.Type == TokenType.KEY_WORD) && afterId.Type == TokenType.LBRACKET)
                 {
-                    statements.Add(new FuncCallNode(id, parseFuncCall()));
+                    var func = new FuncCallNode(id, parseFuncCall());
+
+                    if (id.Type != TokenType.KEY_WORD)
+                        TypeBuilder.RequireProcFunc(func, tables);
+
+                    statements.Add(func);
                 }
                 else if (isUntil && !id.Value.Equals("until"))
                 {

@@ -1,4 +1,24 @@
 └─Program hello
+  ├─Function sumfunc
+  │ ├─Block begin
+  │ ├─Args of sumfunc
+  │ │ ├─a
+  │ │ │ └─integer
+  │ │ └─b
+  │ │   └─integer
+  │ └─Return type sumfunc
+  │   └─integer
+  ├─Procedure manyargsproc
+  │ ├─Block begin
+  │ └─Args of manyargsproc
+  │   ├─a
+  │   │ └─integer
+  │   ├─b
+  │   │ └─integer
+  │   ├─c
+  │   │ └─real
+  │   └─d
+  │     └─integer
   ├─Declaration var
   │ ├─a
   │ │ └─integer
@@ -12,7 +32,7 @@
     ├─Call function sumfunc
     │ ├─a
     │ └─b
-    └─Call function manyargsfunc
+    └─Call function manyargsproc
       ├─a
       ├─b
       ├─/

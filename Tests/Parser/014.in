@@ -1,10 +1,20 @@
 program hello;
 
+function SumFunc(a, b: Integer) : Integer;
+begin
+
+end;
+
+procedure ManyArgsProc(a, b: Integer; c: Real; d: Integer);
+begin
+
+end;
+
 var
     a, b, ans: Integer;
 
 begin
     WriteLn(a);
     SumFunc(a, b);
-    ManyArgsFunc(a, b, 5 * 1 / 2, 10 + 2);
+    ManyArgsProc(a, b, 5 * 1 / 2, 10 + 2);
 end.
