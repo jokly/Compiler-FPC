@@ -1,0 +1,14 @@
+└─Program hello
+  ├─Procedure print
+  │ ├─forward
+  │ └─Args of print
+  │   └─a
+  │     └─integer
+  ├─Procedure print
+  │ ├─Block begin
+  │ │ └─Call function writeln
+  │ │   └─a
+  │ └─Args of print
+  │   └─a
+  │     └─integer
+  └─Block begin

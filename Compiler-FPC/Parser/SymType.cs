@@ -89,6 +89,8 @@ namespace Compiler_FPC.Parser
 
     class SymTypeProc : SymType
     {
+        public bool IsForward { get; set; } = false;
+
         public SymTypeProc(Node node) : base(node)
         {
 

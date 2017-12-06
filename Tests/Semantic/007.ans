@@ -1,1 +1,20 @@
-(4, 12): Identifier not fount 'a'
+└─Program hello
+  ├─Function sum
+  │ ├─forward
+  │ ├─Args of sum
+  │ │ ├─a
+  │ │ │ └─integer
+  │ │ └─b
+  │ │   └─integer
+  │ └─Return type sum
+  │   └─integer
+  ├─Function sum
+  │ ├─Block begin
+  │ ├─Args of sum
+  │ │ ├─a
+  │ │ │ └─integer
+  │ │ └─b
+  │ │   └─integer
+  │ └─Return type sum
+  │   └─integer
+  └─Block begin

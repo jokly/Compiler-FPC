@@ -126,14 +126,24 @@ namespace Compiler_FPC.Parser
                     tables.NewTable();
                     var proc = new ProcedureNode(matchNext(TokenType.ID), parseArgs(tokenizer.Current), parseBlocks());
                     tables.BackTable();
-                    tables.AddSymbol(new SymTypeProc(proc));
+                    var typeProc = new SymTypeProc(proc);
+
+                    if (proc.Childrens[0] is ForwardDecl)
+                        typeProc.IsForward = true;
+
+                    tables.AddSymbol(typeProc);
                     return proc;
                 case "function":
                     tables.NewTable();
                     var funcName = matchNext(TokenType.ID);
                     var func = new FunctionNode(funcName, parseArgs(funcName, true), parseReturnValue(funcName), parseBlocks());
                     tables.BackTable();
-                    tables.AddSymbol(new SymTypeFunc(func, TypeBuilder.Build(func.Right, tables)));
+                    var typeFunc = new SymTypeFunc(func, TypeBuilder.Build(func.Right, tables));
+
+                    if (func.Childrens[0] is ForwardDecl)
+                        typeFunc.IsForward = true;
+
+                    tables.AddSymbol(typeFunc);
                     return func;
                 case "EOF":
                     return null;

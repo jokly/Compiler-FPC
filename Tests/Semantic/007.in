@@ -1,8 +1,12 @@
 program hello;
 
-var
-    a, b: Integer;
+function sum(a, b: Integer) : Integer; forward;
+
+function sum(a, b: Integer) : Integer;
+begin
+
+end;
 
 begin
-    a := b + 5;
+
 end.

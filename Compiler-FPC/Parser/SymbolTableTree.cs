@@ -22,9 +22,21 @@ namespace Compiler_FPC.Parser
         public void AddSymbol(Symbol symbol)
         {
             var symbolName = symbol.Node.Token.Value;
-
+            
             if (Table.ContainsKey(symbolName))
-                throw new DuplicateDeclarationException(Table[symbolName].Node.Token, symbol.Node.Token);
+            {
+                var forward = Table[symbolName];
+
+                if (symbol is SymTypeProc && forward is SymTypeProc && (forward as SymTypeProc).IsForward)
+                {
+                    // TODO type matching
+
+                    Table[symbolName] = symbol;
+                    return;
+                }
+                else
+                    throw new DuplicateDeclarationException(Table[symbolName].Node.Token, symbol.Node.Token);
+            }
 
             Table.Add(symbolName, symbol);
         }
