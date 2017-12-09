@@ -29,5 +29,6 @@
     └─b
       └─:=
         └─Call function getrec
-          └─.
-            └─b
+          └─)
+            └─.
+              └─b

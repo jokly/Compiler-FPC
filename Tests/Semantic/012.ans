@@ -1,1 +1,23 @@
-(13, 5): Not a function 'proc'
+└─Program hello
+  ├─Declaration type
+  │ └─tfunc
+  │   └─function
+  │     ├─Args of function
+  │     │ └─a
+  │     │   └─integer
+  │     └─Return type function
+  │       └─integer
+  ├─Declaration var
+  │ ├─a
+  │ │ └─integer
+  │ └─func
+  │   └─Array of
+  │     ├─1
+  │     ├─3
+  │     └─tfunc
+  └─Block begin
+    └─a
+      └─:=
+        └─[ Index ]
+          ├─0
+          └─Call function ]

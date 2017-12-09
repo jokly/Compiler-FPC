@@ -27,13 +27,13 @@
     ├─int
     │ └─:=
     │   └─Call function getfuncgetarr
-    │     └─Call function getfuncgetarr
+    │     └─Call function )
     │       └─[ Index ]
     │         └─0
     └─int
       └─:=
         └─Call function getfuncgetarr
-          └─Call function getfuncgetarr
+          └─Call function )
             └─[ Index ]
               └─*
                 ├─l

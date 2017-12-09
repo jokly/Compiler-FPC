@@ -13,6 +13,6 @@ var
     int, i: Integer;
 
 begin
-    int := arr[1, i + 2, 2 * 3 - i];
+    int := arr[1][i + 2][2 * 3 - i];
     int := getArr(0, 1)[i * 2];
 end.

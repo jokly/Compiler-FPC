@@ -58,4 +58,11 @@ namespace Compiler_FPC.Parser
 
         public override string Message => $"({token.Row}, {token.Col}): Not a function '{token.Value}'";
     }
+
+    class NotAnArray : SemanticException
+    {
+        public NotAnArray(Token token) : base(token) { }
+
+        public override string Message => $"({token.Row}, {token.Col}): Not an array '{token.Value}'"; 
+    }
 }

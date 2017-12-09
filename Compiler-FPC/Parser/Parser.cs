@@ -494,15 +494,11 @@ namespace Compiler_FPC.Parser
                 }
                 else if ((id.Type == TokenType.ID || id.Type == TokenType.KEY_WORD) && afterId.Type == TokenType.LBRACKET)
                 {
-                    List<List<Node>> funcCall = new List<List<Node>>();
-                    while (tokenizer.Current.Type == TokenType.LBRACKET)
-                        funcCall.Add(parseFuncCall());
-
                     var symbol = tables.GetSymbol(id);
-                    if (!(symbol is SymTypeProc) && !(symbol is SymTypeFunc))
+                    if (!(symbol is SymTypeFunc) && !(symbol is SymTypeProc))
                         throw new NotAFunction(id);
 
-                    var func = genFuncCallNode(0, funcCall, id, symbol as SymType);
+                    var func = genFuncCallNode(parseFuncCall(), id, symbol as SymType);
 
                     statements.Add(func);
                 }
@@ -657,8 +653,6 @@ namespace Compiler_FPC.Parser
                     throw new ParserException(tokenizer.Current, ")");
             }
 
-            tokenizer.Next();
-
             return args;
         }
 
@@ -751,44 +745,7 @@ namespace Compiler_FPC.Parser
             switch (t.Type)
             {
                 case TokenType.ID:
-                    tokenizer.Next();
-
-                    tables.GetSymbol(t);
-
-                    List<List<Node>> funcCall = new List<List<Node>>();
-                    while (tokenizer.Current.Type == TokenType.LBRACKET)
-                        funcCall.Add(parseFuncCall());
-
-                    SquareBracketsNode sqrBr = null;
-                    if (tokenizer.Current.Type == TokenType.LSQUARE_BRACKET)
-                    {
-                        var indexes = parseSquareBrackets();
-                        sqrBr = new SquareBracketsNode(tokenizer.Current, indexes);
-                        tokenizer.Next();
-
-                        if (funcCall.Count != 0) funcCall[funcCall.Count - 1].Add(sqrBr);
-                    }
-
-                    DotNode rec = null;
-                    if (tokenizer.Current.Type == TokenType.DOT)
-                    {
-                        var dotTok = tokenizer.Current;
-                        matchNext(TokenType.ID);
-                        rec = new DotNode(dotTok, parseFactor());
-
-                        if (funcCall.Count != 0) funcCall[funcCall.Count - 1].Add(rec);
-                    }
-
-                    if (funcCall.Count != 0)
-                    {
-                        var symbol = tables.GetSymbol(t);
-                        if (!(symbol is SymTypeFunc) && !(symbol is SymTypeProc))
-                            throw new NotAFunction(t);
-
-                        return genFuncCallNode(0, funcCall, t, symbol as SymType);
-                    }
-                    else
-                        return new IdNode(t, sqrBr, rec);
+                    return parseId();
                 case TokenType.INTEGER:
                     tokenizer.Next();
                     return new IntConstNode(t, new SymTypeInteger());
@@ -815,48 +772,106 @@ namespace Compiler_FPC.Parser
             throw new ParserException(t, "expression");
         }
 
-        private List<Node> parseSquareBrackets()
+        private ExprNode parseId(bool isNext = false, SymType type = null)
         {
-            List<Node> indexes = new List<Node>();
+            var t = tokenizer.Current;
 
-            while (tokenizer.Current.Type != TokenType.RSQUARE_BRACKET && tokenizer.Next() != null)
+            if (t.Type != TokenType.LBRACKET && t.Type != TokenType.LSQUARE_BRACKET &&
+                t.Type != TokenType.DOT && t.Type != TokenType.ID && !isNext)
             {
-                if (tokenizer.Current.Type == TokenType.COMMA || tokenizer.Current.Type == TokenType.RSQUARE_BRACKET)
-                    continue;
-
-                indexes.Add(parseExpr());
+                return null;
             }
+            
+            tokenizer.Next();
 
-            if (tokenizer.Current == null)
-                throw new ParserException(tokenizer.Current, ")");
+            if (tokenizer.Current.Type == TokenType.LBRACKET)
+            {
+                type = getType(type, t);
 
-            return indexes;
+                if (!(type is SymTypeFunc) && !(type is SymTypeProc))
+                    throw new NotAFunction(t);
+
+                return genFuncCallNode(parseFuncCall(), t, type);
+            }
+            else if (tokenizer.Current.Type == TokenType.LSQUARE_BRACKET)
+            {
+                type = getType(type, t);
+
+                if (!(type is SymTypeArray))
+                    throw new NotAnArray(t);
+
+                tokenizer.Next();
+                var index = parseExpr();
+                require(TokenType.RSQUARE_BRACKET);
+                var sqrBr = new SquareBracketsNode(tokenizer.Current, index, parseId(true, (type as SymTypeArray).ElemType));
+
+                return sqrBr;
+            }
+            else if (tokenizer.Current.Type == TokenType.DOT)
+            {
+                var dotTok = tokenizer.Current;
+                matchNext(TokenType.ID);
+                var rec = new IdNode(t, new DotNode(dotTok, parseId(true)));
+
+                return rec;
+            }
+            else if (t.Type == TokenType.ID)
+            {
+                var id = new IdNode(t, parseId());
+
+                var id_type = tables.GetSymbol(t);
+
+                if (!(id_type is SymVar))
+                    throw new NotFounIdException(t);
+
+                id.TypeNode = (tables.GetSymbol(t) as SymVar).Type;
+                return id;
+            }
+            else
+            {
+                return null;
+            }
         }
 
-        private FuncCallNode genFuncCallNode(int i, List<List<Node>> args, Token t, SymType type = null)
+        private SymType getType(SymType type, Token token)
         {
-            if (i == args.Count)
-                return null;
+            Symbol symbol = type;
 
+            if (type == null)
+            {
+                symbol = tables.GetSymbol(token);
+
+                if (symbol is SymVar)
+                {
+                    symbol = (symbol as SymVar).Type;
+                }
+            }
+
+            if (symbol is SymTypeAlias)
+                symbol = (symbol as SymTypeAlias).Type;
+
+            return symbol as SymType;
+        }
+
+        private FuncCallNode genFuncCallNode(List<Node> args, Token t, SymType type = null)
+        {
             if (type is SymTypeAlias)
                 type = (type as SymTypeAlias).Type;
 
             if (!(type is SymTypeFunc) && !(type is SymTypeProc))
                 throw new NotAFunction(t);
 
-            if ((type is SymTypeProc) && !(type is SymTypeFunc) && i != args.Count - 1)
-                throw new NotAFunction(t);
-            else if (type is SymTypeFunc)
+            if (type is SymTypeFunc)
             {
                 var funcType = type as SymTypeFunc;
-                var func = new FuncCallNode(t, args[i], genFuncCallNode(i + 1, args, t, funcType.ReturnesType));
+                var func = new FuncCallNode(t, args, parseId(true, funcType.ReturnesType));
                 func.TypeNode = type;
 
                 return func;
             }
             else
             {
-                return new FuncCallNode(t, args[i], genFuncCallNode(i + 1, args, t));
+                return new FuncCallNode(t, args, parseId(true));
             }
         }
     }

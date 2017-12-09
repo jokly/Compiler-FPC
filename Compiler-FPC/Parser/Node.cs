@@ -271,6 +271,11 @@ namespace Compiler_FPC.Parser
 
     class IdNode : ExprNode
     {
+        public IdNode(Token token, ExprNode callings) : base(token)
+        {
+            Left = callings;
+        }
+
         public IdNode(Token token, SquareBracketsNode index = null, DotNode record = null) : base(token)
         {
             Left = index;
@@ -325,9 +330,10 @@ namespace Compiler_FPC.Parser
 
     class SquareBracketsNode : ExprNode
     {
-        public SquareBracketsNode(Token token, List<Node> indexes) : base(token, "[ Index")
+        public SquareBracketsNode(Token token, Node index, Node child) : base(token, "[ Index")
         {
-            Childrens = indexes;
+            Left = index;
+            Right = child;
         }
     }
 }
