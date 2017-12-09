@@ -10,10 +10,18 @@ namespace Compiler_FPC.Parser
         public string BlockName { get; protected set; } = "";
         public List<Node> Childrens { get; protected set; } = new List<Node>();
 
+        public SymType TypeNode { get; set; }
+
         public Node(Token token, string blockName = "")
         {
             Token = token;
             BlockName = blockName;
+        }
+
+        public Node(Token token, SymType type)
+        {
+            Token = token;
+            TypeNode = type;
         }
     }
 
@@ -236,6 +244,7 @@ namespace Compiler_FPC.Parser
     class ExprNode : Node
     {
         public ExprNode(Token token, string name = "") : base(token, name) { }
+        public ExprNode(Token token, SymType type) : base(token, type) { }
     }
 
     class UnOpNode : ExprNode
@@ -252,6 +261,11 @@ namespace Compiler_FPC.Parser
         {
             Left = left;
             Right = right;
+        }
+
+        private void EvalType()
+        {
+
         }
     }
 
@@ -275,21 +289,25 @@ namespace Compiler_FPC.Parser
     class ConstNode : ExprNode
     {
         public ConstNode(Token token) : base(token) { }
+        public ConstNode(Token token, SymType type) : base(token, type) { }
     }
 
     class IntConstNode : ConstNode
     {
         public IntConstNode(Token token) : base(token) { }
+        public IntConstNode(Token token, SymType type) : base(token, type) { }
     }
 
     class RealConstNode : ConstNode
     {
         public RealConstNode(Token token) : base(token) { }
+        public RealConstNode(Token token, SymType type) : base(token, type) { }
     }
 
     class CharConstNode : ConstNode
     {
         public CharConstNode(Token token) : base(token) { }
+        public CharConstNode(Token token, SymType type) : base(token, type) { }
     }
 
     class StringConstNode : ConstNode

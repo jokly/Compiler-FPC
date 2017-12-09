@@ -1,0 +1,12 @@
+program hello;
+
+type
+    TFunc = function(a: Integer) : Integer;
+
+var
+    a: Integer;
+    func: array[1..3] of TFunc;
+
+begin
+    a := func[0]();
+end.

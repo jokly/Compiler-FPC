@@ -1,0 +1,14 @@
+program hello;
+
+procedure print(a: Integer);
+begin
+    WriteLn(a);
+end;
+
+var
+    a, b: Integer;
+
+begin
+    print(a);
+    print(a)(b);
+end.

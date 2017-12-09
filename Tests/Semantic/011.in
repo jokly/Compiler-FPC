@@ -1,0 +1,14 @@
+program hello;
+
+procedure proc(a: Integer);
+begin
+    WriteLn(a);
+end; 
+
+var
+    a, b: Integer;
+
+begin
+    proc(a);
+    proc(a)(b);
+end.

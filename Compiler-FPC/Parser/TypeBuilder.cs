@@ -70,14 +70,6 @@ namespace Compiler_FPC.Parser
             }
         }
 
-        public static void RequireProcFunc(FuncCallNode node, SymbolTableTree tables)
-        {
-            var symbol = tables.GetSymbol(node.Token);
-
-            if (!(symbol is SymTypeFunc) && !(symbol is SymTypeProc))
-                throw new NotAFunction(node.Token);
-        }
-
         private static SymType GetType(Token token, SymbolTableTree tables)
         {
             switch (token.Value)

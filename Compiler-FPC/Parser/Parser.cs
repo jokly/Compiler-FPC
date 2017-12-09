@@ -12,6 +12,7 @@ namespace Compiler_FPC.Parser
         private Parser()
         {
             tables = new SymbolTableTree();
+            AddBuiltIn();
         }
 
         public Parser(string fileName) : this()
@@ -40,6 +41,12 @@ namespace Compiler_FPC.Parser
             }
 
             return tree.TreeString;
+        }
+
+        private void AddBuiltIn()
+        {
+            tables.AddSymbol(new SymTypeProc(new Node(new Token(-1, -1, TokenType.WRITE, "write", "write"))));
+            tables.AddSymbol(new SymTypeProc(new Node(new Token(-1, -1, TokenType.WRITELN, "writeln", "writeln"))));
         }
 
         private Token matchNext(TokenType expectedTkType)
@@ -270,9 +277,12 @@ namespace Compiler_FPC.Parser
                 }
                 else
                 {
+                    tables.NewTable();
                     var typeNode = new TypeNode(nameToken, getType());
-                    types.Add(typeNode);
+                    tables.BackTable();
+
                     tables.AddSymbol(TypeBuilder.Build(typeNode, tables));
+                    types.Add(typeNode);
                 }
             }
         }
@@ -484,10 +494,15 @@ namespace Compiler_FPC.Parser
                 }
                 else if ((id.Type == TokenType.ID || id.Type == TokenType.KEY_WORD) && afterId.Type == TokenType.LBRACKET)
                 {
-                    var func = new FuncCallNode(id, parseFuncCall());
+                    List<List<Node>> funcCall = new List<List<Node>>();
+                    while (tokenizer.Current.Type == TokenType.LBRACKET)
+                        funcCall.Add(parseFuncCall());
 
-                    if (id.Type != TokenType.KEY_WORD)
-                        TypeBuilder.RequireProcFunc(func, tables);
+                    var symbol = tables.GetSymbol(id);
+                    if (!(symbol is SymTypeProc) && !(symbol is SymTypeFunc))
+                        throw new NotAFunction(id);
+
+                    var func = genFuncCallNode(0, funcCall, id, symbol as SymType);
 
                     statements.Add(func);
                 }
@@ -765,20 +780,26 @@ namespace Compiler_FPC.Parser
                     }
 
                     if (funcCall.Count != 0)
-                        return genFuncCallNode(0, funcCall, t);
+                    {
+                        var symbol = tables.GetSymbol(t);
+                        if (!(symbol is SymTypeFunc) && !(symbol is SymTypeProc))
+                            throw new NotAFunction(t);
+
+                        return genFuncCallNode(0, funcCall, t, symbol as SymType);
+                    }
                     else
                         return new IdNode(t, sqrBr, rec);
                 case TokenType.INTEGER:
                     tokenizer.Next();
-                    return new IntConstNode(t);
+                    return new IntConstNode(t, new SymTypeInteger());
                 case TokenType.REAL:
                     tokenizer.Next();
-                    return new RealConstNode(t);
+                    return new RealConstNode(t, new SymTypeReal());
                 case TokenType.STRING:
                     tokenizer.Next();
 
                     if (t.Value.Length == 1)
-                        return new CharConstNode(t);
+                        return new CharConstNode(t, new SymTypeChar());
 
                     return new StringConstNode(t);
                 case TokenType.LBRACKET:
@@ -812,12 +833,31 @@ namespace Compiler_FPC.Parser
             return indexes;
         }
 
-        private FuncCallNode genFuncCallNode(int i, List<List<Node>> args, Token t)
+        private FuncCallNode genFuncCallNode(int i, List<List<Node>> args, Token t, SymType type = null)
         {
             if (i == args.Count)
                 return null;
 
-            return new FuncCallNode(t, args[i], genFuncCallNode(i + 1, args, t));
+            if (type is SymTypeAlias)
+                type = (type as SymTypeAlias).Type;
+
+            if (!(type is SymTypeFunc) && !(type is SymTypeProc))
+                throw new NotAFunction(t);
+
+            if ((type is SymTypeProc) && !(type is SymTypeFunc) && i != args.Count - 1)
+                throw new NotAFunction(t);
+            else if (type is SymTypeFunc)
+            {
+                var funcType = type as SymTypeFunc;
+                var func = new FuncCallNode(t, args[i], genFuncCallNode(i + 1, args, t, funcType.ReturnesType));
+                func.TypeNode = type;
+
+                return func;
+            }
+            else
+            {
+                return new FuncCallNode(t, args[i], genFuncCallNode(i + 1, args, t));
+            }
         }
     }
 }
