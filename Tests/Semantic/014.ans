@@ -1,0 +1,15 @@
+└─Program hello
+  ├─Declaration type
+  │ └─tint
+  │   └─integer
+  ├─Declaration var
+  │ ├─a
+  │ │ └─integer
+  │ └─b
+  │   └─tint
+  └─Block begin
+    └─a
+      └─:=
+        └─+
+          └─-
+            └─b

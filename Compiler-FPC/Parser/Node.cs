@@ -10,7 +10,7 @@ namespace Compiler_FPC.Parser
         public string BlockName { get; protected set; } = "";
         public List<Node> Childrens { get; protected set; } = new List<Node>();
 
-        public SymType TypeNode { get; set; }
+        public Symbol TypeNode { get; set; }
 
         public Node(Token token, string blockName = "")
         {
@@ -249,7 +249,7 @@ namespace Compiler_FPC.Parser
 
     class UnOpNode : ExprNode
     {
-        public UnOpNode(Token token, ExprNode right) : base(token)
+        public UnOpNode(Token token, ExprNode right, SymType type) : base(token, type)
         {
             Right = right;
         }
@@ -261,11 +261,6 @@ namespace Compiler_FPC.Parser
         {
             Left = left;
             Right = right;
-        }
-
-        private void EvalType()
-        {
-
         }
     }
 

@@ -1,0 +1,12 @@
+program hello;
+
+type
+    TInt = Integer;
+
+var
+    a: Integer;
+    b: TInt;
+
+begin
+    a := +-b;
+end.

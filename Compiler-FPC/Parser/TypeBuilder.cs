@@ -10,7 +10,23 @@ namespace Compiler_FPC.Parser
     {
         public static SymType Build(Node node, SymbolTableTree tables)
         {
-            if (node is ArrayTypeNode)
+            if (node is IntConstNode)
+            {
+                return new SymTypeInteger();
+            }
+            else if (node is RealConstNode)
+            {
+                return new SymTypeReal();
+            }
+            else if (node is CharConstNode)
+            {
+                return new SymTypeChar();
+            }
+            else if (node is IdNode)
+            {
+                return (tables.GetSymbol(node.Token) as SymVar).Type;
+            }
+            else if (node is ArrayTypeNode)
             {
                 var start = node.Childrens[0];
                 var end = node.Childrens[1];
@@ -48,13 +64,15 @@ namespace Compiler_FPC.Parser
             }
             else if (node is ProcTypeNode)
             {
-                return new SymTypeProc(node);
+                var args = GetArgsType(node.Left.Childrens, tables);
+                return new SymTypeProc(node, args);
             }
             else if (node is FuncTypeNode)
             {
+                var args = GetArgsType(node.Left.Childrens, tables);
                 var returnedType = Build(node.Right, tables);
 
-                return new SymTypeFunc(node, returnedType);
+                return new SymTypeFunc(node, args, returnedType);
             }
             else if (node is ReturnValueNode)
             {
@@ -68,6 +86,21 @@ namespace Compiler_FPC.Parser
             {
                 throw new UnknowTypeException(node.Token);
             }
+        }
+
+        public static List<SymType> GetArgsType(List<Node> args, SymbolTableTree tables)
+        {
+            var types_list = new List<SymType>();
+
+            foreach (var arg in args)
+            {
+                if (arg.TypeNode is SymVar)
+                    types_list.Add((arg.TypeNode as SymVar).Type);
+                else
+                    types_list.Add(arg.TypeNode as SymType);
+            }
+
+            return types_list;
         }
 
         private static SymType GetType(Token token, SymbolTableTree tables)

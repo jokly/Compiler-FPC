@@ -90,10 +90,11 @@ namespace Compiler_FPC.Parser
     class SymTypeProc : SymType
     {
         public bool IsForward { get; set; } = false;
+        public List<SymType> Args;
 
-        public SymTypeProc(Node node) : base(node)
+        public SymTypeProc(Node node, List<SymType> args) : base(node)
         {
-
+            Args = args;
         }
     }
 
@@ -101,7 +102,7 @@ namespace Compiler_FPC.Parser
     {
         public SymType ReturnesType { get; protected set; }
 
-        public SymTypeFunc(Node node, SymType returnedType) : base(node)
+        public SymTypeFunc(Node node, List<SymType> args, SymType returnedType) : base(node, args)
         {
             ReturnesType = returnedType;
         }

@@ -1,0 +1,11 @@
+program hello;
+
+var
+    a, b: Integer;
+    ptr: ^Integer;
+
+begin
+    a := -+-++--b;
+    ptr := @a;
+    a := not b;
+end.

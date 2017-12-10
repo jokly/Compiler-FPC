@@ -45,8 +45,10 @@ namespace Compiler_FPC.Parser
 
         private void AddBuiltIn()
         {
-            tables.AddSymbol(new SymTypeProc(new Node(new Token(-1, -1, TokenType.WRITE, "write", "write"))));
-            tables.AddSymbol(new SymTypeProc(new Node(new Token(-1, -1, TokenType.WRITELN, "writeln", "writeln"))));
+            var scalarList = new List<SymType> { new SymTypeScalar() };
+
+            tables.AddSymbol(new SymTypeProc(new Node(new Token(-1, -1, TokenType.WRITE, "write", "write")), scalarList));
+            tables.AddSymbol(new SymTypeProc(new Node(new Token(-1, -1, TokenType.WRITELN, "writeln", "writeln")), scalarList));
         }
 
         private Token matchNext(TokenType expectedTkType)
@@ -131,9 +133,13 @@ namespace Compiler_FPC.Parser
                     return new ForwardDecl(name);
                 case "procedure":
                     tables.NewTable();
-                    var proc = new ProcedureNode(matchNext(TokenType.ID), parseArgs(tokenizer.Current), parseBlocks());
+                    var t = matchNext(TokenType.ID);
+                    var p_args = parseArgs(tokenizer.Current);
+                    var proc = new ProcedureNode(t, p_args, parseBlocks());
                     tables.BackTable();
-                    var typeProc = new SymTypeProc(proc);
+
+                    var p_type_args = TypeBuilder.GetArgsType(p_args.Childrens, tables);
+                    var typeProc = new SymTypeProc(proc, p_type_args);
 
                     if (proc.Childrens[0] is ForwardDecl)
                         typeProc.IsForward = true;
@@ -143,9 +149,12 @@ namespace Compiler_FPC.Parser
                 case "function":
                     tables.NewTable();
                     var funcName = matchNext(TokenType.ID);
-                    var func = new FunctionNode(funcName, parseArgs(funcName, true), parseReturnValue(funcName), parseBlocks());
+                    var f_args = parseArgs(funcName, true);
+                    var func = new FunctionNode(funcName, f_args, parseReturnValue(funcName), parseBlocks());
                     tables.BackTable();
-                    var typeFunc = new SymTypeFunc(func, TypeBuilder.Build(func.Right, tables));
+
+                    var f_type_args = TypeBuilder.GetArgsType(f_args.Childrens, tables);
+                    var typeFunc = new SymTypeFunc(func, f_type_args, TypeBuilder.Build(func.Right, tables));
 
                     if (func.Childrens[0] is ForwardDecl)
                         typeFunc.IsForward = true;
@@ -358,9 +367,12 @@ namespace Compiler_FPC.Parser
                 foreach (var tokenVar in tokensVars)
                 {
                     var varNode = new VarNode(tokenVar, type);
-                    var symType = TypeBuilder.Build(type, tables);
 
-                    tables.AddSymbol(new SymVar(varNode, symType));
+                    var symType = TypeBuilder.Build(type, tables);
+                    var symVar = new SymVar(varNode, symType);
+                    tables.AddSymbol(symVar);
+
+                    varNode.TypeNode = symVar;
                     vars.Add(varNode);
                 }
 
@@ -732,10 +744,14 @@ namespace Compiler_FPC.Parser
 
         private ExprNode genUnOp(int i, List<Token> binOps, ExprNode fac)
         {
-            if (i == binOps.Count - 1)
-                return new UnOpNode(binOps[i], fac);
+            var type = ExprTypeBuilder.UnOpBuild(binOps[i], fac);
 
-            return new UnOpNode(binOps[i], genUnOp(i + 1, binOps, fac));
+            if (i == binOps.Count - 1)
+            {
+                return new UnOpNode(binOps[i], fac, type);
+            }
+
+            return new UnOpNode(binOps[i], genUnOp(i + 1, binOps, fac), type);
         }
 
         private ExprNode parseFactor()
@@ -824,7 +840,8 @@ namespace Compiler_FPC.Parser
                 if (!(id_type is SymVar))
                     throw new NotFounIdException(t);
 
-                id.TypeNode = (tables.GetSymbol(t) as SymVar).Type;
+                id.TypeNode = tables.GetSymbol(t);
+
                 return id;
             }
             else
@@ -860,6 +877,22 @@ namespace Compiler_FPC.Parser
 
             if (!(type is SymTypeFunc) && !(type is SymTypeProc))
                 throw new NotAFunction(t);
+
+            var list_args = TypeBuilder.GetArgsType(args, tables);
+
+            if (list_args.Count != (type as SymTypeProc).Args.Count)
+                throw new ArgsException(t);
+            else
+            {
+                for(int i = 0; i < list_args.Count; i++)
+                {
+                    var input_type = list_args[i].GetType();
+                    var def_type = (type as SymTypeProc).Args[i].GetType();
+
+                    if (!input_type.Equals(def_type) && !(input_type.IsSubclassOf(def_type)))
+                        throw new ArgsException(t);
+                }
+            }
 
             if (type is SymTypeFunc)
             {

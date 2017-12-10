@@ -105,6 +105,7 @@
   <ItemGroup>
     <Compile Include="CLOptions.cs" />
     <Compile Include="Lexer\Config.cs" />
+    <Compile Include="Parser\ExprTypeBuilder.cs" />
     <Compile Include="Parser\Node.cs" />
     <Compile Include="Parser\Parser.cs" />
     <Compile Include="Parser\ParserException.cs" />

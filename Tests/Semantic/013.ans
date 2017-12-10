@@ -1,1 +1,28 @@
-(13, 5): Not a function 'proc'
+└─Program hello
+  ├─Declaration var
+  │ ├─a
+  │ │ └─integer
+  │ ├─b
+  │ │ └─integer
+  │ └─ptr
+  │   └─^
+  │     └─integer
+  └─Block begin
+    ├─a
+    │ └─:=
+    │   └─-
+    │     └─+
+    │       └─-
+    │         └─+
+    │           └─+
+    │             └─-
+    │               └─-
+    │                 └─b
+    ├─ptr
+    │ └─:=
+    │   └─@
+    │     └─a
+    └─a
+      └─:=
+        └─not
+          └─b

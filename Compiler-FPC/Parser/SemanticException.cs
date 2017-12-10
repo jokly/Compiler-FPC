@@ -65,4 +65,19 @@ namespace Compiler_FPC.Parser
 
         public override string Message => $"({token.Row}, {token.Col}): Not an array '{token.Value}'"; 
     }
+
+    class ArgsException : SemanticException
+    {
+        public ArgsException(Token token) : base(token) { }
+
+        // TODO: DELETE TOKEN FROM MESSAGE
+        public override string Message => $"({token.Row}, {token.Col}): Arguments exception '{token.Value}'";
+    }
+
+    class IncompatibleTypes : SemanticException
+    {
+        public IncompatibleTypes(Token token) : base(token) { }
+
+        public override string Message => $"({token.Row}, {token.Col}): Incompatible types '{token.Value}'";
+    }
 }
