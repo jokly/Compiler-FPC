@@ -1,1 +1,1 @@
-(7, 1): Unexpected token 'end'; Expected: ';'
+(10, 1): Unexpected token 'end'; Expected: ';'

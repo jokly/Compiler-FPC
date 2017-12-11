@@ -1,6 +1,8 @@
 └─Program hello
   ├─Declaration var
-  │ └─mainvar
+  │ ├─mainvar
+  │ │ └─integer
+  │ └─ans
   │   └─integer
   └─Block begin
     ├─Block begin

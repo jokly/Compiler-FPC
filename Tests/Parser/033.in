@@ -1,5 +1,8 @@
 ProGrAm hello;
 
+var
+    a: Integer;
+
 begin 
     a := 5 * (10 - 3;
 end.

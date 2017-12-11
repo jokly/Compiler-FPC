@@ -1,4 +1,7 @@
 └─Program hello
+  ├─Declaration var
+  │ └─a
+  │   └─integer
   └─Block begin
     └─Block if
       ├─Block begin

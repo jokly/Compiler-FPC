@@ -2,7 +2,7 @@ program hello;
 
 const
     a = 5;
-    b = 'hello';
+    b = 'h';
     c = a + 10;
 
 type

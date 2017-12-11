@@ -257,7 +257,7 @@ namespace Compiler_FPC.Parser
 
     class BinOpNode : ExprNode
     {
-        public BinOpNode(Token token, ExprNode left, ExprNode right) : base(token)
+        public BinOpNode(Token token, ExprNode left, ExprNode right, SymType type) : base(token, type)
         {
             Left = left;
             Right = right;

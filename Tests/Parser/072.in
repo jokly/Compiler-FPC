@@ -1,5 +1,7 @@
 ProGrAm test;
 
+var
+    a: Integer;
 
 begin
     a := 

@@ -1,0 +1,22 @@
+└─Program hello
+  ├─Declaration type
+  │ └─tint
+  │   └─integer
+  ├─Declaration var
+  │ ├─a
+  │ │ └─integer
+  │ ├─b
+  │ │ └─integer
+  │ └─c
+  │   └─real
+  └─Block begin
+    ├─a
+    │ └─:=
+    │   └─*
+    │     ├─5
+    │     └─b
+    └─c
+      └─:=
+        └─*
+          ├─b
+          └─6,5

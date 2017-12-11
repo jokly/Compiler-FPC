@@ -1,1 +1,1 @@
-(5, 4): Unexpected token 'EOF'; Expected: '.'
+(8, 4): Unexpected token 'EOF'; Expected: '.'

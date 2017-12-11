@@ -1,5 +1,8 @@
 ProGrAm hello;
 
+var
+    a: Integer;
+
 begin 
     if 5 = 5 then begin
         a := 5;

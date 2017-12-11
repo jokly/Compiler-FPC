@@ -240,8 +240,9 @@ namespace Compiler_FPC.Parser
                 matchNext(TokenType.RELOP_EQ);
                 tokenizer.Next();
 
-                var varNode = new VarNode(nameToken, parseExpr());
-                tables.AddSymbol(new SymVar(varNode, new SymType()));
+                var expr = parseExpr();
+                var varNode = new VarNode(nameToken, expr);
+                tables.AddSymbol(new SymVar(varNode, TypeBuilder.Build(expr, tables)));
                 consts.Add(varNode);
 
                 require(TokenType.SEMICOLON);
@@ -501,6 +502,7 @@ namespace Compiler_FPC.Parser
                     }
                     else
                     {
+                        var type = tables.GetSymbol(id);
                         statements.Add(new VarNode(id, new AssignmentNode(afterId, parseExpr())));
                     }
                 }
@@ -508,7 +510,7 @@ namespace Compiler_FPC.Parser
                 {
                     var symbol = tables.GetSymbol(id);
                     if (!(symbol is SymTypeFunc) && !(symbol is SymTypeProc))
-                        throw new NotAFunction(id);
+                        throw new NotAFunctionException(id);
 
                     var func = genFuncCallNode(parseFuncCall(), id, symbol as SymType);
 
@@ -680,7 +682,7 @@ namespace Compiler_FPC.Parser
             {
                 tokenizer.Next();
                 var r = parseExpr1();
-                e = new BinOpNode(t, e, r);
+                e = new BinOpNode(t, e, r, ExprTypeBuilder.BinOpBuild(t, e, r));
                 t = tokenizer.Current;
             }
 
@@ -697,7 +699,7 @@ namespace Compiler_FPC.Parser
             {
                 tokenizer.Next();
                 var r = parseTerm();
-                e = new BinOpNode(t, e, r);
+                e = new BinOpNode(t, e, r, ExprTypeBuilder.BinOpBuild(t, e, r));
                 t = tokenizer.Current;
             }
 
@@ -716,7 +718,7 @@ namespace Compiler_FPC.Parser
             {
                 tokenizer.Next();
                 var r = parseTerm0();
-                e =  new BinOpNode(t, e, r);
+                e =  new BinOpNode(t, e, r, ExprTypeBuilder.BinOpBuild(t, e, r));
                 t = tokenizer.Current;
             }
 
@@ -739,7 +741,6 @@ namespace Compiler_FPC.Parser
                 return genUnOp(0, binOps, parseFactor());
             else
                 return parseFactor();
-
         }
 
         private ExprNode genUnOp(int i, List<Token> binOps, ExprNode fac)
@@ -805,7 +806,7 @@ namespace Compiler_FPC.Parser
                 type = getType(type, t);
 
                 if (!(type is SymTypeFunc) && !(type is SymTypeProc))
-                    throw new NotAFunction(t);
+                    throw new NotAFunctionException(t);
 
                 return genFuncCallNode(parseFuncCall(), t, type);
             }
@@ -814,7 +815,7 @@ namespace Compiler_FPC.Parser
                 type = getType(type, t);
 
                 if (!(type is SymTypeArray))
-                    throw new NotAnArray(t);
+                    throw new NotAnArrayException(t);
 
                 tokenizer.Next();
                 var index = parseExpr();
@@ -876,7 +877,7 @@ namespace Compiler_FPC.Parser
                 type = (type as SymTypeAlias).Type;
 
             if (!(type is SymTypeFunc) && !(type is SymTypeProc))
-                throw new NotAFunction(t);
+                throw new NotAFunctionException(t);
 
             var list_args = TypeBuilder.GetArgsType(args, tables);
 
@@ -886,11 +887,10 @@ namespace Compiler_FPC.Parser
             {
                 for(int i = 0; i < list_args.Count; i++)
                 {
-                    var input_type = list_args[i].GetType();
-                    var def_type = (type as SymTypeProc).Args[i].GetType();
+                    var input_type = TypeBuilder.GetTrueType(args[i], list_args[i]);
+                    var def_type = TypeBuilder.GetTrueType((type as SymTypeProc).Args[i]);
 
-                    if (!input_type.Equals(def_type) && !(input_type.IsSubclassOf(def_type)))
-                        throw new ArgsException(t);
+                    TypeBuilder.GetType(def_type, input_type);
                 }
             }
 

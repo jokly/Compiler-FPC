@@ -52,16 +52,16 @@ namespace Compiler_FPC.Parser
         public override string Message => $"({token.Row}, {token.Col}): Not integer";
     }
 
-    class NotAFunction : SemanticException
+    class NotAFunctionException : SemanticException
     {
-        public NotAFunction(Token token) : base(token) { }
+        public NotAFunctionException(Token token) : base(token) { }
 
         public override string Message => $"({token.Row}, {token.Col}): Not a function '{token.Value}'";
     }
 
-    class NotAnArray : SemanticException
+    class NotAnArrayException : SemanticException
     {
-        public NotAnArray(Token token) : base(token) { }
+        public NotAnArrayException(Token token) : base(token) { }
 
         public override string Message => $"({token.Row}, {token.Col}): Not an array '{token.Value}'"; 
     }
@@ -74,9 +74,9 @@ namespace Compiler_FPC.Parser
         public override string Message => $"({token.Row}, {token.Col}): Arguments exception '{token.Value}'";
     }
 
-    class IncompatibleTypes : SemanticException
+    class IncompatibleTypesException : SemanticException
     {
-        public IncompatibleTypes(Token token) : base(token) { }
+        public IncompatibleTypesException(Token token) : base(token) { }
 
         public override string Message => $"({token.Row}, {token.Col}): Incompatible types '{token.Value}'";
     }

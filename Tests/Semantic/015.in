@@ -1,0 +1,13 @@
+program hello;
+
+type
+    TInt = Integer;
+
+var
+    a, b: Integer;
+    c: Real;
+
+begin
+    a := 5 * b;
+    c := b * 6.5;
+end.

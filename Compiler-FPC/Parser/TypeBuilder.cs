@@ -82,6 +82,10 @@ namespace Compiler_FPC.Parser
             {
                 return GetType(node.Token, tables);
             }
+            else if (node is BinOpNode || node is UnOpNode)
+            {
+                return node.TypeNode as SymType;
+            }
             else
             {
                 throw new UnknowTypeException(node.Token);
@@ -101,6 +105,94 @@ namespace Compiler_FPC.Parser
             }
 
             return types_list;
+        }
+
+        public static SymType GetTrueType(Node node, Symbol type)
+        {
+            if (type is SymVar)
+            {
+                return GetTrueType(node, (type as SymVar).Type);
+            }
+            else if (type is SymTypeAlias)
+            {
+                return GetTrueType(node, (type as SymTypeAlias).Type);
+            }
+            else if (type is SymTypeArray)
+            {
+                if (!(node is IdNode))
+                    throw new IncompatibleTypesException(node.Token);
+
+                return GetTrueType(node.Left, (type as SymTypeArray).ElemType);
+            }
+            else if (type is SymTypeRecord)
+            {
+                if (!(node is IdNode) || node.Right == null)
+                    throw new IncompatibleTypesException(node.Token);
+
+                var rec = node.Right.Left;
+                var recType = rec.TypeNode;
+
+                return GetTrueType(rec, recType);
+            }
+            else if (type is SymTypePointer)
+            {
+                if (node is IdNode)
+                    return GetTrueType(node, (type as SymTypePointer).Type);
+                else if (node is UnOpNode)
+                    return GetTrueType(node.Left, (type as SymTypePointer).Type);
+                else
+                    throw new IncompatibleTypesException(node.Token);
+            }
+            else if (type is SymTypeFunc)
+            {
+                if (!(node is FuncCallNode))
+                    throw new IncompatibleTypesException(node.Token);
+
+                return GetTrueType(node.Left, (type as SymTypeFunc).ReturnesType);
+            }
+            else
+            {
+                return type as SymType;
+            }
+        }
+
+        public static SymType GetTrueType(Symbol type)
+        {
+            if (type is SymVar)
+            {
+                return GetTrueType((type as SymVar).Type);
+            }
+            else if (type is SymTypeAlias)
+            {
+                return GetTrueType((type as SymTypeAlias).Type);
+            }
+            else if (type is SymTypeArray)
+            {
+                return GetTrueType((type as SymTypeArray).ElemType);
+            }
+            else if (type is SymTypePointer)
+            {
+                return GetTrueType((type as SymTypePointer).Type);
+            }
+            else if (type is SymTypeFunc)
+            {
+                return GetTrueType((type as SymTypeFunc).ReturnesType);
+            }
+            else
+            {
+                return type as SymType;
+            }
+        }
+
+        public static SymType GetType(SymType left, SymType right)
+        {
+            var lt = left.GetType();
+            var rt = right.GetType();
+
+            if (lt.Equals(rt) || (rt.IsSubclassOf(lt)) || (left is SymTypeReal && right is SymTypeInteger))
+                return left;
+            else
+                throw new IncompatibleTypesException(left.Node.Token);
         }
 
         private static SymType GetType(Token token, SymbolTableTree tables)

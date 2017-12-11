@@ -1,5 +1,8 @@
 program hello;
 
+var
+    b, ans: Integer;
+
 begin
     ans := a + b;
 end.

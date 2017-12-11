@@ -1,7 +1,7 @@
 ProGrAm hello;
 
 var
-    mainVar: Integer;
+    mainVar, ans: Integer;
 
 begin 
     begin 
