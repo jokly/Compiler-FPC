@@ -36,5 +36,8 @@ namespace Compiler_FPC
 
         [Option('p', "parser", HelpText = "Launch parser")]
         public bool LaunchParser { get; set; }
+
+        [Option('g', "generator", HelpText = "Launch asm generator")]
+        public bool LaunchGenerator { get; set; }
     }
 }

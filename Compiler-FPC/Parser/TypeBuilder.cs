@@ -84,7 +84,7 @@ namespace Compiler_FPC.Parser
             }
             else if (node is BinOpNode || node is UnOpNode)
             {
-                return node.TypeNode as SymType;
+                return node.NodeType as SymType;
             }
             else
             {
@@ -98,10 +98,10 @@ namespace Compiler_FPC.Parser
 
             foreach (var arg in args)
             {
-                if (arg.TypeNode is SymVar)
-                    types_list.Add((arg.TypeNode as SymVar).Type);
+                if (arg.NodeType is SymVar)
+                    types_list.Add((arg.NodeType as SymVar).Type);
                 else
-                    types_list.Add(arg.TypeNode as SymType);
+                    types_list.Add(arg.NodeType as SymType);
             }
 
             return types_list;
@@ -130,7 +130,7 @@ namespace Compiler_FPC.Parser
                     throw new IncompatibleTypesException(node.Token);
 
                 var rec = node.Right.Left;
-                var recType = rec.TypeNode;
+                var recType = rec.NodeType;
 
                 return GetTrueType(rec, recType);
             }
@@ -148,7 +148,7 @@ namespace Compiler_FPC.Parser
                 if (!(node is FuncCallNode))
                     throw new IncompatibleTypesException(node.Token);
 
-                return GetTrueType(node.Left, (type as SymTypeFunc).ReturnesType);
+                return GetTrueType(node.Left, (type as SymTypeFunc).ReturnType);
             }
             else
             {
@@ -176,7 +176,7 @@ namespace Compiler_FPC.Parser
             }
             else if (type is SymTypeFunc)
             {
-                return GetTrueType((type as SymTypeFunc).ReturnesType);
+                return GetTrueType((type as SymTypeFunc).ReturnType);
             }
             else
             {
@@ -191,6 +191,8 @@ namespace Compiler_FPC.Parser
 
             if (lt.Equals(rt) || (rt.IsSubclassOf(lt)) || (left is SymTypeReal && right is SymTypeInteger))
                 return left;
+            else if (left is SymTypeInteger && right is SymTypeReal)
+                return right;
             else
                 throw new IncompatibleTypesException(left.Node.Token);
         }

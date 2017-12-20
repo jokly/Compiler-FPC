@@ -15,7 +15,7 @@ namespace Compiler_FPC.Parser
 
         public static SymType UnOpBuild(Token op, ExprNode fac)
         {
-            SymType type = TypeBuilder.GetTrueType(fac, fac.TypeNode);
+            SymType type = TypeBuilder.GetTrueType(fac, fac.NodeType);
 
             if (op.Type == TokenType.PLUS || op.Type == TokenType.MINUS)
             {
@@ -26,7 +26,7 @@ namespace Compiler_FPC.Parser
             }
             else if (op.Type == TokenType.ADDRESS)
             {
-                if (fac.TypeNode is SymVar)
+                if (fac.NodeType is SymVar)
                     return new SymTypePointer(type);
                 else
                     throw new IncompatibleTypesException(op);
@@ -92,8 +92,8 @@ namespace Compiler_FPC.Parser
                      op.Text.Equals("shl") || op.Text.Equals("shr") ||
                      op.Type == TokenType.BITWISE_SL || op.Type == TokenType.BITWISE_SR)
             {
-                var lt = TypeBuilder.GetTrueType(left, left.TypeNode);
-                var rt = TypeBuilder.GetTrueType(right, right.TypeNode);
+                var lt = TypeBuilder.GetTrueType(left, left.NodeType);
+                var rt = TypeBuilder.GetTrueType(right, right.NodeType);
 
                 if (lt is SymTypeInteger && rt is SymTypeInteger)
                     return lt;
@@ -108,11 +108,11 @@ namespace Compiler_FPC.Parser
 
         private static SymType GetEqualType(Node left, Node right)
         {
-            var lt = TypeBuilder.GetTrueType(left, right.TypeNode).GetType();
-            var rt = TypeBuilder.GetTrueType(right, right.TypeNode).GetType();
+            var lt = TypeBuilder.GetTrueType(left, right.NodeType).GetType();
+            var rt = TypeBuilder.GetTrueType(right, right.NodeType).GetType();
 
             if (lt.Equals(rt))
-                return TypeBuilder.GetTrueType(left, right.TypeNode);
+                return TypeBuilder.GetTrueType(left, right.NodeType);
             else
                 return null;
         }
@@ -133,7 +133,7 @@ namespace Compiler_FPC.Parser
 
         private static SymType GetArithmeticType(Node node)
         {
-            var type = TypeBuilder.GetTrueType(node, node.TypeNode);
+            var type = TypeBuilder.GetTrueType(node, node.NodeType);
 
             if (type is SymTypeInteger || type is SymTypeReal)
                 return type;

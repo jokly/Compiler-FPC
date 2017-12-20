@@ -61,6 +61,26 @@ namespace Compiler_FPC
             {
                 Console.WriteLine("No input files.");
             }
+
+            // AsmGenerator
+            if (options.LaunchGenerator && options.GetInputFileName != null)
+            {
+                if (options.GetOutputFileName != null)
+                {
+                    using (var outputFile = new StreamWriter(options.GetOutputFileName))
+                    {
+                        outputFile.Write(getGeneratorOutput(options.GetInputFileName));
+                    }
+                }
+                else
+                {
+                    Console.WriteLine(getGeneratorOutput(options.GetInputFileName));
+                }
+            }
+            else if (options.LaunchGenerator && options.GetInputFileName == null)
+            {
+                Console.WriteLine("No input files.");
+            }
         }
 
         static string getLexerOutput(string fileName)
@@ -92,8 +112,18 @@ namespace Compiler_FPC
         static string getParserOutput(string fileName)
         {
             var tokenizer = new Tokenizer(fileName);
+            var text = new Parser.Parser(tokenizer).Tree();
 
-            return new Parser.Parser(tokenizer).Tree();
+            return text;
+        }
+
+        static string getGeneratorOutput(string fileName)
+        {
+            var tokenizer = new Tokenizer(fileName);
+            var parser = new Parser.Parser(tokenizer);
+            parser.BuildTree();
+
+            return new Generator.AsmGenerator(parser.tree).AsmText();
         }
     }
 }

@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Compiler_FPC.Generator;
 
 namespace Compiler_FPC.Parser
 {
     class Parser
     {
         private readonly Tokenizer tokenizer;
-        private SyntaxTree tree;
+        public SyntaxTree tree { get; private set; }
         private SymbolTableTree tables;
 
         private Parser()
@@ -27,9 +27,15 @@ namespace Compiler_FPC.Parser
 
         public string Tree()
         {
+            return BuildTree();
+        }
+
+        public string BuildTree()
+        {
             if (tree == null)
             {
                 tokenizer.Next();
+
                 try
                 {
                     tree = new SyntaxTree(parseProgram());
@@ -49,6 +55,7 @@ namespace Compiler_FPC.Parser
 
             tables.AddSymbol(new SymTypeProc(new Node(new Token(-1, -1, TokenType.WRITE, "write", "write")), scalarList));
             tables.AddSymbol(new SymTypeProc(new Node(new Token(-1, -1, TokenType.WRITELN, "writeln", "writeln")), scalarList));
+            tables.AddSymbol(new SymTypeProc(new Node(new Token(-1, -1, TokenType.READ, "read", "read")), scalarList));
         }
 
         private Token matchNext(TokenType expectedTkType)
@@ -241,7 +248,7 @@ namespace Compiler_FPC.Parser
                 tokenizer.Next();
 
                 var expr = parseExpr();
-                var varNode = new VarNode(nameToken, expr);
+                var varNode = new ConstVarNode(nameToken, expr);
                 tables.AddSymbol(new SymVar(varNode, TypeBuilder.Build(expr, tables)));
                 consts.Add(varNode);
 
@@ -367,13 +374,13 @@ namespace Compiler_FPC.Parser
 
                 foreach (var tokenVar in tokensVars)
                 {
-                    var varNode = new VarNode(tokenVar, type);
+                    var varNode = new DeclVarNode(tokenVar, type);
 
                     var symType = TypeBuilder.Build(type, tables);
                     var symVar = new SymVar(varNode, symType);
                     tables.AddSymbol(symVar);
+                    varNode.NodeType = symType;
 
-                    varNode.TypeNode = symVar;
                     vars.Add(varNode);
                 }
 
@@ -503,7 +510,8 @@ namespace Compiler_FPC.Parser
                     else
                     {
                         var type = tables.GetSymbol(id);
-                        statements.Add(new VarNode(id, new AssignmentNode(afterId, parseExpr())));
+                        var var_node = new AssignVarNode(id, new AssignmentNode(afterId, parseExpr()));
+                        statements.Add(var_node);
                     }
                 }
                 else if ((id.Type == TokenType.ID || id.Type == TokenType.KEY_WORD) && afterId.Type == TokenType.LBRACKET)
@@ -682,7 +690,10 @@ namespace Compiler_FPC.Parser
             {
                 tokenizer.Next();
                 var r = parseExpr1();
-                e = new BinOpNode(t, e, r, ExprTypeBuilder.BinOpBuild(t, e, r));
+                var type = ExprTypeBuilder.BinOpBuild(t, e, r);
+                e.NodeType = type;
+                r.NodeType = type;
+                e = new BinOpNode(t, e, r, type);
                 t = tokenizer.Current;
             }
 
@@ -699,7 +710,10 @@ namespace Compiler_FPC.Parser
             {
                 tokenizer.Next();
                 var r = parseTerm();
-                e = new BinOpNode(t, e, r, ExprTypeBuilder.BinOpBuild(t, e, r));
+                var type = ExprTypeBuilder.BinOpBuild(t, e, r);
+                e.NodeType = type;
+                r.NodeType = type;
+                e = new BinOpNode(t, e, r, type);
                 t = tokenizer.Current;
             }
 
@@ -718,7 +732,10 @@ namespace Compiler_FPC.Parser
             {
                 tokenizer.Next();
                 var r = parseTerm0();
-                e =  new BinOpNode(t, e, r, ExprTypeBuilder.BinOpBuild(t, e, r));
+                var type = ExprTypeBuilder.BinOpBuild(t, e, r);
+                e.NodeType = type;
+                r.NodeType = type;
+                e =  new BinOpNode(t, e, r, type);
                 t = tokenizer.Current;
             }
 
@@ -798,7 +815,7 @@ namespace Compiler_FPC.Parser
             {
                 return null;
             }
-            
+
             tokenizer.Next();
 
             if (tokenizer.Current.Type == TokenType.LBRACKET)
@@ -841,7 +858,7 @@ namespace Compiler_FPC.Parser
                 if (!(id_type is SymVar))
                     throw new NotFounIdException(t);
 
-                id.TypeNode = tables.GetSymbol(t);
+                id.NodeType = tables.GetSymbol(t);
 
                 return id;
             }
@@ -897,8 +914,8 @@ namespace Compiler_FPC.Parser
             if (type is SymTypeFunc)
             {
                 var funcType = type as SymTypeFunc;
-                var func = new FuncCallNode(t, args, parseId(true, funcType.ReturnesType));
-                func.TypeNode = type;
+                var func = new FuncCallNode(t, args, parseId(true, funcType.ReturnType));
+                func.NodeType = type;
 
                 return func;
             }

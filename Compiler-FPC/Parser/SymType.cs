@@ -100,11 +100,11 @@ namespace Compiler_FPC.Parser
 
     class SymTypeFunc : SymTypeProc
     {
-        public SymType ReturnesType { get; protected set; }
+        public SymType ReturnType { get; protected set; }
 
         public SymTypeFunc(Node node, List<SymType> args, SymType returnedType) : base(node, args)
         {
-            ReturnesType = returnedType;
+            ReturnType = returnedType;
         }
     }
 }

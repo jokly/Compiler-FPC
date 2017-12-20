@@ -103,6 +103,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Generator\AsmGenerator.cs" />
+    <Compile Include="Generator\AsmNode.cs" />
     <Compile Include="CLOptions.cs" />
     <Compile Include="Lexer\Config.cs" />
     <Compile Include="Parser\ExprTypeBuilder.cs" />
@@ -127,5 +129,6 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

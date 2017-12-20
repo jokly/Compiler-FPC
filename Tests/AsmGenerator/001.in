@@ -1,0 +1,9 @@
+program test;
+
+var
+    a: Integer;
+
+begin
+    a := 1;
+    WriteLn(a);
+end.
