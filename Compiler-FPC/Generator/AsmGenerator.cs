@@ -56,58 +56,6 @@ namespace Compiler_FPC.Generator
             return SectionData + SectionBss + SectionText + _Main;
         }
 
-        public void GenPrint(TokenType print_type, Node value)
-        {
-            string type = TypeToStr(value.NodeType); ;
-
-            if (value is IdNode)
-            {
-                MainList.Add(new AsmPushNode($"DWORD [{value.Token.Value}]"));
-            }
-            else if (value is IntConstNode)
-            {
-                MainList.Add(new AsmPushNode($"{value.Token.Value}"));
-            }
-
-            if (print_type == TokenType.WRITE)
-            {
-                MainList.Add(new AsmPushNode("Write" + type));
-            }
-            else if (print_type == TokenType.WRITELN)
-            {
-                MainList.Add(new AsmPushNode("WriteLn" + type));
-            }
-            else
-                throw new System.Exception(); //TODO
-
-            MainList.Add(new AsmCallNode("_printf"));
-            MainList.Add(new AsmAddNode("esp", "8"));
-        }
-
-        private string TypeToStr(Symbol type)
-        {
-            if (type is SymVar)
-            {
-                return TypeToStr((type as SymVar).Type);
-            }
-            else if (type is SymTypeInteger)
-            {
-                return "Int";
-            }
-            else if (type is SymTypeReal)
-            {
-                return "Real";
-            }
-            else if (type is SymTypeChar)
-            {
-                return "Str";
-            }
-            else
-            {
-                throw new System.Exception(); // TODO
-            }
-        }
-
         private void GenerateProgram()
         {
             FillLists(Tree.Root);

@@ -370,6 +370,11 @@ namespace Compiler_FPC.Parser
                 {
                     list.Add(new AsmAddNode("eax", "ebx"));
                 }
+                else if (Token.Type == TokenType.MINUS)
+                {
+                    list.Add(new AsmSubNode("eax", "ebx"));
+                    list.Add(new AsmNegNode("eax"));
+                }
 
                 list.Add(new AsmPushNode("eax"));
             }

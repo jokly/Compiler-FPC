@@ -1,0 +1,9 @@
+program test;
+
+var
+    a: Integer;
+
+begin
+    a := (5 + 3) * (7 - 2); // 8 * 5 = 40
+    WriteLn(a);
+end.

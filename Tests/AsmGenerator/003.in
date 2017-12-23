@@ -1,0 +1,11 @@
+program test;
+
+var
+    a, b: Integer;
+
+begin
+    a := 3;
+    b := a + 3 * 2;
+    a := b;
+    WriteLn(a);
+end.
