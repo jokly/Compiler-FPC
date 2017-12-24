@@ -511,6 +511,7 @@ namespace Compiler_FPC.Parser
                     {
                         var type = tables.GetSymbol(id);
                         var var_node = new AssignVarNode(id, new AssignmentNode(afterId, parseExpr()));
+                        var_node.NodeType = (type as SymVar).Type;
                         statements.Add(var_node);
                     }
                 }

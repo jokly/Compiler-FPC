@@ -1,4 +1,5 @@
 ﻿using Compiler_FPC.Generator;
+using System;
 using System.Collections.Generic;
 
 namespace Compiler_FPC.Parser
@@ -93,7 +94,16 @@ namespace Compiler_FPC.Parser
         public override List<AsmNode> Generate()
         {
             var list = new List<AsmNode>();
-            list.Add(new AsmPopNode($"DWORD [{Token.Value}]"));
+            var destination = $"DWORD [{Token.Value}]";
+
+            if (NodeType is SymTypeReal)
+            {
+                list.Add(new AsmFstpNode(destination));
+            }
+            else
+            {
+                list.Add(new AsmPopNode(destination));
+            }
 
             return list;
         }
@@ -293,18 +303,32 @@ namespace Compiler_FPC.Parser
         public override List<AsmNode> Generate()
         {
             var list = new List<AsmNode>();
+            var child = Childrens[0];
+            var child_type = TypeBuilder.GetTrueType(child, child.NodeType);
 
             if (Token.Value.Equals("write") || Token.Value.Equals("writeln"))
             {
-                list.Add(new AsmPushNode(Token.Value + TypeToSuff(Childrens[0].NodeType)));
+                var format_node = new AsmPushNode(Token.Value + TypeToSuff(child_type));
+                var offset = 8;
+
+                if (child_type is SymTypeReal)
+                {
+                    list.Add(new AsmFldNode("DWORD [esp]"));
+                    list.Add(new AsmPopNode("eax"));
+                    list.Add(new AsmSubNode("esp", "8"));
+                    list.Add(new AsmFstpNode("QWORD [esp]"));
+                    offset = 12;
+                }
+
+                list.Add(format_node);
                 list.Add(new AsmCallNode("_printf"));
-                list.Add(new AsmAddNode("esp", "8"));
+                list.Add(new AsmAddNode("esp", offset.ToString()));
             }
             else if (Token.Value.Equals("read"))
             {
                 list.Add(new AsmPopNode($"DWORD [{Childrens[0].Token.Value}]"));
-                list.Add(new AsmPushNode($"{Childrens[0].Token.Value}"));
-                list.Add(new AsmPushNode(Token.Value + TypeToSuff(Childrens[0].NodeType)));
+                list.Add(new AsmPushNode($"{child.Token.Value}"));
+                list.Add(new AsmPushNode(Token.Value + TypeToSuff(child_type)));
                 list.Add(new AsmCallNode("_scanf"));
                 list.Add(new AsmAddNode("esp", "8"));
             }
@@ -355,7 +379,18 @@ namespace Compiler_FPC.Parser
 
             if (NodeType is SymTypeReal)
             {
-
+                if (Token.Type == TokenType.ASTERIX)
+                {
+                    list.Add(new AsmFmulpNode());
+                }
+                else if (Token.Type == TokenType.PLUS)
+                {
+                    list.Add(new AsmFaddpNode());
+                }
+                else if (Token.Type == TokenType.MINUS)
+                {
+                    list.Add(new AsmFsubpNode());
+                }
             }
             else
             {
@@ -421,7 +456,20 @@ namespace Compiler_FPC.Parser
         public override List<AsmNode> Generate()
         {
             var list = new List<AsmNode>();
-            list.Add(new AsmPushNode(Token.Value));
+
+            if (NodeType is SymTypeReal)
+            {
+                float num = (float)Convert.ToDouble(Token.Value);
+                var i = BitConverter.ToInt32(BitConverter.GetBytes(num), 0);
+
+                list.Add(new AsmPushNode(i.ToString("X") + "h"));
+                list.Add(new AsmFldNode("DWORD [esp]"));
+                list.Add(new AsmPopNode("eax"));
+            }
+            else
+            {
+                list.Add(new AsmPushNode(Token.Value));
+            }
 
             return list;
         }

@@ -1,0 +1,9 @@
+program test;
+
+var
+    a: Real;
+
+begin
+    a := 3.2 + 1;
+    WriteLn(a);
+end.

@@ -122,6 +122,30 @@ namespace Compiler_FPC.Generator
         public override string ToString() => $"mov {To}, {From}";
     }
 
+    class AsmFldNode : AsmSectionProgramNode
+    {
+        public string Operand { get; private set; }
+
+        public AsmFldNode(string operand)
+        {
+            Operand = operand;
+        }
+
+        public override string ToString() => $"fld {Operand}";
+    }
+
+    class AsmFstpNode : AsmSectionProgramNode
+    {
+        public string Operand { get; private set; }
+
+        public AsmFstpNode(string operand)
+        {
+            Operand = operand;   
+        }
+
+        public override string ToString() => $"fstp {Operand}";
+    }
+
     class AsmUnOpNode : AsmSectionProgramNode
     {
         public string Operand { get; private set; }
@@ -174,6 +198,27 @@ namespace Compiler_FPC.Generator
         public AsmMulNode(string right) : base("", right) { }
 
         public override string ToString() => $"mul {Right}";
+    }
+
+    class AsmFaddpNode : AsmBinOpNode
+    {
+        public AsmFaddpNode() : base("", "") { }
+
+        public override string ToString() => $"faddp";
+    }
+
+    class AsmFsubpNode : AsmBinOpNode
+    {
+        public AsmFsubpNode() : base("", "") { }
+
+        public override string ToString() => $"fsubp";
+    }
+
+    class AsmFmulpNode : AsmBinOpNode
+    {
+        public AsmFmulpNode() : base ("", "") { }
+
+        public override string ToString() => $"fmulp";
     }
 
     class AsmCallNode : AsmSectionProgramNode
