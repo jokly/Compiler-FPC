@@ -313,8 +313,6 @@ namespace Compiler_FPC.Parser
 
                 if (child_type is SymTypeReal)
                 {
-                    list.Add(new AsmFldNode("DWORD [esp]"));
-                    list.Add(new AsmPopNode("eax"));
                     list.Add(new AsmSubNode("esp", "8"));
                     list.Add(new AsmFstpNode("QWORD [esp]"));
                     offset = 12;
@@ -326,8 +324,12 @@ namespace Compiler_FPC.Parser
             }
             else if (Token.Value.Equals("read"))
             {
-                list.Add(new AsmPopNode($"DWORD [{Childrens[0].Token.Value}]"));
-                list.Add(new AsmPushNode($"{child.Token.Value}"));
+                var destination = child.Token.Value;
+
+                if (!(child_type is SymTypeReal))
+                    list.Add(new AsmPopNode($"DWORD [{destination}]"));
+
+                list.Add(new AsmPushNode($"{destination}"));
                 list.Add(new AsmPushNode(Token.Value + TypeToSuff(child_type)));
                 list.Add(new AsmCallNode("_scanf"));
                 list.Add(new AsmAddNode("esp", "8"));
@@ -435,6 +437,14 @@ namespace Compiler_FPC.Parser
         {
             var list = new List<AsmNode>();
             list.Add(new AsmPushNode($"DWORD [{Token.Value}]"));
+
+            var type = TypeBuilder.GetTrueType(this, NodeType);
+
+            if (type is SymTypeReal)
+            {
+                list.Add(new AsmFldNode("DWORD [esp]"));
+                list.Add(new AsmPopNode("eax"));
+            }
 
             return list;
         }
