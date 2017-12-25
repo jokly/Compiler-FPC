@@ -12,7 +12,21 @@ namespace Compiler_FPC.Parser
         public string BlockName { get; protected set; } = "";
         public List<Node> Childrens { get; protected set; } = new List<Node>();
 
-        public Symbol NodeType { get; set; }
+        protected Symbol TrueNodeType = null;
+
+        private Symbol node_type;
+        public Symbol NodeType
+        {
+            get { return node_type; }
+         
+            set
+            {
+                if (TrueNodeType == null)
+                    TrueNodeType = node_type;
+
+                node_type = value;
+            }
+        }
 
         public Node(Token token, string blockName = "")
         {
@@ -385,6 +399,10 @@ namespace Compiler_FPC.Parser
                 {
                     list.Add(new AsmFmulpNode());
                 }
+                else if (Token.Type == TokenType.FORWARD_SLASH)
+                {
+                    list.Add(new AsmFdivpNode());
+                }
                 else if (Token.Type == TokenType.PLUS)
                 {
                     list.Add(new AsmFaddpNode());
@@ -439,10 +457,15 @@ namespace Compiler_FPC.Parser
             list.Add(new AsmPushNode($"DWORD [{Token.Value}]"));
 
             var type = TypeBuilder.GetTrueType(this, NodeType);
+            var true_type = TypeBuilder.GetTrueType(this, TrueNodeType);
 
             if (type is SymTypeReal)
             {
-                list.Add(new AsmFldNode("DWORD [esp]"));
+                if (true_type is SymTypeInteger)
+                    list.Add(new AsmFildNode("DWORD [esp]"));
+                else
+                    list.Add(new AsmFldNode("DWORD [esp]"));
+
                 list.Add(new AsmPopNode("eax"));
             }
 
@@ -471,14 +494,19 @@ namespace Compiler_FPC.Parser
             {
                 float num = (float)Convert.ToDouble(Token.Value);
                 var i = BitConverter.ToInt32(BitConverter.GetBytes(num), 0);
+                var hex_val = i.ToString("X") + $"h; {Token.Value}";
 
-                list.Add(new AsmPushNode(i.ToString("X") + "h"));
+                list.Add(new AsmPushNode(hex_val));
                 list.Add(new AsmFldNode("DWORD [esp]"));
                 list.Add(new AsmPopNode("eax"));
             }
             else
             {
-                list.Add(new AsmPushNode(Token.Value));
+                int num = Convert.ToInt32(Token.Value);
+                var i = BitConverter.ToInt32(BitConverter.GetBytes(num), 0);
+                var hex_val = i.ToString("X") + $"h; {Token.Value}";
+
+                list.Add(new AsmPushNode(hex_val));
             }
 
             return list;

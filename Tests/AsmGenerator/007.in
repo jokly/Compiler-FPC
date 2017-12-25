@@ -1,0 +1,12 @@
+program test;
+
+var
+    a: Real;
+    b: Integer;
+
+begin
+    a := 2.3;
+    b := 2;
+    a := a + b;
+    WriteLn(a);
+end.

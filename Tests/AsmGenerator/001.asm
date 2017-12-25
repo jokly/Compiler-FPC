@@ -22,7 +22,7 @@ section .text
         extern _scanf
 
 _main:
-	push 1
+	push 1h; 1
 	pop DWORD [a]
 	push DWORD [a]
 	push writelnInt
