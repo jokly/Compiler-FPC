@@ -1,0 +1,10 @@
+program test;
+
+var
+    b: Integer;
+
+begin
+    b := --3;
+    b := -+b;
+    WriteLn(b);
+end.

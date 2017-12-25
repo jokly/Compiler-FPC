@@ -1,0 +1,10 @@
+program test;
+
+var
+    b: Real;
+
+begin
+    b := --3.1;
+    b := -+b;
+    WriteLn(b);
+end.

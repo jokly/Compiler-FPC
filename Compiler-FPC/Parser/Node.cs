@@ -379,6 +379,31 @@ namespace Compiler_FPC.Parser
         {
             Right = right;
         }
+
+        public override List<AsmNode> Generate()
+        {
+            var list = new List<AsmNode>();
+
+            if (NodeType is SymTypeReal)
+            {
+                
+                if (Token.Type == TokenType.MINUS)
+                {
+                    list.Add(new AsmFchsNode());
+                }
+            }
+            else
+            {
+                if (Token.Type == TokenType.MINUS)
+                {
+                    list.Add(new AsmPopNode("eax"));
+                    list.Add(new AsmNegNode("eax"));
+                    list.Add(new AsmPushNode("eax"));
+                }
+            }
+
+            return list;
+        }
     }
 
     class BinOpNode : ExprNode

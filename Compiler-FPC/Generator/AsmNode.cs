@@ -177,6 +177,13 @@ namespace Compiler_FPC.Generator
         public override string ToString() => $"neg {Operand}";
     }
 
+    class AsmFchsNode : AsmUnOpNode
+    {
+        public AsmFchsNode() : base("") { }
+
+        public override string ToString() => $"fchs";
+    }
+
     class AsmBinOpNode : AsmSectionProgramNode
     {
         public string Left { get; private set; }
