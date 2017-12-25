@@ -1,0 +1,9 @@
+program test;
+
+var
+    a: Integer;
+
+begin
+    a := 16 shr 2;
+    WriteLn(a);
+end.

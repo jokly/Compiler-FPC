@@ -439,8 +439,8 @@ namespace Compiler_FPC.Parser
             }
             else
             {
-                list.Add(new AsmPopNode("eax"));
                 list.Add(new AsmPopNode("ebx"));
+                list.Add(new AsmPopNode("eax"));
 
                 if (Token.Type == TokenType.ASTERIX)
                 {
@@ -453,7 +453,29 @@ namespace Compiler_FPC.Parser
                 else if (Token.Type == TokenType.MINUS)
                 {
                     list.Add(new AsmSubNode("eax", "ebx"));
-                    list.Add(new AsmNegNode("eax"));
+                }
+                else if (Token.Value.Equals("div"))
+                {
+                    list.Add(new AsmDivNode("ebx"));
+                }
+                else if (Token.Value.Equals("mod"))
+                {
+                    list.Add(new AsmDivNode("ebx"));
+                    list.Add(new AsmMoveNode("eax", "edx"));
+                }
+                else if (Token.Value.Equals("shl") || Token.Type == TokenType.BITWISE_SL)
+                {
+                    list.Add(new AsmPushNode("ebx"));
+                    list.Add(new AsmMoveNode("cl", "[esp]"));
+                    list.Add(new AsmPopNode("ebx"));
+                    list.Add(new AsmShlNode("eax", "cl"));
+                }
+                else if (Token.Value.Equals("shr") || Token.Type == TokenType.BITWISE_SR)
+                {
+                    list.Add(new AsmPushNode("ebx"));
+                    list.Add(new AsmMoveNode("cl", "[esp]"));
+                    list.Add(new AsmPopNode("ebx"));
+                    list.Add(new AsmShrNode("eax", "cl"));
                 }
 
                 list.Add(new AsmPushNode("eax"));
@@ -519,7 +541,7 @@ namespace Compiler_FPC.Parser
             {
                 float num = (float)Convert.ToDouble(Token.Value);
                 var i = BitConverter.ToInt32(BitConverter.GetBytes(num), 0);
-                var hex_val = i.ToString("X") + $"h; {Token.Value}";
+                var hex_val = "0x" + i.ToString("X") + $"; {Token.Value}";
 
                 list.Add(new AsmPushNode(hex_val));
                 list.Add(new AsmFldNode("DWORD [esp]"));
@@ -529,7 +551,7 @@ namespace Compiler_FPC.Parser
             {
                 int num = Convert.ToInt32(Token.Value);
                 var i = BitConverter.ToInt32(BitConverter.GetBytes(num), 0);
-                var hex_val = i.ToString("X") + $"h; {Token.Value}";
+                var hex_val = "0x" + i.ToString("X") + $"; {Token.Value}";
 
                 list.Add(new AsmPushNode(hex_val));
             }

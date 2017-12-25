@@ -219,6 +219,27 @@ namespace Compiler_FPC.Generator
         public override string ToString() => $"mul {Right}";
     }
 
+    class AsmDivNode : AsmBinOpNode
+    {
+        public AsmDivNode(string right) : base("", right) { }
+
+        public override string ToString() => $"div {Right}";
+    }
+
+    class AsmShlNode : AsmBinOpNode
+    {
+        public AsmShlNode(string left, string right) : base(left, right) { }
+
+        public override string ToString() => $"shl {Left}, {Right}";
+    }
+
+    class AsmShrNode : AsmBinOpNode
+    {
+        public AsmShrNode(string left, string right) : base(left, right) { }
+
+        public override string ToString() => $"shr {Left}, {Right}";
+    }
+
     class AsmFaddpNode : AsmBinOpNode
     {
         public AsmFaddpNode() : base("", "") { }
