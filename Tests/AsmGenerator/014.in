@@ -1,0 +1,11 @@
+program test;
+
+var
+    a: Integer;
+    b: Real;
+
+begin
+    a := 16;
+    b := a / 2;
+    WriteLn(b);
+end.

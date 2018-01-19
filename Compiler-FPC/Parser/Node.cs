@@ -78,7 +78,8 @@ namespace Compiler_FPC.Parser
         {
             var list = new List<AsmNode>();
 
-            list.Add(new AsmSubNode("esp", "4"));
+            var trueType = TypeBuilder.GetTrueType(NodeType) as SymType;
+            list.Add(new AsmSubNode("esp", trueType.Size.ToString()));
             list.Add(new AsmPopNode($"DWORD [ebp - {(NodeType as SymVar).Offset}]"));
 
             return list;
@@ -93,7 +94,8 @@ namespace Compiler_FPC.Parser
         {
             var list = new List<AsmNode>();
 
-            list.Add(new AsmSubNode("esp", "4"));
+            var trueType = TypeBuilder.GetTrueType(NodeType) as SymType;
+            list.Add(new AsmSubNode("esp", trueType.Size.ToString()));
             
             return list;
         }

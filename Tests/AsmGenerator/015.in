@@ -1,0 +1,11 @@
+program test;
+
+var
+    a: Integer;
+
+begin
+    a := (5 + 1) div 3 * 2;
+    Write(a);
+    a := a + 1;
+    Write(a);
+end.
