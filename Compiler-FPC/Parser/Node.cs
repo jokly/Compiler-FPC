@@ -110,6 +110,10 @@ namespace Compiler_FPC.Parser
             var list = new List<AsmNode>();
             var destination = $"DWORD [ebp - {(NodeType as SymVar).Offset}]";
             var trueType = TypeBuilder.GetTrueType(NodeType);
+            var exprType = TypeBuilder.GetTrueType(Left.Left.NodeType);
+
+            if (!trueType.GetType().Equals(exprType.GetType()))
+                throw new AsmGeneratorInvalidType(Token);
 
             if (trueType is SymTypeReal)
             {
@@ -121,7 +125,7 @@ namespace Compiler_FPC.Parser
             }
             else
             {
-                throw new AsmGeneratorInvalidType(Token); // EXCEPTION
+                throw new AsmGeneratorInvalidType(Token);
             }
 
             return list;
@@ -368,7 +372,7 @@ namespace Compiler_FPC.Parser
             else if (type is SymTypeChar)
                 return "Str";
             else
-                throw new AsmGeneratorInvalidType(Token); // EXCEPTION
+                throw new AsmGeneratorInvalidType(Token);
         }
     }
 
@@ -406,7 +410,7 @@ namespace Compiler_FPC.Parser
                 }
             }
             else
-                throw new AsmGeneratorInvalidType(Token); // EXCEPTION
+                throw new AsmGeneratorInvalidType(Token);
 
             return list;
         }
@@ -556,11 +560,18 @@ namespace Compiler_FPC.Parser
                 list.Add(new AsmFldNode("DWORD [esp]"));
                 list.Add(new AsmPopNode("eax"));
             }
-            else
+            else if (NodeType is SymTypeInteger)
             {
                 int num = Convert.ToInt32(Token.Value);
                 var i = BitConverter.ToInt32(BitConverter.GetBytes(num), 0);
                 var hex_val = "0x" + i.ToString("X") + $"; {Token.Value}";
+
+                list.Add(new AsmPushNode(hex_val));
+            }
+            else if (NodeType is SymTypeChar)
+            {
+                int chr = Token.Value[0];
+                var hex_val = "0x" + chr.ToString("X") + $"; {Token.Value}";
 
                 list.Add(new AsmPushNode(hex_val));
             }

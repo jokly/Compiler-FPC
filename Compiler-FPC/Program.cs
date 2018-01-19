@@ -123,6 +123,9 @@ namespace Compiler_FPC
             var parser = new Parser.Parser(tokenizer);
             parser.BuildTree();
 
+            if (parser.tree == null)
+                return parser.Tree();
+
             return new Generator.AsmGenerator(parser.tree).AsmText();
         }
     }

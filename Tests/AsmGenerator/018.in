@@ -1,0 +1,9 @@
+program test;
+
+var
+    a: Char;
+
+begin
+    a := 'a';
+    WriteLn(a);
+end.

@@ -12,11 +12,11 @@ namespace Compiler_FPC.Generator
         readReal : DD '%f', 0
 
         writeInt  : DD '%i', 0
-        writeStr  : DD '%s', 0
+        writeStr  : DD '%c', 0
         writeReal : DD '%f', 0
 
         writelnInt  : DD '%i', 10, 0
-        writelnStr  : DD '%s', 10, 0
+        writelnStr  : DD '%c', 10, 0
         writelnReal : DD '%f', 10, 0
 
 ";
@@ -53,7 +53,15 @@ namespace Compiler_FPC.Generator
 
         public string AsmText()
         {
-            GenerateProgram();
+            try
+            {
+                GenerateProgram();
+            }
+            catch (AsmGeneratorException ex)
+            {
+                return ex.Message;
+            }
+            
 
             return SectionData + SectionBss + SectionText + _Main;
         }

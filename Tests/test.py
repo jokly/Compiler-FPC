@@ -31,7 +31,18 @@ def gen_test(folders, optinons=[]):
         for file in inputFiles:
             fileName = os.path.splitext(file)[0]
             asmFileName = fileName + '.asm'
+
             subpr.run([PATH_TO_COMPILER, '-f', file, '-o', asmFileName] + optinons)
+
+            if open(asmFileName, 'r').read()[0] == '(':
+                if open(asmFileName, 'r').read() != open(fileName + '.ans').read():
+                    print('Passed (' + str(countTests) + os.sep + str(len(inputFiles)) + ')')
+                    print('Not passed: ' + asmFileName)
+                    exit(0)
+                else:
+                    print(asmFileName + '...OK')
+                    countTests += 1
+                    continue
 
             subpr.run(['nasm', '-f', 'win32', asmFileName, '-o', fileName + '.obj'])
             subpr.run(['gcc', '-m32', fileName + '.obj', '-o', fileName + '.exe'])
