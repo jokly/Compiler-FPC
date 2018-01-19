@@ -6,6 +6,7 @@ namespace Compiler_FPC.Parser
     {
         public SymbolTable Parent { get; protected set; } = null;
         private List<SymbolTable> Childrens = new List<SymbolTable>();
+        private int Offset = 4;
 
         private Dictionary<string, Symbol> Table = new Dictionary<string, Symbol>();
 
@@ -36,6 +37,12 @@ namespace Compiler_FPC.Parser
                 }
                 else
                     throw new DuplicateDeclarationException(Table[symbolName].Node.Token, symbol.Node.Token);
+            }
+
+            if (symbol is SymVar)
+            {
+                (symbol as SymVar).Offset = Offset;
+                Offset += 4;
             }
 
             Table.Add(symbolName, symbol);

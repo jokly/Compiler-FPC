@@ -9,6 +9,7 @@ namespace Compiler_FPC.Parser
     class SymVar : Symbol
     {
         public SymType Type { get; protected set; }
+        public int Offset;
 
         public SymVar(Node node, SymType type) : base(node)
         {

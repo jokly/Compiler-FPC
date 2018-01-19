@@ -34,8 +34,10 @@ namespace Compiler_FPC.Generator
 
 ";
 
-        private string _Main = 
+        private string _Main =
         @"_main:
+        push ebp
+        mov ebp, esp
 ";
 
         private SyntaxTree Tree;
@@ -68,7 +70,8 @@ namespace Compiler_FPC.Generator
                 _Main += "\t" + node.ToString() + "\n";
             }
 
-            _Main += "\n";
+            _Main += "        leave\n";
+            _Main += "        ret";
         }
 
         private void GenerateSectionData()

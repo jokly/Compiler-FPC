@@ -1,2 +1,2 @@
-nasm -f win32 001.out -o 001.obj
+nasm -f win32 001.asm -o 001.obj
 gcc -m32 001.obj -o 001.exe

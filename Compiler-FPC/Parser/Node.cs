@@ -14,7 +14,7 @@ namespace Compiler_FPC.Parser
 
         protected Symbol TrueNodeType = null;
 
-        private Symbol node_type;
+        protected Symbol node_type;
         public Symbol NodeType
         {
             get { return node_type; }
@@ -60,8 +60,6 @@ namespace Compiler_FPC.Parser
         {
             Childrens = childrens;
         }
-
-
     }
 
     class VarNode : Node
@@ -80,8 +78,8 @@ namespace Compiler_FPC.Parser
         {
             var list = new List<AsmNode>();
 
-            list.Add(new AsmDataNode(Token.Value, AsmDataType.DD, "0"));
-            list.Add(new AsmPopNode($"DWORD [{Token.Value}]"));
+            list.Add(new AsmSubNode("esp", "4"));
+            list.Add(new AsmPopNode($"DWORD [ebp - {(NodeType as SymVar).Offset}]"));
 
             return list;
         }
@@ -95,8 +93,8 @@ namespace Compiler_FPC.Parser
         {
             var list = new List<AsmNode>();
 
-            list.Add(new AsmBssNode(Token.Value, AsmBssType.RESD, NodeType is SymTypeReal ? 8 : 4));
-
+            list.Add(new AsmSubNode("esp", "4"));
+            
             return list;
         }
     }
@@ -108,9 +106,10 @@ namespace Compiler_FPC.Parser
         public override List<AsmNode> Generate()
         {
             var list = new List<AsmNode>();
-            var destination = $"DWORD [{Token.Value}]";
+            var destination = $"DWORD [ebp - {(NodeType as SymVar).Offset}]";
+            var trueType = TypeBuilder.GetTrueType(NodeType);
 
-            if (NodeType is SymTypeReal)
+            if (trueType is SymTypeReal)
             {
                 list.Add(new AsmFstpNode(destination));
             }
@@ -501,7 +500,8 @@ namespace Compiler_FPC.Parser
         public override List<AsmNode> Generate()
         {
             var list = new List<AsmNode>();
-            list.Add(new AsmPushNode($"DWORD [{Token.Value}]"));
+            var offset = ((TrueNodeType == null ? NodeType : TrueNodeType) as SymVar).Offset;
+            list.Add(new AsmPushNode($"DWORD [ebp - {offset}]"));
 
             var type = TypeBuilder.GetTrueType(this, NodeType);
             var true_type = TypeBuilder.GetTrueType(this, TrueNodeType);

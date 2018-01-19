@@ -249,7 +249,9 @@ namespace Compiler_FPC.Parser
 
                 var expr = parseExpr();
                 var varNode = new ConstVarNode(nameToken, expr);
-                tables.AddSymbol(new SymVar(varNode, TypeBuilder.Build(expr, tables)));
+                var type = new SymVar(varNode, TypeBuilder.Build(expr, tables));
+                tables.AddSymbol(type);
+                varNode.NodeType = type;
                 consts.Add(varNode);
 
                 require(TokenType.SEMICOLON);
@@ -511,7 +513,7 @@ namespace Compiler_FPC.Parser
                     {
                         var type = tables.GetSymbol(id);
                         var var_node = new AssignVarNode(id, new AssignmentNode(afterId, parseExpr()));
-                        var_node.NodeType = (type as SymVar).Type;
+                        var_node.NodeType = (type as SymVar);
                         statements.Add(var_node);
                     }
                 }
@@ -679,6 +681,16 @@ namespace Compiler_FPC.Parser
             return args;
         }
 
+        private void setNodeType(ExprNode e, SymType type)
+        {
+            if (e is IdNode)
+            {
+                e.NodeType = tables.GetSymbol(e.Token);
+            }
+
+            e.NodeType = type;
+        }
+
         private ExprNode parseExpr()
         {
             var e = parseExpr1();
@@ -692,8 +704,8 @@ namespace Compiler_FPC.Parser
                 tokenizer.Next();
                 var r = parseExpr1();
                 var type = ExprTypeBuilder.BinOpBuild(t, e, r);
-                e.NodeType = type;
-                r.NodeType = type;
+                setNodeType(e, type);
+                setNodeType(r, type);
                 e = new BinOpNode(t, e, r, type);
                 t = tokenizer.Current;
             }
@@ -712,8 +724,8 @@ namespace Compiler_FPC.Parser
                 tokenizer.Next();
                 var r = parseTerm();
                 var type = ExprTypeBuilder.BinOpBuild(t, e, r);
-                e.NodeType = type;
-                r.NodeType = type;
+                setNodeType(e, type);
+                setNodeType(r, type);
                 e = new BinOpNode(t, e, r, type);
                 t = tokenizer.Current;
             }
@@ -734,8 +746,8 @@ namespace Compiler_FPC.Parser
                 tokenizer.Next();
                 var r = parseTerm0();
                 var type = ExprTypeBuilder.BinOpBuild(t, e, r);
-                e.NodeType = type;
-                r.NodeType = type;
+                setNodeType(e, type);
+                setNodeType(r, type);
                 e =  new BinOpNode(t, e, r, type);
                 t = tokenizer.Current;
             }
