@@ -113,9 +113,13 @@ namespace Compiler_FPC.Parser
             {
                 list.Add(new AsmFstpNode(destination));
             }
-            else
+            else if (trueType is SymTypeInteger || trueType is SymTypeChar)
             {
                 list.Add(new AsmPopNode(destination));
+            }
+            else
+            {
+                throw new AsmGeneratorInvalidType(Token); // EXCEPTION
             }
 
             return list;
@@ -362,7 +366,7 @@ namespace Compiler_FPC.Parser
             else if (type is SymTypeChar)
                 return "Str";
             else
-                throw new System.Exception(); //TODO
+                throw new AsmGeneratorInvalidType(Token); // EXCEPTION
         }
     }
 
@@ -385,13 +389,12 @@ namespace Compiler_FPC.Parser
 
             if (NodeType is SymTypeReal)
             {
-                
                 if (Token.Type == TokenType.MINUS)
                 {
                     list.Add(new AsmFchsNode());
                 }
             }
-            else
+            else if (NodeType is SymTypeInteger)
             {
                 if (Token.Type == TokenType.MINUS)
                 {
@@ -400,6 +403,8 @@ namespace Compiler_FPC.Parser
                     list.Add(new AsmPushNode("eax"));
                 }
             }
+            else
+                throw new AsmGeneratorInvalidType(Token); // EXCEPTION
 
             return list;
         }
@@ -436,7 +441,7 @@ namespace Compiler_FPC.Parser
                     list.Add(new AsmFsubpNode());
                 }
             }
-            else
+            else if (NodeType is SymTypeInteger)
             {
                 list.Add(new AsmPopNode("ebx"));
                 list.Add(new AsmPopNode("eax"));
@@ -479,6 +484,8 @@ namespace Compiler_FPC.Parser
 
                 list.Add(new AsmPushNode("eax"));
             }
+            else
+                throw new AsmGeneratorInvalidType(Token);
 
             return list;
         }

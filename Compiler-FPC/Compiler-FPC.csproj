@@ -104,6 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Generator\AsmGenerator.cs" />
+    <Compile Include="Generator\AsmGeneratorException.cs" />
     <Compile Include="Generator\AsmNode.cs" />
     <Compile Include="CLOptions.cs" />
     <Compile Include="Lexer\Config.cs" />

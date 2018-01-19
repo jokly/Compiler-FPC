@@ -6,7 +6,7 @@ namespace Compiler_FPC.Parser
     {
         public SymbolTable Parent { get; protected set; } = null;
         private List<SymbolTable> Childrens = new List<SymbolTable>();
-        private int Offset = 4;
+        private int Offset = 0;
 
         private Dictionary<string, Symbol> Table = new Dictionary<string, Symbol>();
 
@@ -41,8 +41,8 @@ namespace Compiler_FPC.Parser
 
             if (symbol is SymVar)
             {
+                Offset += (symbol as SymVar).Type.Size;
                 (symbol as SymVar).Offset = Offset;
-                Offset += 4;
             }
 
             Table.Add(symbolName, symbol);

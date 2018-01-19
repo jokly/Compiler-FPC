@@ -5,6 +5,8 @@ namespace Compiler_FPC.Parser
 {
     class SymType : Symbol
     {
+        public int Size { get; protected set; } = 4;
+
         public SymType(Node node = null) : base(node)
         {
 
