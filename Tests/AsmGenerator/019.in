@@ -1,9 +1,9 @@
 program test;
 
 var
-    a: Char;
+    a: Integer;
 
 begin
-    a := 'a' mod 'b';
-    a := 'a';
+    a := 10 and 5;
+    WriteLn(a);
 end.

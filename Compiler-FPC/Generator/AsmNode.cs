@@ -184,6 +184,13 @@ namespace Compiler_FPC.Generator
         public override string ToString() => $"fchs";
     }
 
+    class AsmNotNode : AsmUnOpNode
+    {
+        public AsmNotNode(string operand) : base(operand) { }
+
+        public override string ToString() => $"not {Operand}";
+    }
+
     class AsmBinOpNode : AsmSectionProgramNode
     {
         public string Left { get; private set; }
@@ -196,6 +203,28 @@ namespace Compiler_FPC.Generator
         }
 
         public override string ToString() => base.ToString();
+    }
+
+    class AsmAndNode : AsmBinOpNode
+    {
+        public AsmAndNode(string left, string right) : base(left, right) { }
+
+        public override string ToString() => $"and {Left}, {Right}";
+
+    }
+
+    class AsmOrNode : AsmBinOpNode
+    {
+        public AsmOrNode(string left, string right) : base(left, right) { }
+
+        public override string ToString() => $"or {Left}, {Right}";
+    }
+
+    class AsmXorNode : AsmBinOpNode
+    {
+        public AsmXorNode(string left, string right) : base(left, right) { }
+
+        public override string ToString() => $"xor {Left}, {Right}";
     }
 
     class AsmAddNode : AsmBinOpNode

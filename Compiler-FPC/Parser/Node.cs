@@ -402,12 +402,19 @@ namespace Compiler_FPC.Parser
             }
             else if (NodeType is SymTypeInteger)
             {
+                list.Add(new AsmPopNode("eax"));
+
                 if (Token.Type == TokenType.MINUS)
                 {
-                    list.Add(new AsmPopNode("eax"));
                     list.Add(new AsmNegNode("eax"));
-                    list.Add(new AsmPushNode("eax"));
+                    
                 }
+                else if (Token.Text.Equals("not"))
+                {
+                    list.Add(new AsmNotNode("eax"));
+                }
+
+                list.Add(new AsmPushNode("eax"));
             }
             else
                 throw new AsmGeneratorInvalidType(Token);
@@ -486,6 +493,18 @@ namespace Compiler_FPC.Parser
                     list.Add(new AsmMoveNode("cl", "[esp]"));
                     list.Add(new AsmPopNode("ebx"));
                     list.Add(new AsmShrNode("eax", "cl"));
+                }
+                else if (Token.Text.Equals("and"))
+                {
+                    list.Add(new AsmAndNode("eax", "ebx"));
+                }
+                else if (Token.Text.Equals("or"))
+                {
+                    list.Add(new AsmOrNode("eax", "ebx"));
+                }
+                else if (Token.Text.Equals("xor"))
+                {
+                    list.Add(new AsmXorNode("eax", "ebx"));
                 }
 
                 list.Add(new AsmPushNode("eax"));
