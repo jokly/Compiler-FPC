@@ -296,6 +296,50 @@ namespace Compiler_FPC.Parser
             Right = endVal;
             Childrens = new List<Node> { beginBlock, direction };
         }
+
+        public override List<AsmNode> Generate()
+        {
+            var list = new List<AsmNode>();
+
+            var empty = new List<AsmNode>();
+            var left = AsmGenerator.GenAsm(Left, empty);
+
+            empty = new List<AsmNode>();
+            var right = AsmGenerator.GenAsm(Right, empty);
+
+            empty = new List<AsmNode>();
+            var beginBlock = AsmGenerator.GenAsm(Childrens[0], empty);
+
+            int curr = AsmLabelNode.GetCurrent();
+
+            list.AddRange(right);
+            list.AddRange(left);
+            list.Add(new AsmLabelNode());
+            list.Add(new AsmPopNode("eax"));
+            list.Add(new AsmPopNode("ebx"));
+            list.Add(new AsmCmpNode("eax", "ebx"));
+
+            if (Childrens[1] is ForDirTo)
+                list.Add(new AsmJgNode(AsmLabelNode.GenLabel(curr + 1)));
+            else if (Childrens[1] is ForDirDownto)
+                list.Add(new AsmJlNode(AsmLabelNode.GenLabel(curr + 1)));
+
+            list.Add(new AsmPushNode("ebx"));
+            list.Add(new AsmPushNode("eax"));
+            list.AddRange(beginBlock);
+
+            list.Add(new AsmPopNode("eax"));
+            if (Childrens[1] is ForDirTo)
+                list.Add(new AsmAddNode("eax", "1"));
+            else if (Childrens[1] is ForDirDownto)
+                list.Add(new AsmSubNode("eax", "1"));
+
+            list.Add(new AsmPushNode("eax"));
+            list.Add(new AsmJmpNode(AsmLabelNode.GenLabel(curr)));
+            list.Add(new AsmLabelNode());
+
+            return list;
+        }
     }
 
     class ForDirTo : Node

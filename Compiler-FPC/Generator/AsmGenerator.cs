@@ -104,7 +104,7 @@ namespace Compiler_FPC.Generator
 
         public static List<AsmNode> GenAsm(Node node, List<AsmNode> asm_list)
         {
-            if (!(node is IfNode))
+            if (!(node is IfNode || node is ForNode))
             {
                 if (node.Left != null)
                     GenAsm(node.Left, asm_list);
