@@ -108,7 +108,24 @@ namespace Compiler_FPC.Parser
         public override List<AsmNode> Generate()
         {
             var list = new List<AsmNode>();
-            var destination = $"DWORD [ebp - {(NodeType as SymVar).Offset}]";
+
+            if (Right == null)
+                list.Add(new AsmPushNode($"{(NodeType as SymVar).Offset}"));
+            else
+            {
+                list.Add(new AsmPopNode("eax"));
+                list.Add(new AsmPushNode($"{(NodeType as SymVar).Offset}"));
+                list.Add(new AsmPopNode("ebx"));
+                list.Add(new AsmMulNode("ebx"));
+                list.Add(new AsmPushNode("eax"));
+            }
+
+            list.Add(new AsmPushNode("ebp"));
+            list.Add(new AsmPopNode("eax"));
+            list.Add(new AsmPopNode("ebx"));
+            list.Add(new AsmSubNode("eax", "ebx"));
+
+            var destination = $"DWORD [eax]";
             var trueType = TypeBuilder.GetTrueType(NodeType);
             var exprType = TypeBuilder.GetTrueType(Left.Left.NodeType);
 
@@ -176,6 +193,26 @@ namespace Compiler_FPC.Parser
         {
             Left = type;
             Childrens = new List<Node> { leftRange, rightRange };
+        }
+
+        public override List<AsmNode> Generate()
+        {
+            var list = new List<AsmNode>();
+
+            var trueType = TypeBuilder.GetTrueType(NodeType) as SymType;
+
+            var left = AsmGenerator.GenAsm(Childrens[0], new List<AsmNode>());
+            var right = AsmGenerator.GenAsm(Childrens[1], new List<AsmNode>());
+
+            list.Add(new AsmPopNode("eax"));
+            list.Add(new AsmPopNode("ebx"));
+            list.Add(new AsmSubNode("eax", "ebx"));
+            list.Add(new AsmPushNode(trueType.Size.ToString()));
+            list.Add(new AsmPopNode("ebx"));
+            list.Add(new AsmMulNode("eax"));
+            list.Add(new AsmSubNode("esp", "eax"));
+
+            return list;
         }
     }
 
@@ -467,7 +504,7 @@ namespace Compiler_FPC.Parser
         public override List<AsmNode> Generate()
         {
             var list = new List<AsmNode>();
-            var child = Childrens[0];
+            var child = Childrens[0] is SquareBracketsNode ? Childrens[0].Left : Childrens[0];
             var child_type = TypeBuilder.GetTrueType(child, child.NodeType);
 
             if (Token.Value.Equals("write") || Token.Value.Equals("writeln"))
@@ -712,8 +749,26 @@ namespace Compiler_FPC.Parser
         public override List<AsmNode> Generate()
         {
             var list = new List<AsmNode>();
-            var offset = ((TrueNodeType == null ? NodeType : TrueNodeType) as SymVar).Offset;
-            list.Add(new AsmPushNode($"DWORD [ebp - {offset}]"));
+            
+            if (Left != null)
+            {
+                list.AddRange(AsmGenerator.GenAsm(Left.Left, new List<AsmNode>()));
+                list.Add(new AsmPushNode((NodeType as SymType).Size.ToString()));
+                list.Add(new AsmPopNode("eax"));
+                list.Add(new AsmPopNode("ebx"));
+                list.Add(new AsmMulNode("ebx"));
+                list.Add(new AsmPushNode("eax"));
+            }
+            else
+                list.Add(new AsmPushNode(((TrueNodeType == null ? NodeType : TrueNodeType) as SymVar).Offset.ToString()));
+
+
+            list.Add(new AsmPopNode("ebx"));
+            list.Add(new AsmPushNode("ebp"));
+            list.Add(new AsmPopNode("eax"));
+            list.Add(new AsmSubNode("eax", "ebx"));
+
+            list.Add(new AsmPushNode($"DWORD [eax]"));
 
             var type = TypeBuilder.GetTrueType(this, NodeType);
             var true_type = TypeBuilder.GetTrueType(this, TrueNodeType);

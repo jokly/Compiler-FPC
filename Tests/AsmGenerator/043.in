@@ -1,0 +1,14 @@
+program test;
+
+var
+    arr: array[0..10] of Integer;
+
+begin
+    arr[0] := 1;
+
+    while arr[0] <= 10 do begin
+        arr[arr[0]] := arr[arr[0] - 1] + 1;
+        Write(arr[arr[0]]);
+        arr[0] := arr[0] + 1;
+    end;
+end.

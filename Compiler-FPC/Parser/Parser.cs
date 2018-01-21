@@ -453,7 +453,9 @@ namespace Compiler_FPC.Parser
 
                 tokenizer.Next();
 
-                return new ArrayTypeNode(of, leftRange, rightRange, getArrayTypeNode());
+                var type = new ArrayTypeNode(of, leftRange, rightRange, getArrayTypeNode());
+                type.NodeType = type.Left.NodeType;
+                return type;
             }
             else if (tokenizer.Current.Type == TokenType.POINTER)
             {
@@ -464,7 +466,9 @@ namespace Compiler_FPC.Parser
             }
             else if (tokenizer.Current.Type == TokenType.ID)
             {
-                return new VarTypeNode((tokenizer.Current));
+                var type = new VarTypeNode((tokenizer.Current));
+                type.NodeType = TypeBuilder.Build(type, tables);
+                return type;
             }
             else
                 throw new ParserException(tokenizer.Current, TokenType.ID);
@@ -873,8 +877,10 @@ namespace Compiler_FPC.Parser
                 var index = parseExpr();
                 require(TokenType.RSQUARE_BRACKET);
                 var sqrBr = new SquareBracketsNode(tokenizer.Current, index, parseId(true, (type as SymTypeArray).ElemType));
+                var idNode = new IdNode(t, sqrBr);
+                idNode.NodeType = type;
 
-                return sqrBr;
+                return idNode;
             }
             else if (tokenizer.Current.Type == TokenType.DOT)
             {

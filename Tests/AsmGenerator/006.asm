@@ -27,8 +27,18 @@ _main:
 	push 0x40133333; 2,3
 	fld DWORD [esp]
 	pop eax
-	fstp DWORD [ebp - 4]
-	push DWORD [ebp - 4]
+	push 4
+	push ebp
+	pop eax
+	pop ebx
+	sub eax, ebx
+	fstp DWORD [eax]
+	push 4
+	pop ebx
+	push ebp
+	pop eax
+	sub eax, ebx
+	push DWORD [eax]
 	fld DWORD [esp]
 	pop eax
 	push 0x3F800000; 1
@@ -47,8 +57,18 @@ _main:
 	fld DWORD [esp]
 	pop eax
 	fdivp
-	fstp DWORD [ebp - 4]
-	push DWORD [ebp - 4]
+	push 4
+	push ebp
+	pop eax
+	pop ebx
+	sub eax, ebx
+	fstp DWORD [eax]
+	push 4
+	pop ebx
+	push ebp
+	pop eax
+	sub eax, ebx
+	push DWORD [eax]
 	fld DWORD [esp]
 	pop eax
 	sub esp, 8

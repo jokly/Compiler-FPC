@@ -40,19 +40,44 @@ _main:
 	pop eax
 	mul ebx
 	push eax
-	pop DWORD [ebp - 4]
-	push DWORD [ebp - 4]
+	push 4
+	push ebp
+	pop eax
+	pop ebx
+	sub eax, ebx
+	pop DWORD [eax]
+	push 4
+	pop ebx
+	push ebp
+	pop eax
+	sub eax, ebx
+	push DWORD [eax]
 	push writeInt
 	call _printf
 	add esp, 8
-	push DWORD [ebp - 4]
+	push 4
+	pop ebx
+	push ebp
+	pop eax
+	sub eax, ebx
+	push DWORD [eax]
 	push 0x1; 1
 	pop ebx
 	pop eax
 	add eax, ebx
 	push eax
-	pop DWORD [ebp - 4]
-	push DWORD [ebp - 4]
+	push 4
+	push ebp
+	pop eax
+	pop ebx
+	sub eax, ebx
+	pop DWORD [eax]
+	push 4
+	pop ebx
+	push ebp
+	pop eax
+	sub eax, ebx
+	push DWORD [eax]
 	push writeInt
 	call _printf
 	add esp, 8

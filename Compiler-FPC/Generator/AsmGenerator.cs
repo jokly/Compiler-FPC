@@ -61,7 +61,7 @@ namespace Compiler_FPC.Generator
             {
                 return ex.Message;
             }
-            
+
 
             return SectionData + SectionBss + SectionText + _Main;
         }
@@ -104,7 +104,7 @@ namespace Compiler_FPC.Generator
 
         public static List<AsmNode> GenAsm(Node node, List<AsmNode> asm_list)
         {
-            if (!(node is IfNode || node is ForNode || node is WhileNode || node is RepeatNode))
+            if (!(node is IfNode || node is ForNode || node is WhileNode || node is RepeatNode || node is IdNode))
             {
                 if (node.Left != null)
                     GenAsm(node.Left, asm_list);

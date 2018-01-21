@@ -25,15 +25,35 @@ _main:
         mov ebp, esp
 	sub esp, 4
 	push 0xA; 10
-	pop DWORD [ebp - 4]
-	push DWORD [ebp - 4]
+	push 4
+	push ebp
+	pop eax
+	pop ebx
+	sub eax, ebx
+	pop DWORD [eax]
+	push 4
+	pop ebx
+	push ebp
+	pop eax
+	sub eax, ebx
+	push DWORD [eax]
 	push 0x2; 2
 	pop ebx
 	pop eax
 	div ebx
 	push eax
-	pop DWORD [ebp - 4]
-	push DWORD [ebp - 4]
+	push 4
+	push ebp
+	pop eax
+	pop ebx
+	sub eax, ebx
+	pop DWORD [eax]
+	push 4
+	pop ebx
+	push ebp
+	pop eax
+	sub eax, ebx
+	push DWORD [eax]
 	push writeInt
 	call _printf
 	add esp, 8

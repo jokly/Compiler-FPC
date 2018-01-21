@@ -30,8 +30,18 @@ _main:
 	pop eax
 	and eax, ebx
 	push eax
-	pop DWORD [ebp - 4]
-	push DWORD [ebp - 4]
+	push 4
+	push ebp
+	pop eax
+	pop ebx
+	sub eax, ebx
+	pop DWORD [eax]
+	push 4
+	pop ebx
+	push ebp
+	pop eax
+	sub eax, ebx
+	push DWORD [eax]
 	push writeInt
 	call _printf
 	add esp, 8

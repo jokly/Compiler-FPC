@@ -31,8 +31,18 @@ _main:
 	fld DWORD [esp]
 	pop eax
 	faddp
-	fstp DWORD [ebp - 4]
-	push DWORD [ebp - 4]
+	push 4
+	push ebp
+	pop eax
+	pop ebx
+	sub eax, ebx
+	fstp DWORD [eax]
+	push 4
+	pop ebx
+	push ebp
+	pop eax
+	sub eax, ebx
+	push DWORD [eax]
 	fld DWORD [esp]
 	pop eax
 	sub esp, 8

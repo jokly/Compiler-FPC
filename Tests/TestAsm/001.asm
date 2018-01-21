@@ -23,24 +23,45 @@ section .text
 _main:
         push ebp
         mov ebp, esp
-        sub esp, 4
-        sub esp, 4
         push 0x0; 0
-        pop DWORD [ebp - 4]
-        L2:
-        push DWORD [ebp - 4]
-        push 0x1; 1
-        pop ebx
+        push 0xA; 10
         pop eax
-        add eax, ebx
-        push eax
-        pop DWORD [ebp - 4]
-        push DWORD [ebp - 4]
+        pop ebx
+        sub eax, ebx
+        push 4
+        pop ebx
+        mul eax
+        sub esp, eax
+        sub esp, 4
         push 0x1; 1
+        push 0x0; 0
+        pop eax
+        push 4
+        pop ebx
+        mul ebx
+        push eax
+        push ebp
+        pop eax
+        pop ebx
+        sub eax, ebx
+        pop DWORD [eax]
+        L2:
+        push 0x0; 0
+        push 4
+        pop eax
+        pop ebx
+        mul ebx
+        push eax
+        pop ebx
+        push ebp
+        pop eax
+        sub eax, ebx
+        push DWORD [eax]
+        push 0xA; 10
         pop ebx
         pop eax
         cmp eax, ebx
-        jg L0
+        jle L0
         push 0
         jmp L1
         L0:
@@ -49,11 +70,112 @@ _main:
         pop eax
         push eax
         pop eax
-        cmp eax, 0
-        je L2
-        push DWORD [ebp - 4]
-        push writeInt
+        cmp eax, 1
+        jne L3
+        push 0x0; 0
+        push 4
+        pop eax
+        pop ebx
+        mul ebx
+        push eax
+        pop ebx
+        push ebp
+        pop eax
+        sub eax, ebx
+        push DWORD [eax]
+        push 0x1; 1
+        pop ebx
+        pop eax
+        sub eax, ebx
+        push eax
+        push 4
+        pop eax
+        pop ebx
+        mul ebx
+        push eax
+        pop ebx
+        push ebp
+        pop eax
+        sub eax, ebx
+        push DWORD [eax]
+        push 0x1; 1
+        pop ebx
+        pop eax
+        add eax, ebx
+        push eax
+        push 0x0; 0
+        push 4
+        pop eax
+        pop ebx
+        mul ebx
+        push eax
+        pop ebx
+        push ebp
+        pop eax
+        sub eax, ebx
+        push DWORD [eax]
+        pop eax
+        push 4
+        pop ebx
+        mul ebx
+        push eax
+        push ebp
+        pop eax
+        pop ebx
+        sub eax, ebx
+        pop DWORD [eax]
+        push 0x0; 0
+        push 4
+        pop eax
+        pop ebx
+        mul ebx
+        push eax
+        pop ebx
+        push ebp
+        pop eax
+        sub eax, ebx
+        push DWORD [eax]
+        push 4
+        pop eax
+        pop ebx
+        mul ebx
+        push eax
+        pop ebx
+        push ebp
+        pop eax
+        sub eax, ebx
+        push DWORD [eax]
+        push writelnInt
         call _printf
         add esp, 8
+        push 0x0; 0
+        push 4
+        pop eax
+        pop ebx
+        mul ebx
+        push eax
+        pop ebx
+        push ebp
+        pop eax
+        sub eax, ebx
+        push DWORD [eax]
+        push 0x1; 1
+        pop ebx
+        pop eax
+        add eax, ebx
+        push eax
+        push 0x0; 0
+        pop eax
+        push 4
+        pop ebx
+        mul ebx
+        push eax
+        push ebp
+        pop eax
+        pop ebx
+        sub eax, ebx
+        pop DWORD [eax]
+        jmp L2
+        L3:
         leave
         ret
