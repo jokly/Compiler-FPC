@@ -5,5 +5,5 @@ var
 
 begin
     a := 10 or 5;
-    WriteLn(a);
+    Write(a);
 end.

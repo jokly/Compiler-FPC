@@ -6,5 +6,5 @@ var
 begin
     a := 10;
     a := a div 2;
-    WriteLn(a);
+    Write(a);
 end.

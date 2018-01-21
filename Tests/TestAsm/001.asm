@@ -7,9 +7,9 @@ section .data
         writeStr  : DD '%c', 0
         writeReal : DD '%f', 0
 
-        writelnInt  : DD '%i', 10, 0
-        writelnStr  : DD '%c', 10, 0
-        writelnReal : DD '%f', 10, 0
+        writelnInt  : DB '%i', 10, 0
+        writelnStr  : DB '%c', 10, 0
+        writelnReal : DB '%f', 10, 0
 
 
 section .bss
@@ -27,15 +27,7 @@ _main:
         sub esp, 4
         push 0x0; 0
         pop DWORD [ebp - 4]
-        push 0x0; 0
-        push 0xA; 10
-        L0:
-        pop eax
-        pop ebx
-        cmp eax, ebx
-        jl L1
-        push ebx
-        push eax
+        L2:
         push DWORD [ebp - 4]
         push 0x1; 1
         pop ebx
@@ -43,11 +35,22 @@ _main:
         add eax, ebx
         push eax
         pop DWORD [ebp - 4]
+        push DWORD [ebp - 4]
+        push 0x1; 1
+        pop ebx
         pop eax
-        sub eax, 1
-        push eax
-        jmp L0
+        cmp eax, ebx
+        jg L0
+        push 0
+        jmp L1
+        L0:
+        push 1
         L1:
+        pop eax
+        push eax
+        pop eax
+        cmp eax, 0
+        je L2
         push DWORD [ebp - 4]
         push writeInt
         call _printf

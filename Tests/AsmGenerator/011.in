@@ -6,5 +6,5 @@ var
 begin
     a := 13;
     a := a mod 5;
-    WriteLn(a);
+    Write(a);
 end.

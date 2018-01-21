@@ -7,5 +7,5 @@ var
 begin
     a := 16;
     b := a / 2;
-    WriteLn(b);
+    Write(b);
 end.

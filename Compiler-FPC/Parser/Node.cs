@@ -277,6 +277,30 @@ namespace Compiler_FPC.Parser
             Left = cond;
             Right = beginBlock;
         }
+
+        public override List<AsmNode> Generate()
+        {
+            var list = new List<AsmNode>();
+
+            var empty = new List<AsmNode>();
+            var cond = AsmGenerator.GenAsm(Left, empty);
+
+            empty = new List<AsmNode>();
+            var beginBlock = AsmGenerator.GenAsm(Right, empty);
+
+            var curr = AsmLabelNode.GetCurrent();
+
+            list.Add(new AsmLabelNode());
+            list.AddRange(cond);
+            list.Add(new AsmPopNode("eax"));
+            list.Add(new AsmCmpNode("eax", "1"));
+            list.Add(new AsmJneNode(AsmLabelNode.GenLabel(curr + 1)));
+            list.AddRange(beginBlock);
+            list.Add(new AsmJmpNode(AsmLabelNode.GenLabel(curr)));
+            list.Add(new AsmLabelNode());
+
+            return list;
+        }
     }
 
     class RepeatNode : Node
@@ -285,6 +309,30 @@ namespace Compiler_FPC.Parser
         {
             Left = cond;
             Right = beginBlock;
+        }
+
+        public override List<AsmNode> Generate()
+        {
+            var list = new List<AsmNode>();
+
+            var empty = new List<AsmNode>();
+            var cond = AsmGenerator.GenAsm(Left, empty);
+
+            empty = new List<AsmNode>();
+            var beginBlock = AsmGenerator.GenAsm(Right, empty);
+
+
+            var curr = AsmLabelNode.GetCurrent();
+
+            list.Add(new AsmLabelNode());
+            list.AddRange(beginBlock);
+            list.AddRange(cond);
+            list.Add(new AsmPopNode("eax"));
+            list.Add(new AsmCmpNode("eax", "0"));
+            list.Add(new AsmJeNode(AsmLabelNode.GenLabel(curr)));
+
+
+            return list;
         }
     }
 

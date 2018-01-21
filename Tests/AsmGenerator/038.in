@@ -1,0 +1,14 @@
+program test;
+
+var
+    a, i: Integer;
+
+begin
+    a := 0;
+
+    while a <= 3 do begin
+        a := a + 1;
+    end;
+
+    Write(a);
+end.

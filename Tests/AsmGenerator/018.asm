@@ -7,9 +7,9 @@ section .data
         writeStr  : DD '%c', 0
         writeReal : DD '%f', 0
 
-        writelnInt  : DD '%i', 10, 0
-        writelnStr  : DD '%c', 10, 0
-        writelnReal : DD '%f', 10, 0
+        writelnInt  : DB '%i', 10, 0
+        writelnStr  : DB '%c', 10, 0
+        writelnReal : DB '%f', 10, 0
 
 
 section .bss
@@ -27,7 +27,7 @@ _main:
 	push 0x61; a
 	pop DWORD [ebp - 4]
 	push DWORD [ebp - 4]
-	push writelnStr
+	push writeStr
 	call _printf
 	add esp, 8
         leave

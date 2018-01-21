@@ -15,9 +15,9 @@ namespace Compiler_FPC.Generator
         writeStr  : DD '%c', 0
         writeReal : DD '%f', 0
 
-        writelnInt  : DD '%i', 10, 0
-        writelnStr  : DD '%c', 10, 0
-        writelnReal : DD '%f', 10, 0
+        writelnInt  : DB '%i', 10, 0
+        writelnStr  : DB '%c', 10, 0
+        writelnReal : DB '%f', 10, 0
 
 ";
 
@@ -104,7 +104,7 @@ namespace Compiler_FPC.Generator
 
         public static List<AsmNode> GenAsm(Node node, List<AsmNode> asm_list)
         {
-            if (!(node is IfNode || node is ForNode))
+            if (!(node is IfNode || node is ForNode || node is WhileNode || node is RepeatNode))
             {
                 if (node.Left != null)
                     GenAsm(node.Left, asm_list);

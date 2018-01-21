@@ -6,5 +6,5 @@ var
 begin
     b := --3;
     b := -+b;
-    WriteLn(b);
+    Write(b);
 end.
