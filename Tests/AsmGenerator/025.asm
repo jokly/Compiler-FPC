@@ -29,7 +29,7 @@ _main:
 	pop ebx
 	pop eax
 	cmp eax, ebx
-	je L0
+	jle L0
 	push 0
 	jmp L1
 	L0:
@@ -42,17 +42,35 @@ _main:
 	push writeInt
 	call _printf
 	add esp, 8
-	push 0x1; 1
+	push 0x3; 3
 	push 0x2; 2
 	pop ebx
 	pop eax
 	cmp eax, ebx
-	je L2
+	jle L2
 	push 0
 	jmp L3
 	L2:
 	push 1
 	L3:
+	pop eax
+	push eax
+	pop DWORD [ebp - 4]
+	push DWORD [ebp - 4]
+	push writeInt
+	call _printf
+	add esp, 8
+	push 0x1; 1
+	push 0x2; 2
+	pop ebx
+	pop eax
+	cmp eax, ebx
+	jle L4
+	push 0
+	jmp L5
+	L4:
+	push 1
+	L5:
 	pop eax
 	push eax
 	pop DWORD [ebp - 4]

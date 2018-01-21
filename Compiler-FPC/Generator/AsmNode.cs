@@ -227,6 +227,13 @@ namespace Compiler_FPC.Generator
         public override string ToString() => $"xor {Left}, {Right}";
     }
 
+    class AsmCmpNode : AsmBinOpNode
+    {
+        public AsmCmpNode(string left, string right) : base(left, right) { }
+
+        public override string ToString() => $"cmp {Left}, {Right}";
+    }
+
     class AsmAddNode : AsmBinOpNode
     {
         public AsmAddNode(string left, string right) : base(left, right) { }
@@ -307,5 +314,82 @@ namespace Compiler_FPC.Generator
         }
 
         public override string ToString() => $"call {Name}";
+    }
+
+    class AsmLabelNode : AsmSectionProgramNode
+    {
+        public string Name { get; protected set; }
+        private static int Current = 0;
+
+        public AsmLabelNode()
+        {
+            Name = GenLabel(Current);
+            Current++;
+        }
+
+        public AsmLabelNode(string name) { Name = name; }
+
+        public static int GetCurrent()
+        {
+            return Current;
+        }
+
+        public static string GenLabel(int num)
+        {
+            return "L" + num.ToString();
+        }
+
+        public override string ToString() => $"{Name}:";
+    }
+
+    class AsmJmpNode : AsmSectionProgramNode
+    {
+        public string Label { get; protected set; }
+
+        public AsmJmpNode(string label) { Label = label; }
+
+        public override string ToString() => $"jmp {Label}";
+    }
+
+    class AsmJeNode : AsmJmpNode
+    {
+        public AsmJeNode(string label) : base(label) { }
+
+        public override string ToString() => $"je {Label}";
+    }
+
+    class AsmJneNode : AsmJmpNode
+    {
+        public AsmJneNode(string label) : base(label) { }
+
+        public override string ToString() => $"jne {Label}";
+    }
+
+    class AsmJgNode : AsmJmpNode
+    {
+        public AsmJgNode(string label) : base(label) { }
+
+        public override string ToString() => $"jg {Label}";
+    }
+
+    class AsmJgeNode : AsmJmpNode
+    {
+        public AsmJgeNode(string label) : base(label) { }
+
+        public override string ToString() => $"jge {Label}";
+    }
+
+    class AsmJlNode : AsmJmpNode
+    {
+        public AsmJlNode(string label) : base(label) { }
+
+        public override string ToString() => $"jl {Label}";
+    }
+
+    class AsmJleNode : AsmJmpNode
+    {
+        public AsmJleNode(string label) : base(label) { }
+
+        public override string ToString() => $"jle {Label}";
     }
 }

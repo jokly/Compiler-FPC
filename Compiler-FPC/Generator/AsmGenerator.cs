@@ -136,8 +136,6 @@ namespace Compiler_FPC.Generator
                 {
                     MainList.Add(com);
                 }
-                else
-                    throw new System.Exception(); // TODO
             }
         }
     }

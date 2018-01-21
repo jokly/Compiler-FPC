@@ -506,6 +506,36 @@ namespace Compiler_FPC.Parser
                 {
                     list.Add(new AsmXorNode("eax", "ebx"));
                 }
+                else if (Token.Type == TokenType.RELOP_EQ || Token.Type == TokenType.RELOP_NE ||
+                          Token.Type == TokenType.RELOP_LT || Token.Type == TokenType.RELOP_GT ||
+                          Token.Type == TokenType.RELOP_LE || Token.Type == TokenType.RELOP_GE)
+                {
+                    list.Add(new AsmCmpNode("eax", "ebx"));
+
+                    int curr = AsmLabelNode.GetCurrent();
+                    string true_label = AsmLabelNode.GenLabel(curr);
+                    string false_label = AsmLabelNode.GenLabel(curr + 1);
+
+                    if (Token.Type == TokenType.RELOP_EQ)
+                        list.Add(new AsmJeNode(true_label));
+                    else if (Token.Type == TokenType.RELOP_NE)
+                        list.Add(new AsmJneNode(true_label));
+                    else if (Token.Type == TokenType.RELOP_LT)
+                        list.Add(new AsmJlNode(true_label));
+                    else if (Token.Type == TokenType.RELOP_GT)
+                        list.Add(new AsmJgNode(true_label));
+                    else if (Token.Type == TokenType.RELOP_LE)
+                        list.Add(new AsmJleNode(true_label));
+                    else if (Token.Type == TokenType.RELOP_GE)
+                        list.Add(new AsmJgeNode(true_label));
+
+                    list.Add(new AsmPushNode("0"));
+                    list.Add(new AsmJmpNode(false_label));
+                    list.Add(new AsmLabelNode());
+                    list.Add(new AsmPushNode("1"));
+                    list.Add(new AsmLabelNode());
+                    list.Add(new AsmPopNode("eax"));
+                }
 
                 list.Add(new AsmPushNode("eax"));
             }

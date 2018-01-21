@@ -4,8 +4,8 @@ var
     a: Integer;
 
 begin
-    a := 1 = 1;
+    a := 1 < 1;
     Write(a);
-    a := 1 = 2;
+    a := 1 < 2;
     Write(a);
 end.

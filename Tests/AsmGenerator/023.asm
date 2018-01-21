@@ -29,7 +29,7 @@ _main:
 	pop ebx
 	pop eax
 	cmp eax, ebx
-	je L0
+	jl L0
 	push 0
 	jmp L1
 	L0:
@@ -47,7 +47,7 @@ _main:
 	pop ebx
 	pop eax
 	cmp eax, ebx
-	je L2
+	jl L2
 	push 0
 	jmp L3
 	L2:

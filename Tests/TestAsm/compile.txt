@@ -1,2 +1,9 @@
 nasm -f win32 001.asm -o 001.obj
 gcc -m32 001.obj -o 001.exe
+
+eax == ebx: je
+eax != ebx: jne
+eax > ebx: jg
+eax >= ebx: jge
+eax < ebx: jl
+eax <= ebx: jle
