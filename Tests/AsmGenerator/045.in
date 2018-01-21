@@ -1,0 +1,11 @@
+program test;
+
+var
+    a: Integer;
+
+begin
+    a := 10;
+    a := a + 0;
+    a := a - 0;
+    Write(a);
+end.

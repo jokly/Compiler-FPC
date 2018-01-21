@@ -117,20 +117,36 @@ namespace Compiler_FPC.Generator
                 if (MainList[i] is AsmPushNode && MainList[i + 1] is AsmPopNode &&
                     MainList[i + 2] is AsmPopNode && MainList[i + 3] is AsmAddNode)
                 {
-                    if (!(MainList[i] as AsmPushNode).Value.Equals("0x1; 1"))
+                    if ((MainList[i] as AsmPushNode).Value.Equals("0x1; 1"))
                     {
-                        i++;
-                        continue;
+                        for (var j = 0; j < 4; j++)
+                            MainList.RemoveAt(i);
+
+                        MainList.InsertRange(i, new List<AsmNode>()
+                        {
+                            new AsmPopNode("eax"),
+                            new AsmIncNode("eax")
+                        });
                     }
+                }
 
-                    for (var j = 0; j < 4; j++)
-                        MainList.RemoveAt(i);
+                i++;
+            }
 
-                    MainList.InsertRange(i, new List<AsmNode>()
+            // 5
+            i = 0;
+            while (i < MainList.Count - 4)
+            {
+                // a + 0; a - 0
+                if (MainList[i] is AsmPushNode && MainList[i + 1] is AsmPopNode &&
+                    MainList[i + 2] is AsmPopNode && (MainList[i + 3] is AsmAddNode || MainList[i + 3] is AsmSubNode) &&
+                    MainList[i + 4] is AsmPushNode)
+                {
+                    if ((MainList[i] as AsmPushNode).Value.Equals("0x0; 0") && (MainList[i + 4] as AsmPushNode).Value.Equals("eax"))
                     {
-                        new AsmPopNode("eax"),
-                        new AsmIncNode("eax")
-                    });
+                        for (var j = 0; j < 5; j++)
+                            MainList.RemoveAt(i);
+                    }
                 }
 
                 i++;
