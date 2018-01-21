@@ -24,12 +24,14 @@ _main:
         push ebp
         mov ebp, esp
         sub esp, 4
+        push 0x0; 0
+        pop DWORD [ebp - 4]
         push 0x1; 1
-        push 0x5; 5
+        push 0x1; 1
         pop ebx
         pop eax
         cmp eax, ebx
-        jg L0
+        jne L0
         push 0
         jmp L1
         L0:
@@ -38,17 +40,20 @@ _main:
         pop eax
         push eax
         pop eax
-        pop eax
-        cmp eax, 0
+        cmp eax, 1
         je L2
-        push 0
         jmp L3
         L2:
-        push 1
+        push 0x1; 1
+        pop DWORD [ebp - 4]
+        jmp L4
         L3:
+        push 0x1; 1
         pop eax
+        neg eax
         push eax
         pop DWORD [ebp - 4]
+        L4:
         push DWORD [ebp - 4]
         push writeInt
         call _printf

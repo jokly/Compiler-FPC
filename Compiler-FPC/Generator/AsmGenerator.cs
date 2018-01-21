@@ -102,25 +102,31 @@ namespace Compiler_FPC.Generator
             SectionBss += "\n";
         }
 
+        public static List<AsmNode> GenAsm(Node node, List<AsmNode> asm_list)
+        {
+            if (!(node is IfNode))
+            {
+                if (node.Left != null)
+                    GenAsm(node.Left, asm_list);
+
+                if (node.Right != null)
+                    GenAsm(node.Right, asm_list);
+
+                if (node.Childrens.Count != 0)
+                    foreach (var ch in node.Childrens)
+                        GenAsm(ch, asm_list);
+            }
+
+            var commands = node.Generate();
+            asm_list.AddRange(commands);
+
+            return asm_list;
+        }
+
         private void FillLists(Node current)
         {
-            if (current.Left != null)
-            {
-                FillLists(current.Left);
-            }
-
-            if (current.Right != null)
-            {
-                FillLists(current.Right);
-            }
-
-            if (current.Childrens.Count != 0)
-            {
-                foreach (var ch in current.Childrens)
-                    FillLists(ch);
-            }
-
-            var commands = current.Generate();
+            var asm = new List<AsmNode>();
+            var commands = GenAsm(current, asm);
 
             foreach (var com in commands)
             {

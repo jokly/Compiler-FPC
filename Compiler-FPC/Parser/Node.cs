@@ -219,6 +219,55 @@ namespace Compiler_FPC.Parser
             Left = cond;
             Childrens = new List<Node>() { beginBlock, elseNode };
         }
+
+        public override List<AsmNode> Generate()
+        {
+            var empty = new List<AsmNode>();
+            var cond = AsmGenerator.GenAsm(Left, empty);
+
+            var beginBlock = new List<AsmNode>();
+            foreach (var ch in Childrens[0].Childrens)
+            {
+                empty = new List<AsmNode>();
+                beginBlock.AddRange(AsmGenerator.GenAsm(ch, empty));
+            }
+
+            var elseBlock = new List<AsmNode>();
+            if (Childrens[1] != null)
+            {
+                empty = new List<AsmNode>();
+
+                if (Childrens[1].Childrens[0] is IfNode)
+                {
+                    elseBlock = AsmGenerator.GenAsm(Childrens[1].Childrens[0], empty);
+                }
+                else
+                {
+                    foreach (var ch in Childrens[1].Childrens[0].Childrens)
+                    {
+                        empty = new List<AsmNode>();
+                        elseBlock.AddRange(AsmGenerator.GenAsm(ch, empty));
+                    }
+                }
+            }
+
+            var list = new List<AsmNode>();
+            int curr = AsmLabelNode.GetCurrent();
+
+            list.AddRange(cond);
+            list.Add(new AsmPopNode("eax"));
+            list.Add(new AsmCmpNode("eax", "1"));
+            list.Add(new AsmJeNode(AsmLabelNode.GenLabel(curr)));
+            list.Add(new AsmJmpNode(AsmLabelNode.GenLabel(curr + 1)));
+            list.Add(new AsmLabelNode());
+            list.AddRange(beginBlock);
+            list.Add(new AsmJmpNode(AsmLabelNode.GenLabel(curr + 2)));
+            list.Add(new AsmLabelNode());
+            list.AddRange(elseBlock);
+            list.Add(new AsmLabelNode());
+
+            return list;
+        }
     }
 
     class WhileNode : Node
