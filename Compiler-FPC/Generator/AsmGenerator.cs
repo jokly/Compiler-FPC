@@ -149,6 +149,17 @@ namespace Compiler_FPC.Generator
                     }
                 }
 
+                if (MainList[i] is AsmPushNode && MainList[i + 1] is AsmPopNode &&
+                    MainList[i + 2] is AsmPopNode && MainList[i + 3] is AsmMulNode &&
+                    MainList[i + 4] is AsmPushNode)
+                {
+                    if ((MainList[i] as AsmPushNode).Value.Equals("0x1; 1") && (MainList[i + 3] as AsmMulNode).Right.Equals("ebx"))
+                    {
+                        for (var j = 0; j < 5; j++)
+                            MainList.RemoveAt(i);
+                    }
+                }
+
                 i++;
             }
         }
