@@ -1,4 +1,5 @@
 ﻿using Compiler_FPC.Parser;
+using System;
 using System.Collections.Generic;
 
 namespace Compiler_FPC.Generator
@@ -146,17 +147,52 @@ namespace Compiler_FPC.Generator
                     {
                         for (var j = 0; j < 5; j++)
                             MainList.RemoveAt(i);
+
+                        continue;
                     }
                 }
 
+                // a * 1
                 if (MainList[i] is AsmPushNode && MainList[i + 1] is AsmPopNode &&
                     MainList[i + 2] is AsmPopNode && MainList[i + 3] is AsmMulNode &&
                     MainList[i + 4] is AsmPushNode)
                 {
-                    if ((MainList[i] as AsmPushNode).Value.Equals("0x1; 1") && (MainList[i + 3] as AsmMulNode).Right.Equals("ebx"))
+                    var mul = (MainList[i] as AsmPushNode).Value;
+
+                    if (mul.Equals("0x1; 1") && (MainList[i + 3] as AsmMulNode).Right.Equals("ebx"))
                     {
                         for (var j = 0; j < 5; j++)
                             MainList.RemoveAt(i);
+
+                        continue;
+                    }
+
+                    int num = 0;
+                    var split = mul.Split(' ');
+                    if (split.Length > 1)
+                    {
+                        int.TryParse(split[1], out num);
+                        if ((num & (num - 1)) == 0 && (MainList[i + 3] as AsmMulNode).Right.Equals("ebx"))
+                        {
+                            for (var j = 0; j < 5; j++)
+                                MainList.RemoveAt(i);
+
+                            var shift = (int)Math.Log(num, 2);
+
+                            MainList.InsertRange(i, new List<AsmNode>()
+                            {
+                                new AsmPushNode((shift).ToString()),
+                                new AsmPopNode("ebx"),
+                                new AsmPopNode("eax"),
+                                new AsmPushNode("ebx"),
+                                new AsmMoveNode("cl", "[esp]"),
+                                new AsmPopNode("ebx"),
+                                new AsmShlNode("eax", "cl"),
+                                new AsmPushNode("eax")
+                            });
+
+                            continue;
+                        }
                     }
                 }
 

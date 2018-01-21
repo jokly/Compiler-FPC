@@ -1,0 +1,10 @@
+program test;
+
+var
+    a: Integer;
+
+begin
+    a := 10;
+    a := a * 8;
+    Write(a);
+end.

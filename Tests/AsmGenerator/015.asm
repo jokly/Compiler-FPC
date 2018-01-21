@@ -33,10 +33,13 @@ _main:
 	pop eax
 	div ebx
 	push eax
-	push 0x2; 2
+	push 1
 	pop ebx
 	pop eax
-	mul ebx
+	push ebx
+	mov cl, [esp]
+	pop ebx
+	shl eax, cl
 	push eax
 	push 4
 	push ebp
