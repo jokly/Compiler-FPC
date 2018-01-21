@@ -191,6 +191,13 @@ namespace Compiler_FPC.Generator
         public override string ToString() => $"not {Operand}";
     }
 
+    class AsmIncNode : AsmUnOpNode
+    {
+        public AsmIncNode(string operand) : base(operand) { }
+
+        public override string ToString() => $"inc {Operand}";
+    }
+
     class AsmBinOpNode : AsmSectionProgramNode
     {
         public string Left { get; private set; }

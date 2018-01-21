@@ -69,12 +69,12 @@ namespace Compiler_FPC
                 {
                     using (var outputFile = new StreamWriter(options.GetOutputFileName))
                     {
-                        outputFile.Write(getGeneratorOutput(options.GetInputFileName));
+                        outputFile.Write(getGeneratorOutput(options.GetInputFileName, options.LauncOptimization));
                     }
                 }
                 else
                 {
-                    Console.WriteLine(getGeneratorOutput(options.GetInputFileName));
+                    Console.WriteLine(getGeneratorOutput(options.GetInputFileName, options.LauncOptimization));
                 }
             }
             else if (options.LaunchGenerator && options.GetInputFileName == null)
@@ -117,7 +117,7 @@ namespace Compiler_FPC
             return text;
         }
 
-        static string getGeneratorOutput(string fileName)
+        static string getGeneratorOutput(string fileName, bool isOptimize)
         {
             var tokenizer = new Tokenizer(fileName);
             var parser = new Parser.Parser(tokenizer);
@@ -126,7 +126,7 @@ namespace Compiler_FPC
             if (parser.tree == null)
                 return parser.Tree();
 
-            return new Generator.AsmGenerator(parser.tree).AsmText();
+            return new Generator.AsmGenerator(parser.tree).AsmText(isOptimize);
         }
     }
 }

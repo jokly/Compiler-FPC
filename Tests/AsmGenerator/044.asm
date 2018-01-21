@@ -24,7 +24,6 @@ _main:
         push ebp
         mov ebp, esp
 	sub esp, 4
-	sub esp, 4
 	push 0x0; 0
 	push 4
 	push ebp
@@ -32,28 +31,6 @@ _main:
 	pop ebx
 	sub eax, ebx
 	pop DWORD [eax]
-	L2:
-	push 4
-	pop ebx
-	push ebp
-	pop eax
-	sub eax, ebx
-	push DWORD [eax]
-	push 0x3; 3
-	pop ebx
-	pop eax
-	cmp eax, ebx
-	jle L0
-	push 0
-	jmp L1
-	L0:
-	push 1
-	L1:
-	pop eax
-	push eax
-	pop eax
-	cmp eax, 1
-	jne L3
 	push 4
 	pop ebx
 	push ebp
@@ -69,8 +46,6 @@ _main:
 	pop ebx
 	sub eax, ebx
 	pop DWORD [eax]
-	jmp L2
-	L3:
 	push 4
 	pop ebx
 	push ebp

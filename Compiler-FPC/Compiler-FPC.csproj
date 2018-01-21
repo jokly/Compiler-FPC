@@ -107,6 +107,7 @@
     <Compile Include="Generator\AsmGeneratorException.cs" />
     <Compile Include="Generator\AsmNode.cs" />
     <Compile Include="CLOptions.cs" />
+    <Compile Include="Generator\Optimization.cs" />
     <Compile Include="Lexer\Config.cs" />
     <Compile Include="Parser\ExprTypeBuilder.cs" />
     <Compile Include="Parser\Node.cs" />

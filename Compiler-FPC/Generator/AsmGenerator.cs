@@ -21,11 +21,11 @@ namespace Compiler_FPC.Generator
 
 ";
 
-        private string SectionBss = 
+        private string SectionBss =
         @"section .bss
 ";
 
-        private string SectionText = 
+        private string SectionText =
         @"section .text
         global _main
 
@@ -46,16 +46,31 @@ namespace Compiler_FPC.Generator
         private List<AsmNode> Bss = new List<AsmNode>();
         private List<AsmNode> MainList = new List<AsmNode>();
 
+        private List<Optimization> Optimizations = new List<Optimization>()
+        {
+            new Optimization(
+                2,
+                new List<AsmNode>()
+                {
+
+                },
+                new List<AsmNode>()
+                {
+
+                }
+            ),
+        };
+
         public AsmGenerator(SyntaxTree tree)
         {
             Tree = tree;
         }
 
-        public string AsmText()
+        public string AsmText(bool isOptimize = false)
         {
             try
             {
-                GenerateProgram();
+                GenerateProgram(isOptimize);
             }
             catch (AsmGeneratorException ex)
             {
@@ -66,9 +81,12 @@ namespace Compiler_FPC.Generator
             return SectionData + SectionBss + SectionText + _Main;
         }
 
-        private void GenerateProgram()
+        private void GenerateProgram(bool isOptimize = false)
         {
             FillLists(Tree.Root);
+
+            if (isOptimize)
+                Optimize();
 
             GenerateSectionData();
             GenerateSectionBss();
@@ -80,6 +98,35 @@ namespace Compiler_FPC.Generator
 
             _Main += "        leave\n";
             _Main += "        ret";
+        }
+
+        private void Optimize()
+        {
+            // 4
+            var i = 0;
+            while (i < MainList.Count - 3)
+            {
+                if (MainList[i] is AsmPushNode && MainList[i + 1] is AsmPopNode &&
+                    MainList[i + 2] is AsmPopNode && MainList[i + 3] is AsmAddNode)
+                {
+                    if (!(MainList[i] as AsmPushNode).Value.Equals("0x1; 1"))
+                    {
+                        i++;
+                        continue;
+                    }
+
+                    for (var j = 0; j < 4; j++)
+                        MainList.RemoveAt(i);
+
+                    MainList.InsertRange(i, new List<AsmNode>()
+                    {
+                        new AsmPopNode("eax"),
+                        new AsmIncNode("eax")
+                    });
+                }
+
+                i++;
+            }
         }
 
         private void GenerateSectionData()

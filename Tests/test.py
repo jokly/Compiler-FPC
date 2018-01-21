@@ -117,6 +117,7 @@ if __name__ == '__main__':
     argsParser.add_argument('-p', '--parser', help='Start parser tests', action='store_true')
     argsParser.add_argument('-s', '--semantic', help='Start semantic tests', action='store_true')
     argsParser.add_argument('-g', '--generator', help='Star asm generator tests', action='store_true')
+    argsParser.add_argument('-q', '--optimization', help='Start asm generator with optimizations test', action='store_true')
 
     args = argsParser.parse_args()
 
@@ -131,6 +132,9 @@ if __name__ == '__main__':
 
     if args.generator:
         gen_test(GEN_TESTS['-g'], ['-g'])
+
+    if args.optimization:
+        gen_test(GEN_TESTS['-g'], ['-g', '-q'])
 
     if not args.lexer and not args.parser and not args.semantic and not args.generator:
         for key in TESTS:

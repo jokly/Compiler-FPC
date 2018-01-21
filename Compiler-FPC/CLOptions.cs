@@ -39,5 +39,8 @@ namespace Compiler_FPC
 
         [Option('g', "generator", HelpText = "Launch asm generator")]
         public bool LaunchGenerator { get; set; }
+
+        [Option('q', "optimize", HelpText = "Asm code optimizations")]
+        public bool LauncOptimization { get; set; }
     }
 }

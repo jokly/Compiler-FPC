@@ -98,10 +98,8 @@ _main:
 	pop eax
 	sub eax, ebx
 	push DWORD [eax]
-	push 0x1; 1
-	pop ebx
 	pop eax
-	add eax, ebx
+	inc eax
 	push eax
 	push 0x0; 0
 	push 4
@@ -159,10 +157,8 @@ _main:
 	pop eax
 	sub eax, ebx
 	push DWORD [eax]
-	push 0x1; 1
-	pop ebx
 	pop eax
-	add eax, ebx
+	inc eax
 	push eax
 	push 0x0; 0
 	pop eax

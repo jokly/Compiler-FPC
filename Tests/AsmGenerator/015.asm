@@ -25,10 +25,8 @@ _main:
         mov ebp, esp
 	sub esp, 4
 	push 0x5; 5
-	push 0x1; 1
-	pop ebx
 	pop eax
-	add eax, ebx
+	inc eax
 	push eax
 	push 0x3; 3
 	pop ebx
@@ -61,10 +59,8 @@ _main:
 	pop eax
 	sub eax, ebx
 	push DWORD [eax]
-	push 0x1; 1
-	pop ebx
 	pop eax
-	add eax, ebx
+	inc eax
 	push eax
 	push 4
 	push ebp
