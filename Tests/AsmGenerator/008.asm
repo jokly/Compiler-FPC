@@ -27,8 +27,6 @@ _main:
 	push 0x3; 3
 	pop eax
 	neg eax
-	push eax
-	pop eax
 	neg eax
 	push eax
 	push 4
@@ -43,8 +41,6 @@ _main:
 	pop eax
 	sub eax, ebx
 	push DWORD [eax]
-	pop eax
-	push eax
 	pop eax
 	neg eax
 	push eax

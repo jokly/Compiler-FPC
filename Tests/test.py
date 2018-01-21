@@ -136,7 +136,7 @@ if __name__ == '__main__':
     if args.optimization:
         gen_test(GEN_TESTS['-g'], ['-g', '-q'])
 
-    if not args.lexer and not args.parser and not args.semantic and not args.generator:
+    if not args.lexer and not args.parser and not args.semantic and not args.generator and not args.optimization:
         for key in TESTS:
             test(TESTS[key], [key])
 

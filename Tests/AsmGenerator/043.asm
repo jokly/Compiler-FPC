@@ -68,8 +68,6 @@ _main:
 	push 1
 	L1:
 	pop eax
-	push eax
-	pop eax
 	cmp eax, 1
 	jne L3
 	push 0x0; 0

@@ -46,21 +46,6 @@ namespace Compiler_FPC.Generator
         private List<AsmNode> Bss = new List<AsmNode>();
         private List<AsmNode> MainList = new List<AsmNode>();
 
-        private List<Optimization> Optimizations = new List<Optimization>()
-        {
-            new Optimization(
-                2,
-                new List<AsmNode>()
-                {
-
-                },
-                new List<AsmNode>()
-                {
-
-                }
-            ),
-        };
-
         public AsmGenerator(SyntaxTree tree)
         {
             Tree = tree;
@@ -102,10 +87,33 @@ namespace Compiler_FPC.Generator
 
         private void Optimize()
         {
-            // 4
+            // 2
             var i = 0;
+            while (i < MainList.Count - 1)
+            {
+                // push eax; pop eax
+                if (MainList[i] is AsmPushNode && MainList[i + 1] is AsmPopNode)
+                {
+                    var pushOp = (MainList[i] as AsmPushNode).Value;
+                    var popOp = (MainList[i + 1] as AsmPopNode).Destination;
+                    if (!pushOp.Equals(popOp))
+                    {
+                        i++;
+                        continue;
+                    }
+
+                    for (var j = 0; j < 2; j++)
+                        MainList.RemoveAt(i);
+                }
+
+                i++;
+            }
+
+            // 4
+            i = 0;
             while (i < MainList.Count - 3)
             {
+                // a + 1
                 if (MainList[i] is AsmPushNode && MainList[i + 1] is AsmPopNode &&
                     MainList[i + 2] is AsmPopNode && MainList[i + 3] is AsmAddNode)
                 {

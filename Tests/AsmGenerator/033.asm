@@ -43,8 +43,6 @@ _main:
 	push 1
 	L1:
 	pop eax
-	push eax
-	pop eax
 	cmp eax, 1
 	je L7
 	jmp L8
@@ -69,8 +67,6 @@ _main:
 	L2:
 	push 1
 	L3:
-	pop eax
-	push eax
 	pop eax
 	cmp eax, 1
 	je L4
