@@ -1,0 +1,10 @@
+program test;
+
+var
+    arr: array[1..10] of Integer;
+
+begin
+    arr[2] := 5;
+
+    Write(arr[2]);
+end.

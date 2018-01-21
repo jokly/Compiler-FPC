@@ -103,7 +103,7 @@ namespace Compiler_FPC.Parser
 
     class AssignVarNode : VarNode
     {
-        public AssignVarNode(Token token, Node left) : base(token, left) { }
+        public AssignVarNode(Token token, Node left, Node index = null) : base(token, left) { Right = index;  }
 
         public override List<AsmNode> Generate()
         {

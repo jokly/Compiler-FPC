@@ -531,6 +531,28 @@ namespace Compiler_FPC.Parser
                 {
                     throw new ParserException(id, "until");
                 }
+                else if (afterId.Type == TokenType.LSQUARE_BRACKET)
+                {
+                    tokenizer.Next();
+                    var index = parseExpr();
+                    require(TokenType.RSQUARE_BRACKET);
+                    tokenizer.Next();
+
+                    afterId = tokenizer.Current;
+                    if (afterId.Type == TokenType.ASSIGNMENT || afterId.Type == TokenType.ADDITION_ASSIGNMENT ||
+                        afterId.Type == TokenType.SUBSTRACTION_ASSIGNMENT || afterId.Type == TokenType.MULTIPLICATION_ASSIGNMENT ||
+                        afterId.Type == TokenType.DIVISION_ASSIGNMENT)
+                    {
+                        tokenizer.Next();
+                        var type = tables.GetSymbol(id);
+                        var var_node = new AssignVarNode(id, new AssignmentNode(afterId, parseExpr()), index);
+                        var_node.NodeType = (type as SymVar);
+                        statements.Add(var_node);
+                    }
+                    else
+                        throw new ParserException(id, "assignment");
+
+                }
                 else if (afterId.Type != TokenType.ASSIGNMENT && afterId.Type != TokenType.ADDITION_ASSIGNMENT &&
                         afterId.Type != TokenType.SUBSTRACTION_ASSIGNMENT && afterId.Type != TokenType.MULTIPLICATION_ASSIGNMENT &&
                         afterId.Type != TokenType.DIVISION_ASSIGNMENT)
@@ -917,7 +939,12 @@ namespace Compiler_FPC.Parser
             {
                 for(int i = 0; i < list_args.Count; i++)
                 {
-                    var input_type = TypeBuilder.GetTrueType(args[i], list_args[i]);
+                    Node arg = args[i];
+
+                    if (args[i] is SquareBracketsNode)
+                        arg = args[i].Left;
+
+                    var input_type = TypeBuilder.GetTrueType(arg, arg.NodeType);
                     var def_type = TypeBuilder.GetTrueType((type as SymTypeProc).Args[i]);
 
                     TypeBuilder.GetType(def_type, input_type);
