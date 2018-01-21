@@ -263,4 +263,3 @@ __pycache__/
 GenerateStates/States.txt
 Tests/**/*.out
 Tests/**/*.exe
-Tests/**/*.asm

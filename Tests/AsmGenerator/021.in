@@ -1,0 +1,8 @@
+program test;
+
+var
+    a: Integer;
+
+begin
+    a := 2 xor 5;
+end.
