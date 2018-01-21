@@ -21,26 +21,37 @@ section .text
         extern _scanf
 
 _main:
-    push ebp
-    mov ebp, esp
-
-    sub esp, 4
-
-    mov eax, 9
-    mov ebx, 10
-    cmp eax, ebx
-    jge L1
-    push 0
-    jmp L2
-    L1:
+        push ebp
+        mov ebp, esp
+        sub esp, 4
+        push 0x1; 1
+        push 0x5; 5
+        pop ebx
+        pop eax
+        cmp eax, ebx
+        jg L0
+        push 0
+        jmp L1
+        L0:
         push 1
-    L2:
+        L1:
+        pop eax
+        push eax
+        pop eax
+        pop eax
+        cmp eax, 0
+        je L2
+        push 0
+        jmp L3
+        L2:
+        push 1
+        L3:
+        pop eax
+        push eax
         pop DWORD [ebp - 4]
-
-    push DWORD [ebp - 4]
-    push writelnInt
-    call _printf
-    add esp, 8
-
-    leave
-    ret
+        push DWORD [ebp - 4]
+        push writeInt
+        call _printf
+        add esp, 8
+        leave
+        ret

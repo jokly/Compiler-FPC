@@ -1,0 +1,11 @@
+program test;
+
+var
+    a: Integer;
+
+begin
+    a := not (1 < 5);
+    Write(a);
+    a := not (1 > 5);
+    Write(a);
+end.

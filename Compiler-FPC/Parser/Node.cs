@@ -411,7 +411,16 @@ namespace Compiler_FPC.Parser
                 }
                 else if (Token.Text.Equals("not"))
                 {
-                    list.Add(new AsmNotNode("eax"));
+                    int curr = AsmLabelNode.GetCurrent();
+                    
+                    list.Add(new AsmCmpNode("eax", "0"));
+                    list.Add(new AsmJeNode(AsmLabelNode.GenLabel(curr)));
+                    list.Add(new AsmPushNode("0"));
+                    list.Add(new AsmJmpNode(AsmLabelNode.GenLabel(curr + 1)));
+                    list.Add(new AsmLabelNode());
+                    list.Add(new AsmPushNode("1"));
+                    list.Add(new AsmLabelNode());
+                    list.Add(new AsmPopNode("eax"));
                 }
 
                 list.Add(new AsmPushNode("eax"));
